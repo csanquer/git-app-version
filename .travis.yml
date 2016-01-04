@@ -6,11 +6,11 @@ python:
   - "3.4"
   - "3.5"
 
-# old python versions
-matrix:
-  allow_failures:
-    - python: "2.6"
-    - python: "3.2"
+# # old python versions
+# matrix:
+#   allow_failures:
+#     - python: "2.6"
+#     - python: "3.2"
 install:
   - pip install -r dev-requirements.txt
 script:

@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<app_version>
+  <full_commit>40aaf83894b98898895d478f8b7cc4a866b1d62c</full_commit>
+  <commit_timestamp>1456824813</commit_timestamp>
+  <abbrev_commit>40aaf83</abbrev_commit>
+  <version>v1.1.0-3-g439e52</version>
+  <deploy_timestamp>1456918425</deploy_timestamp>
+  <commit_date>2016-03-01T09:33:33+0000</commit_date>
+  <deploy_date>2016-03-02T11:33:45+0000</deploy_date>
+</app_version>

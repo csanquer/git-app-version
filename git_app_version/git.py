@@ -21,7 +21,7 @@ class Git(object):
     def getCommitDate(self, commit = 'HEAD', cwd=None):
         isodate = outputCommand(["git", "log", "-1", "--pretty=tformat:%ci", "--no-color", "--date=local", commit], cwd=cwd).strip().replace(' ', 'T', 1).replace(' ', '')
         try:
-            return datehelper.dateTimeFromIso8601(isodate)
+            return datehelper.dateTimeFromIso8601(isodate, utc=True)
         except Exception as exc:
             return None
 

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+# from pprint import pprint,pformat
 from datetime import datetime
 import iso8601
 # import tzlocal
@@ -8,8 +9,12 @@ import pytz
 def utcnow():
     return datetime.now(pytz.utc)
 
-def dateTimeFromIso8601(isodate):
-    return iso8601.parse_date(isodate).astimezone(pytz.utc)
+def dateTimeFromIso8601(isodate, utc=False):
+    dt = iso8601.parse_date(isodate)
+    if utc:
+        return dt.astimezone(pytz.utc)
+
+    return dt
 
 def iso8601FromDateTime(dt):
     try:
@@ -19,6 +24,7 @@ def iso8601FromDateTime(dt):
 
 def timestampFromDateTime(dt):
     try:
-        return dt.strftime('%s')
+        utcDt  = dt.replace(tzinfo=None) - dt.utcoffset()
+        return str(int((utcDt - datetime(1970, 1, 1)).total_seconds()))
     except Exception as exc:
         return ''

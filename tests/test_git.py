@@ -99,9 +99,9 @@ def test_getVersion(mockSubProcess, cmdResults, expected):
             'abbrev_commit': '40aaf83',
             'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
             'commit_date': '2016-03-01T09:33:33+0000',
-            'commit_timestamp': '1456821213',
+            'commit_timestamp': '1456824813',
             'deploy_date': '2016-03-02T11:33:45+0000',
-            'deploy_timestamp': '1456914825',
+            'deploy_timestamp': '1456918425',
         }
     )
 ])
@@ -110,6 +110,7 @@ def test_getInfos(mockSubProcess, mockDt, now, cmdResults, expected):
 
     tz = pytz.utc
     mockDt.now.return_value = tz.localize(now)
+    mockDt.side_effect = lambda *args, **kw: datetime(*args, **kw)
 
     mockSubProcess.check_output.side_effect = cmdResults
 

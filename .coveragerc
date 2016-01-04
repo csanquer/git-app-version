@@ -1,0 +1,15 @@
+# .coveragerc to control coverage.py
+[run]
+branch = True
+source = git_app_version
+
+
+[report]
+precision = 2
+ignore_errors = False
+
+[html]
+directory = coverage_html_report
+
+[xml]
+output = coverage.xml

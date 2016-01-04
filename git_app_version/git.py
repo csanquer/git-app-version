@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+# from pprint import pprint,pformat
 from git_app_version.helper.process import outputCommand, callCommand
 import git_app_version.helper.date as datehelper
 
@@ -31,8 +32,8 @@ class Git(object):
         return outputCommand(["git", "rev-list", "--max-count=1", "--abbrev-commit", commit], cwd=cwd).strip()
 
     def getInfos(self, commit = 'HEAD', cwd=None):
-        commitDate = self.getCommitDate(commit, cwd=cwd)
         deployDate = self.getDeployDate()
+        commitDate = self.getCommitDate(commit, cwd=cwd)
 
         return {
             'version': self.getVersion(commit, cwd=cwd),

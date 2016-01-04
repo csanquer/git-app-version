@@ -1,5 +1,5 @@
 ---
-language: python:
+language: python
 python:
   - "2.7"
   - "3.3"
@@ -7,14 +7,17 @@ python:
   - "3.5"
 
 # # old python versions
-# matrix:
-#   allow_failures:
-#     - python: "2.6"
-#     - python: "3.2"
+matrix:
+  allow_failures:
+    - python: "2.6"
+    - python: "3.2"
+
 install:
   - pip install -r dev-requirements.txt
+
 script:
   - coverage run -m py.test
+  
 after_success:
   - coverage report -m
   - coverage html

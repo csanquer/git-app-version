@@ -12,7 +12,7 @@ class Git(object):
         return datehelper.utcnow()
 
     def getVersion(self, commit = 'HEAD', cwd=None):
-        version = outputCommand(["git", "describe", "--tag", commit], cwd=cwd).strip()
+        version = outputCommand(["git", "describe", "--tag", "--always", commit], cwd=cwd).strip()
         if version == '' or version is None:
             version = self.getAbbrevCommit(commit)
 

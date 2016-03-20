@@ -1,5 +1,6 @@
 iso8601
-pyyaml 
+pyyaml
 pytz
 lxml
 tzlocal
+setuptools_scm

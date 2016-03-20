@@ -21,7 +21,7 @@ matrix:
 cache: pip
 
 install:
-  - pip install --user -r dev-requirements.txt
+  - pip install -r dev-requirements.txt
 
 script:
   - coverage run -m py.test

@@ -3,4 +3,3 @@ pyyaml
 pytz
 lxml
 tzlocal
-setuptools_scm

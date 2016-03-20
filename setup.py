@@ -11,6 +11,8 @@ from setuptools import setup, find_packages
 from codecs import open
 from os import path
 
+from git_app_version import __version__
+
 here = path.abspath(path.dirname(__file__))
 
 # Get the long description from the README file
@@ -23,8 +25,7 @@ setup(
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
-    use_scm_version=True,
-    setup_requires=['setuptools_scm'],
+    version=__version__,
 
     description='CLI tool to get Git commit informations and store them in a config file',
     long_description=long_description,
@@ -86,8 +87,7 @@ setup(
         'pyyaml',
         'pytz',
         'lxml',
-        'tzlocal',
-        'setuptools_scm'
+        'tzlocal'
     ],
 
     # List additional groups of dependencies here (e.g. development

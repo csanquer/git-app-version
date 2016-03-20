@@ -7,12 +7,14 @@ import argparse
 from git_app_version.git import Git
 from git_app_version.dumper import Dumper
 
-__VERSION__ = '0.1.2'
+from setuptools_scm import get_version
+
+# __version__ = '0.1.3'
 __DESCRIPTION__ = 'Get Git commit informations and store them in a INI/XML/YAML/JSON file.'
 
 def main():
     parser = argparse.ArgumentParser(prog='git-app-version', description=__DESCRIPTION__)
-    parser.add_argument('-v', '--version', action='version', version='%(prog)s '+__VERSION__)
+    parser.add_argument('-v', '--version', action='version', version='%(prog)s '+get_version())
     parser.add_argument('repository', nargs='?', metavar='path', type=str, help='git repository path', default=os.getcwd())
     parser.add_argument('commit', nargs='?', type=str, help='git commit to check', default='HEAD')
     # parser.add_argument('-O', '--stdout', action='store_true', help='send result to stdout')

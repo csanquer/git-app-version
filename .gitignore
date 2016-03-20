@@ -16,3 +16,4 @@ __pycache__/
 .coverage
 coverage_html_report
 coverage.xml
+.eggs

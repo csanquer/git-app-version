@@ -4,6 +4,7 @@ pytz
 lxml
 tzlocal
 pytest
+setuptools-markdown
 mock
 coverage
 tox

@@ -3,20 +3,18 @@ build/
 dist/
 *.egg-info/
 *.egg
+.eggs
 *.py[cod]
 __pycache__/
 *.so
 *~
-
 /tests/output
-
 # due to using tox and pytest
 .tox
 .cache
 .coverage
 coverage_html_report
 coverage.xml
-.eggs
 bin/
 include/
 local

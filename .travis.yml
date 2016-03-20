@@ -15,6 +15,11 @@ matrix:
     - python: 'nightly'
     - python: pypy3
 
+addons:
+  apt:
+    packages:
+    - pandoc
+
 cache: pip
 
 install:

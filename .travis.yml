@@ -7,14 +7,16 @@ python:
   - "3.3"
   - "3.4"
   - "3.5"
+  - "3.5-dev"
+  - "nightly"
   - "pypy"
   - "pypy3"
 
 # old python versions
 matrix:
   allow_failures:
-    - "pypy"
-    - "pypy3"
+    - python: "pypy"
+    - python: "pypy3"
 #     - python: "2.6"
 #     - python: "3.2"
 

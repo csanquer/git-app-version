@@ -7,17 +7,21 @@ python:
   - "3.3"
   - "3.4"
   - "3.5"
+  - "pypy"
+  - "pypy3"
 
 # old python versions
-# matrix:
-#   allow_failures:
+matrix:
+  allow_failures:
+    - "pypy"
+    - "pypy3"
 #     - python: "2.6"
 #     - python: "3.2"
 
 cache: pip
 
 install:
-  - pip install -r dev-requirements.txt
+  - pip install --user -r dev-requirements.txt
 
 script:
   - coverage run -m py.test

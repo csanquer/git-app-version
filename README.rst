@@ -21,7 +21,7 @@ Requirements
 Installation
 ------------
 
-Just run :
+Just run ::
 
     pip install git-app-version
 
@@ -31,18 +31,17 @@ Usage
 Help
 ~~~~
 
-To get help :
+To get help ::
 
     git-app-version -h
 
 Get Commit Informations
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-To store git commit informations into a json file :
+To store git commit informations into a json file ::
 
     cd <my-git-repository>
     # git-app-version -o <output-file-without-extension> -f <file-format>
-
     git-app-version -o version -f json
 
 This will generate a version.json file in the current directory.

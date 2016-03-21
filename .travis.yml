@@ -38,7 +38,8 @@ deploy:
   user: csanquer
   password:
     secure: nXqSxUZNgsHRpYcXDM7B7SCN49G8AJUHJuvFwfnGPQATI8zVxLLxDEUh0Iait4/l3VmFhbGrTfJk7pCv7a5cWBMN7m8WHwuFRPFvIk4Lt66cUmXlTf7+heSEepqtI5jKfv9hbFmoVUwdugGIyMOoBP86QRu4QCBNI6lmB4e153xzoF26EVAeTtu6y2juQyHQknt64mxEq5od2wIDrUVtuh/9gZGE+H0KZm0dFRVwShVBSX0f0ozAbIyMhvJr+7qGRTLFtOWmU+5ff5IqGUfQtIKsaxO0nVZ34mo10DEfFzev1Nbq1TPCH7t+Gc20hXbcxqGpjiH/71k3OTZ7fpk/QWll12An5Wh12GNvv7wDjOir3VC9Vw5RS3x0p083zpxmxKxZXlUbOW7L1CmS7Dv3x6rOZM4IAExvC3dCjaoPoTmEppDYvs4lpJEwnnEMEVNOnXWbGlIEY69ASNPczu76+3HR52c8F1VdsDdxUKU8qPMmbf+lrHPJgwT6uGAFG80dAh3AczrfpFH4MDaOzLsjVDGAUDIcyM2gr8RFcWGMib1uqH9IteAKHs9Y4c/y4eQdCRlySMWgMDBu4isX09ks/5CZEjnl3FwEePbs92rVh8MGvAIFeVdO9465vJ/V3ogGiqSl4OWt1mC91AesAUFk8nmeLLAR3+YL8dD0DihatFo=
+  distributions: sdist bdist_wheel
+  repo: csanquer/git-app-version
   on:
     tags: true
-    distributions: sdist bdist_wheel
-    repo: csanquer/git-app-version
+    python: '2.7'

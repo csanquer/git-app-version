@@ -108,6 +108,6 @@ abbrev_commit = 40aaf83
 Licensing
 ---------
 
-Project under MIT License
+Project under GPL v3 License
 
 Copyright (C) 2016 Charles Sanquer

@@ -51,7 +51,7 @@ File formats
 
 -  json :
 
-.. code:: json
+.. code::
 
     {
         "commit_date": "2016-03-01T09:33:33+0000",
@@ -65,7 +65,7 @@ File formats
 
 -  ini :
 
-.. code:: ini
+.. code::
 
     [app_version]
     commit_date = 2016-03-01T09:33:33+0000
@@ -78,7 +78,7 @@ File formats
 
 -  xml :
 
-.. code:: xml
+.. code::
 
     <?xml version='1.0' encoding='UTF-8'?>
     <app_version>
@@ -93,7 +93,7 @@ File formats
 
 -  yml :
 
-.. code:: yml
+.. code::
 
     ---
     'abbrev_commit': '40aaf83'

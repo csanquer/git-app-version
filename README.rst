@@ -23,8 +23,6 @@ Installation
 
 Just run :
 
-.. code:: sh
-
     pip install git-app-version
 
 Usage
@@ -35,16 +33,12 @@ Help
 
 To get help :
 
-.. code:: sh
-
     git-app-version -h
 
 Get Commit Informations
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 To store git commit informations into a json file :
-
-.. code:: sh
 
     cd <my-git-repository>
     # git-app-version -o <output-file-without-extension> -f <file-format>
@@ -117,8 +111,3 @@ Licensing
 Project under GPL v3 License
 
 Copyright (C) 2016 Charles Sanquer
-
-.. |PyPI version| image:: https://badge.fury.io/py/git-app-version.svg
-   :target: https://badge.fury.io/py/git-app-version
-.. |image| image:: https://travis-ci.org/csanquer/git-app-version.svg?branch=master
-   :target: https://travis-ci.org/csanquer/git-app-version

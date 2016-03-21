@@ -1,6 +1,7 @@
 Git App Version
 ===============
 
+[![PyPI version](https://badge.fury.io/py/git-app-version.svg)](https://badge.fury.io/py/git-app-version)
 [![image](https://travis-ci.org/csanquer/git-app-version.svg?branch=master)](https://travis-ci.org/csanquer/git-app-version)
 
 A CLI tool written in Python to fetch Git commit informations and store

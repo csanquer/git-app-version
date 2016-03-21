@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-# from pprint import pprint,pformat
 from git_app_version.helper.process import outputCommand, callCommand
 import git_app_version.helper.date as datehelper
 

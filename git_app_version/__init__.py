@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
 
-# from pprint import pprint,pformat
-
 import os
 import argparse
 from git_app_version.git import Git
 from git_app_version.dumper import Dumper
 
-__version__ = '0.2.1'
+__version__ = '0.3.0'
 __DESCRIPTION__ = 'Get Git commit informations and store them in a INI/XML/YAML/JSON file.'
 
 def main():
@@ -15,7 +13,6 @@ def main():
     parser.add_argument('-v', '--version', action='version', version='%(prog)s '+__version__)
     parser.add_argument('repository', nargs='?', metavar='path', type=str, help='git repository path', default=os.getcwd())
     parser.add_argument('commit', nargs='?', type=str, help='git commit to check', default='HEAD')
-    # parser.add_argument('-O', '--stdout', action='store_true', help='send result to stdout')
     parser.add_argument('-o', '--output', metavar='path', type=str, help='output file path (without extension)', default='version')
     parser.add_argument('--format', metavar='format', type=str, help='output file format and extension (ini/xml/yml/json)', default='json')
     parser.add_argument('--section', metavar='root', type=str, help='section name in INI file or root tag in XML file', default='app_version')

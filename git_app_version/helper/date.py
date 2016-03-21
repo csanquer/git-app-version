@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 
-# from pprint import pprint,pformat
 from datetime import datetime
 import iso8601
-# import tzlocal
 import pytz
 
 def utcnow():

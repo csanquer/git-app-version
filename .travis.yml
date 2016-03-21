@@ -7,13 +7,13 @@ python:
   - '3.5-dev'
   - nightly
   - pypy
-  - pypy3
+  # - pypy3
 
 matrix:
   allow_failures:
     - python: '3.5-dev'
     - python: 'nightly'
-    - python: pypy3
+    # - python: pypy3
 
 addons:
   apt:

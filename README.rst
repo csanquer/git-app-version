@@ -1,22 +1,22 @@
+===============
 Git App Version
 ===============
 
 .. image:: https://badge.fury.io/py/git-app-version.svg
    :target: https://badge.fury.io/py/git-app-version
 .. image:: https://travis-ci.org/csanquer/git-app-version.svg?branch=master
-   :target: https://travis-ci.org/csanquer/git-app-version
+    :target: https://travis-ci.org/csanquer/git-app-version
 
-A CLI tool written in Python to fetch Git commit informations and store
-them in an INI/XML/YAML/JSON file.
+A CLI tool written in Python to fetch Git commit informations and store them in an INI/XML/YAML/JSON file.
 
-Typical usecase : when deploying, run this command and import the git
-version config file.
+Typical usecase : when deploying, run this command and import the git version config file.
+
 
 Requirements
 ------------
 
--  Python 2.7 or >= 3.3
--  python pip package tool
+* Python 2.7 or >= 3.3
+* python pip package tool
 
 Installation
 ------------
@@ -25,33 +25,33 @@ Just run ::
 
     pip install git-app-version
 
+
 Usage
 -----
 
 Help
-~~~~
+^^^^
 
 To get help ::
 
     git-app-version -h
 
 Get Commit Informations
-~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^
 
 To store git commit informations into a json file ::
 
     cd <my-git-repository>
     # git-app-version -o <output-file-without-extension> -f <file-format>
+
     git-app-version -o version -f json
 
 This will generate a version.json file in the current directory.
 
 File formats
-~~~~~~~~~~~~
+^^^^^^^^^^^^
 
--  json :
-
-.. code::
+* json ::
 
     {
         "commit_date": "2016-03-01T09:33:33+0000",
@@ -63,9 +63,7 @@ File formats
         "abbrev_commit": "40aaf83"
     }
 
--  ini :
-
-.. code::
+* ini ::
 
     [app_version]
     commit_date = 2016-03-01T09:33:33+0000
@@ -76,9 +74,7 @@ File formats
     deploy_timestamp = 1456918425
     abbrev_commit = 40aaf83
 
--  xml :
-
-.. code::
+* xml ::
 
     <?xml version='1.0' encoding='UTF-8'?>
     <app_version>
@@ -91,9 +87,7 @@ File formats
       <deploy_date>2016-03-02T11:33:45+0000</deploy_date>
     </app_version>
 
--  yml :
-
-.. code::
+* yml ::
 
     ---
     'abbrev_commit': '40aaf83'
@@ -103,6 +97,7 @@ File formats
     'deploy_timestamp': '1456918425'
     'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c'
     'version': 'v1.1.0-3-g439e52'
+
 
 Licensing
 ---------

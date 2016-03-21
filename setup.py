@@ -15,11 +15,11 @@ from setuptools import setup
 
 from git_app_version import __version__
 
-# here = path.abspath(path.dirname(__file__))
+here = path.abspath(path.dirname(__file__))
 
 # Get the long description from the README file
-# with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
-#     long_description = f.read()
+with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
+    long_description = f.read()
 
 setup(
     name='git-app-version',
@@ -29,11 +29,8 @@ setup(
     # https://packaging.python.org/en/latest/single_source_version.html
     version=__version__,
 
-    setup_requires=['setuptools-markdown'],
     description='CLI tool to get Git commit informations and store them in a config file',
-    # long_description=long_description,
-    long_description_markdown_filename='README.md',
-
+    long_description=long_description,
 
     # The project's main homepage.
     url='https://github.com/csanquer/git-app-version',

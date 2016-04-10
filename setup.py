@@ -88,6 +88,7 @@ setup(
         'iso8601',
         'pyyaml',
         'pytz',
+        'xmltodict',
         'lxml',
         'tzlocal'
     ],

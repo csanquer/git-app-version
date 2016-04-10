@@ -2,7 +2,8 @@
 
 import os
 import json
-from lxml import etree
+import xmltodict
+from pprint import pprint
 
 try:
     import configparser
@@ -20,13 +21,13 @@ class Dumper(object):
     def dump(self, data = {}, format = 'json', target = None, cwd=None, section='app_version'):
         target = self.__checkTarget(target, cwd)
         if format == 'yaml' or format == 'yml':
-            return self.dumpYaml(data, target)
+            return self.dumpYaml(data, target, section=section)
         elif format == 'xml':
             return self.dumpXml(data, target, root=section)
         elif format == 'ini':
             return self.dumpIni(data, target, section=section)
         else:
-            return self.dumpJson(data, target)
+            return self.dumpJson(data, target, section=section)
 
     def __checkTarget(self, target, cwd=None):
         if not os.path.isabs(target):
@@ -44,6 +45,16 @@ class Dumper(object):
         if not os.path.exists(parentDir):
             os.makedirs(parentDir, 493) # 493 in decimal as 755 in octal
 
+    def __createInfosToDump(self, infos, section=None):
+        toDump = infos
+        if section is not None and section != '' :
+            sections = section.split('.')
+            sections.reverse()
+            for sec in sections :
+                toDump = { sec: toDump }
+
+        return toDump
+
     def dumpIni(self, data, target, section='app_version'):
         target = target+'.ini'
 
@@ -60,26 +71,23 @@ class Dumper(object):
     def dumpXml(self, data, target, root='app_version'):
         target = target+'.xml'
 
-        rootNode = etree.Element(root)
+        with open(target, 'w') as f:
+            xml = xmltodict.unparse(self.__createInfosToDump(data, root), encoding='utf-8', pretty=True, indent='  ')
+            f.write(xml)
 
-        for key,val in data.items():
-            node = etree.SubElement(rootNode, key)
-            node.text = val
+            return target
 
-        tree = etree.ElementTree(rootNode)
-        tree.write(target,  encoding="UTF-8", xml_declaration=True, pretty_print=True)
-
-        return target
-
-    def dumpJson(self, data, target):
+    def dumpJson(self, data, target, section=None):
         target = target+'.json'
 
+        data1 = self.__createInfosToDump(data, section)
+
         with open(target, 'w') as f:
-            json.dump(data, f, indent=4)
+            json.dump(data1, f, indent=2)
 
         return target
 
-    def dumpYaml(self, data, target):
+    def dumpYaml(self, data, target, section=None):
         target = target+'.yml'
 
         with open(target, 'w') as f:
@@ -87,7 +95,7 @@ class Dumper(object):
                 f.write("---\n")
             else :
                 yaml.dump(
-                    data,
+                    self.__createInfosToDump(data, section),
                     f,
                     default_flow_style=False,
                     explicit_start=True,

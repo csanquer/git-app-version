@@ -2,6 +2,7 @@ iso8601
 pyyaml
 pytz
 lxml
+xmltodict
 tzlocal
 pytest
 mock

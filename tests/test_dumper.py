@@ -4,10 +4,11 @@ from mock import patch
 import pytest
 import os
 import shutil
+from pprint import pprint
 
 from git_app_version.dumper import Dumper as AppDumper
 import json
-from lxml import etree
+import xmltodict
 
 try:
     import configparser
@@ -38,18 +39,7 @@ def getFileContent(path, section=None, fileFormat=None):
             return yaml.load(f)
     elif fileFormat == 'xml':
         with open(path, 'r') as f:
-            tree = etree.parse(f)
-
-            root = tree.getroot()
-
-            data = {}
-            if root.tag == section :
-                for child in root:
-                    data[child.tag] = child.text
-
-            return data
-
-        return ''
+            return xmltodict.parse(f.read())
     elif fileFormat == 'ini':
         config = configparser.RawConfigParser()
         config.read(path)
@@ -67,7 +57,7 @@ def getFileContent(path, section=None, fileFormat=None):
         with open(path, 'r') as f:
             return f.read()
 
-@pytest.mark.parametrize("data,dataFormat,target,section,expectedTarget,expectedFile", [
+@pytest.mark.parametrize("data,dataFormat,target,section,expectedTarget,expectedFile,expectedData", [
     (
         {
             'version': 'v1.1.0-3-g439e52',
@@ -82,7 +72,41 @@ def getFileContent(path, section=None, fileFormat=None):
         'version',
         'app_version',
         'version.ini',
-        'data/version.ini'
+        'data/version.ini',
+        {
+            'version': 'v1.1.0-3-g439e52',
+            'abbrev_commit': '40aaf83',
+            'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
+            'commit_date': '2016-03-01T09:33:33+0000',
+            'commit_timestamp': '1456824813',
+            'deploy_date': '2016-03-02T11:33:45+0000',
+            'deploy_timestamp': '1456918425',
+        },
+    ),
+    (
+        {
+            'version': 'v1.1.0-3-g439e52',
+            'abbrev_commit': '40aaf83',
+            'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
+            'commit_date': '2016-03-01T09:33:33+0000',
+            'commit_timestamp': '1456824813',
+            'deploy_date': '2016-03-02T11:33:45+0000',
+            'deploy_timestamp': '1456918425',
+        },
+        'ini',
+        'version',
+        'parameters.git',
+        'version.ini',
+        'data/version_custom_section.ini',
+        {
+            'version': 'v1.1.0-3-g439e52',
+            'abbrev_commit': '40aaf83',
+            'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
+            'commit_date': '2016-03-01T09:33:33+0000',
+            'commit_timestamp': '1456824813',
+            'deploy_date': '2016-03-02T11:33:45+0000',
+            'deploy_timestamp': '1456918425',
+        },
     ),
     (
         {
@@ -98,7 +122,45 @@ def getFileContent(path, section=None, fileFormat=None):
         'version',
         'app_version',
         'version.json',
-        'data/version.json'
+        'data/version.json',
+        {
+            'version': 'v1.1.0-3-g439e52',
+            'abbrev_commit': '40aaf83',
+            'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
+            'commit_date': '2016-03-01T09:33:33+0000',
+            'commit_timestamp': '1456824813',
+            'deploy_date': '2016-03-02T11:33:45+0000',
+            'deploy_timestamp': '1456918425',
+        },
+    ),
+    (
+        {
+            'version': 'v1.1.0-3-g439e52',
+            'abbrev_commit': '40aaf83',
+            'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
+            'commit_date': '2016-03-01T09:33:33+0000',
+            'commit_timestamp': '1456824813',
+            'deploy_date': '2016-03-02T11:33:45+0000',
+            'deploy_timestamp': '1456918425',
+        },
+        'json',
+        'version',
+        'parameters.git',
+        'version.json',
+        'data/version_custom_section.json',
+        {
+            'parameters': {
+                'git': {
+                    'version': 'v1.1.0-3-g439e52',
+                    'abbrev_commit': '40aaf83',
+                    'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
+                    'commit_date': '2016-03-01T09:33:33+0000',
+                    'commit_timestamp': '1456824813',
+                    'deploy_date': '2016-03-02T11:33:45+0000',
+                    'deploy_timestamp': '1456918425',
+                }
+            }
+        }
     ),
     (
         {
@@ -114,7 +176,45 @@ def getFileContent(path, section=None, fileFormat=None):
         'version',
         'app_version',
         'version.yml',
-        'data/version.yml'
+        'data/version.yml',
+        {
+            'version': 'v1.1.0-3-g439e52',
+            'abbrev_commit': '40aaf83',
+            'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
+            'commit_date': '2016-03-01T09:33:33+0000',
+            'commit_timestamp': '1456824813',
+            'deploy_date': '2016-03-02T11:33:45+0000',
+            'deploy_timestamp': '1456918425',
+        },
+    ),
+    (
+        {
+            'version': 'v1.1.0-3-g439e52',
+            'abbrev_commit': '40aaf83',
+            'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
+            'commit_date': '2016-03-01T09:33:33+0000',
+            'commit_timestamp': '1456824813',
+            'deploy_date': '2016-03-02T11:33:45+0000',
+            'deploy_timestamp': '1456918425',
+        },
+        'yml',
+        'version',
+        'parameters.git',
+        'version.yml',
+        'data/version_custom_section.yml',
+        {
+            'parameters': {
+                'git': {
+                    'version': 'v1.1.0-3-g439e52',
+                    'abbrev_commit': '40aaf83',
+                    'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
+                    'commit_date': '2016-03-01T09:33:33+0000',
+                    'commit_timestamp': '1456824813',
+                    'deploy_date': '2016-03-02T11:33:45+0000',
+                    'deploy_timestamp': '1456918425',
+                }
+            }
+        },
     ),
     (
         {
@@ -130,15 +230,54 @@ def getFileContent(path, section=None, fileFormat=None):
         'version',
         'app_version',
         'version.xml',
-        'data/version.xml'
+        'data/version.xml',
+        {
+            'app_version': {
+                'version': 'v1.1.0-3-g439e52',
+                'abbrev_commit': '40aaf83',
+                'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
+                'commit_date': '2016-03-01T09:33:33+0000',
+                'commit_timestamp': '1456824813',
+                'deploy_date': '2016-03-02T11:33:45+0000',
+                'deploy_timestamp': '1456918425',
+            }
+        },
     ),
+    (
+        {
+            'version': 'v1.1.0-3-g439e52',
+            'abbrev_commit': '40aaf83',
+            'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
+            'commit_date': '2016-03-01T09:33:33+0000',
+            'commit_timestamp': '1456824813',
+            'deploy_date': '2016-03-02T11:33:45+0000',
+            'deploy_timestamp': '1456918425',
+        },
+        'xml',
+        'version',
+        'parameters.git',
+        'version.xml',
+        'data/version_custom_section.xml',
+        {
+            'parameters': {
+                'git': {
+                    'version': 'v1.1.0-3-g439e52',
+                    'abbrev_commit': '40aaf83',
+                    'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
+                    'commit_date': '2016-03-01T09:33:33+0000',
+                    'commit_timestamp': '1456824813',
+                    'deploy_date': '2016-03-02T11:33:45+0000',
+                    'deploy_timestamp': '1456918425',
+                }
+            }
+        },
+    )
 ])
-def test_dump(outputDir, data, dataFormat, target, section, expectedTarget, expectedFile):
+def test_dump(outputDir, data, dataFormat, target, section, expectedTarget, expectedFile,expectedData):
     appdumper = AppDumper()
 
     cwd = os.path.realpath(os.path.dirname(__file__))
-
     resultTarget = appdumper.dump(data, dataFormat, target, outputDir, section)
 
     assert outputDir+'/'+expectedTarget == resultTarget
-    assert data == getFileContent(cwd+'/'+expectedFile, section, dataFormat)
+    assert expectedData == getFileContent(cwd+'/'+expectedFile, section, dataFormat)

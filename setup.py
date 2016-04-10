@@ -89,7 +89,6 @@ setup(
         'pyyaml',
         'pytz',
         'xmltodict',
-        'lxml',
         'tzlocal'
     ],
 

@@ -78,6 +78,37 @@ To store git commit informations into a json file ::
 
 This will generate a version.json file in the current directory (if this directory is a git repository).
 
+Commit informations
+^^^^^^^^^^^^^^^^^^^
+
+* **full_commit** : Git SHA1 commit hash,
+
+  *e.g.: 40aaf83894b98898895d478f8b7cc4a866b1d62c*
+
+* **abbrev_commit** : Git SHA1 commit hash abbrev notation (x significant first characters),
+
+  *e.g.: 40aaf83*
+
+* **version** : result of the command ``git describe --tags --always``, see `git-describe <https://git-scm.com/docs/git-describe>`_,
+
+  *e.g.: v1.1.0-3-g439e52*
+
+* **commit_date** : Git commit date in `iso8601 <https://en.wikipedia.org/wiki/ISO_8601>`_ format,
+
+  *e.g.: 2016-03-01T09:33:33+0000*
+
+* **commit_timestamp** : Git commit date in timestamp format,
+
+  *e.g.: 1456824813*
+
+* **deploy_date** : current date (when running the tool) in `iso8601 <https://en.wikipedia.org/wiki/ISO_8601>`_ format,
+
+  *e.g.: 2016-03-02T11:33:45+0000*
+
+* **deploy_timestamp** : current date (when running the tool) in timestamp format,
+  *e.g.: 1456918425*
+
+
 File formats
 ^^^^^^^^^^^^
 

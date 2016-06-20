@@ -5,7 +5,7 @@ import argparse
 from git_app_version.git import Git
 from git_app_version.dumper import Dumper
 
-__version__ = '0.4.0'
+__version__ = '0.5.0'
 __DESCRIPTION__ = 'Get Git commit informations and store them in a INI/XML/YAML/JSON file.'
 
 def main():
@@ -31,8 +31,13 @@ def main():
 
         if args.verbose > 1 and not args.quiet :
             print('Git commit :')
-            for key,val in data.items():
-                print (key+' = '+val)
+            keys = data.keys()
+            keys.sort()
+            for key in keys:
+                try:
+                    print (key+' = '+data[key])
+                except TypeError:
+                    print (key+' = '+' '.join(data[key]))
 
         dumper = Dumper()
         dest = dumper.dump(data = data, format = args.format, target = args.output, cwd = args.repository, namespace=args.namespace)

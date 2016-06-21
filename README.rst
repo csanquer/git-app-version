@@ -90,6 +90,7 @@ Commit informations
   *e.g.: 40aaf83*
 
 * **version** : result of the command ``git describe --tags --always``, see `git-describe <https://git-scm.com/docs/git-describe>`_,
+  if no version is found, the abbrev commit will be used per default
 
   *e.g.: v1.1.0-3-g439e52*
 
@@ -101,13 +102,49 @@ Commit informations
 
   *e.g.: 1456824813*
 
+* **author_date** : Git author date in `iso8601 <https://en.wikipedia.org/wiki/ISO_8601>`_ format,
+
+  *e.g.: 2016-03-02T11:33:45+0000*
+
+* **author_timestamp** : Git author date in timestamp format,
+
+  *e.g.: 1456918425*
+
 * **deploy_date** : current date (when running the tool) in `iso8601 <https://en.wikipedia.org/wiki/ISO_8601>`_ format,
 
   *e.g.: 2016-03-02T11:33:45+0000*
 
 * **deploy_timestamp** : current date (when running the tool) in timestamp format,
+
   *e.g.: 1456918425*
 
+* **branches** : branches which the commit belongs,
+
+  *e.g.: ['master', 'develop']*
+
+* **top_branches** : branches where the commit is the HEAD commit,
+
+  *e.g.: ['master']*
+
+* **branches** : branches which the commit belongs,
+
+  *e.g.: ['master', 'develop']*
+
+* **committer_name** : Git committer name,
+
+  *e.g.: Paul Durand*
+
+* **committer_email** : Git committer email,
+
+  *e.g.: paul.durand@example.com*
+
+* **author_name** : Git author name,
+
+  *e.g.: Paul Durand*
+
+* **author_email** : Git author email,
+
+  *e.g.: paul.durand@example.com*
 
 File formats
 ^^^^^^^^^^^^
@@ -121,13 +158,26 @@ File formats
   result ::
 
         {
-          "commit_date": "2016-03-01T09:33:33+0000",
-          "full_commit": "40aaf83894b98898895d478f8b7cc4a866b1d62c",
           "version": "v1.1.0-3-g439e52",
-          "commit_timestamp": "1456824813",
-          "deploy_date": "2016-03-02T11:33:45+0000",
-          "deploy_timestamp": "1456918425",
-          "abbrev_commit": "40aaf83"
+          "full_commit": "40aaf83894b98898895d478f8b7cc4a866b1d62c",
+          "abbrev_commit": "40aaf83",
+          "branches": [
+            "develop",
+            "master"
+          ],
+          "top_branches": [
+            "master"
+          ],
+          "committer_email": "paul.durand@example.com",
+          "committer_name": "Paul Durand",
+          "author_name": "Paul Durand",
+          "author_email": "paul.durand@example.com",
+          "commit_date": "2015-09-05T16:14:16+0000",
+          "commit_timestamp": "1441469656",
+          "author_date": "2015-09-05T16:14:16+0000",
+          "author_timestamp": "1441469656",
+          "deploy_date": "2016-06-21T09:33:01+0000",
+          "deploy_timestamp": "1466501581"
         }
 
   with namespace ::
@@ -139,13 +189,26 @@ File formats
         {
           "git": {
             "infos": {
-              "commit_date": "2016-03-01T09:33:33+0000",
-              "full_commit": "40aaf83894b98898895d478f8b7cc4a866b1d62c",
               "version": "v1.1.0-3-g439e52",
-              "commit_timestamp": "1456824813",
-              "deploy_date": "2016-03-02T11:33:45+0000",
-              "deploy_timestamp": "1456918425",
-              "abbrev_commit": "40aaf83"
+              "full_commit": "40aaf83894b98898895d478f8b7cc4a866b1d62c",
+              "abbrev_commit": "40aaf83",
+              "branches": [
+                "develop",
+                "master"
+              ],
+              "top_branches": [
+                "master"
+              ],
+              "committer_email": "paul.durand@example.com",
+              "committer_name": "Paul Durand",
+              "author_name": "Paul Durand",
+              "author_email": "paul.durand@example.com",
+              "commit_date": "2015-09-05T16:14:16+0000",
+              "commit_timestamp": "1441469656",
+              "author_date": "2015-09-05T16:14:16+0000",
+              "author_timestamp": "1441469656",
+              "deploy_date": "2016-06-21T09:33:01+0000",
+              "deploy_timestamp": "1466501581"
             }
           }
         }
@@ -159,13 +222,24 @@ File formats
   result ::
 
         ---
-        'abbrev_commit': '40aaf83'
-        'commit_date': '2016-03-01T09:33:33+0000'
-        'commit_timestamp': '1456824813'
-        'deploy_date': '2016-03-02T11:33:45+0000'
-        'deploy_timestamp': '1456918425'
-        'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c'
         'version': 'v1.1.0-3-g439e52'
+        'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c'
+        'abbrev_commit': '40aaf83'
+        'committer_name': 'Paul Durand'
+        'committer_email': 'paul.durand@example.com'
+        'author_name': 'Paul Durand'
+        'author_email': 'paul.durand@example.com'
+        'commit_date': '2015-09-05T16:14:16+0000'
+        'commit_timestamp': '1441469656'
+        'author_date': '2015-09-05T16:14:16+0000'
+        'author_timestamp': '1441469656'
+        'deploy_date': '2016-06-21T09:32:57+0000'
+        'deploy_timestamp': '1466501577'
+        'branches':
+        - 'develop'
+        - 'master'
+        'top_branches':
+        - 'master'
 
   with namespace ::
 
@@ -176,13 +250,24 @@ File formats
         ---
         'git':
           'infos':
-            'abbrev_commit': '40aaf83'
-            'commit_date': '2016-03-01T09:33:33+0000'
-            'commit_timestamp': '1456824813'
-            'deploy_date': '2016-03-02T11:33:45+0000'
-            'deploy_timestamp': '1456918425'
-            'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c'
             'version': 'v1.1.0-3-g439e52'
+            'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c'
+            'abbrev_commit': '40aaf83'
+            'committer_name': 'Paul Durand'
+            'committer_email': 'paul.durand@example.com'
+            'author_name': 'Paul Durand'
+            'author_email': 'paul.durand@example.com'
+            'commit_date': '2015-09-05T16:14:16+0000'
+            'commit_timestamp': '1441469656'
+            'author_date': '2015-09-05T16:14:16+0000'
+            'author_timestamp': '1441469656'
+            'deploy_date': '2016-06-21T09:32:57+0000'
+            'deploy_timestamp': '1466501577'
+            'branches':
+            - 'develop'
+            - 'master'
+            'top_branches':
+            - 'master'
 * xml ::
 
   with default namespace ::
@@ -193,13 +278,22 @@ File formats
 
         <?xml version='1.0' encoding='UTF-8'?>
         <app_version>
-          <full_commit>40aaf83894b98898895d478f8b7cc4a866b1d62c</full_commit>
-          <commit_timestamp>1456824813</commit_timestamp>
-          <abbrev_commit>40aaf83</abbrev_commit>
           <version>v1.1.0-3-g439e52</version>
-          <deploy_timestamp>1456918425</deploy_timestamp>
-          <commit_date>2016-03-01T09:33:33+0000</commit_date>
-          <deploy_date>2016-03-02T11:33:45+0000</deploy_date>
+          <full_commit>40aaf83894b98898895d478f8b7cc4a866b1d62c</full_commit>
+          <abbrev_commit>40aaf83</abbrev_commit>
+          <commit_date>2015-09-05T16:14:16+0000</commit_date>
+          <commit_timestamp>1441469656</commit_timestamp>
+          <author_date>2015-09-05T16:14:16+0000</author_date>
+          <author_timestamp>1441469656</author_timestamp>
+          <deploy_date>2016-06-21T09:32:53+0000</deploy_date>
+          <deploy_timestamp>1466501573</deploy_timestamp>
+          <committer_name>Paul Durand</committer_name>
+          <committer_email>paul.durand@example.com</committer_email>
+          <author_name>Paul Durand</author_name>
+          <author_email>paul.durand@example.com</author_email>
+          <branches>develop</branches>
+          <branches>master</branches>
+          <top_branches>master</top_branches>
         </app_version>
 
   with namespace ::
@@ -211,13 +305,22 @@ File formats
         <?xml version='1.0' encoding='UTF-8'?>
         <git>
           <infos>
-            <full_commit>40aaf83894b98898895d478f8b7cc4a866b1d62c</full_commit>
-            <commit_timestamp>1456824813</commit_timestamp>
-            <abbrev_commit>40aaf83</abbrev_commit>
             <version>v1.1.0-3-g439e52</version>
-            <deploy_timestamp>1456918425</deploy_timestamp>
-            <commit_date>2016-03-01T09:33:33+0000</commit_date>
-            <deploy_date>2016-03-02T11:33:45+0000</deploy_date>
+            <full_commit>40aaf83894b98898895d478f8b7cc4a866b1d62c</full_commit>
+            <abbrev_commit>40aaf83</abbrev_commit>
+            <commit_date>2015-09-05T16:14:16+0000</commit_date>
+            <commit_timestamp>1441469656</commit_timestamp>
+            <author_date>2015-09-05T16:14:16+0000</author_date>
+            <author_timestamp>1441469656</author_timestamp>
+            <deploy_date>2016-06-21T09:32:53+0000</deploy_date>
+            <deploy_timestamp>1466501573</deploy_timestamp>
+            <committer_name>Paul Durand</committer_name>
+            <committer_email>paul.durand@example.com</committer_email>
+            <author_name>Paul Durand</author_name>
+            <author_email>paul.durand@example.com</author_email>
+            <branches>develop</branches>
+            <branches>master</branches>
+            <top_branches>master</top_branches>
           </infos>
         </git>
 
@@ -231,13 +334,22 @@ File formats
   result ::
 
         [app_version]
-        commit_date = 2016-03-01T09:33:33+0000
-        full_commit = 40aaf83894b98898895d478f8b7cc4a866b1d62c
         version = v1.1.0-3-g439e52
+        full_commit = 40aaf83894b98898895d478f8b7cc4a866b1d62c
+        abbrev_commit = 40aaf83
+        commit_date = 2016-03-01T09:33:33+0000
         commit_timestamp = 1456824813
+        author_date = 2016-03-01T09:33:33+0000
+        author_timestamp = 1456824813
         deploy_date = 2016-03-02T11:33:45+0000
         deploy_timestamp = 1456918425
-        abbrev_commit = 40aaf83
+        author_name = Paul Durand
+        author_email = paul.durand@example.com
+        committer_name = Paul Durand
+        committer_email = paul.durand@example.com
+        top_branches = ['master']
+        branches = ['master','develop']
+
 
   with namespace ::
 
@@ -246,13 +358,21 @@ File formats
   result ::
 
         [git.infos]
-        commit_date = 2016-03-01T09:33:33+0000
-        full_commit = 40aaf83894b98898895d478f8b7cc4a866b1d62c
         version = v1.1.0-3-g439e52
+        full_commit = 40aaf83894b98898895d478f8b7cc4a866b1d62c
+        abbrev_commit = 40aaf83
+        commit_date = 2016-03-01T09:33:33+0000
         commit_timestamp = 1456824813
+        author_date = 2016-03-01T09:33:33+0000
+        author_timestamp = 1456824813
         deploy_date = 2016-03-02T11:33:45+0000
         deploy_timestamp = 1456918425
-        abbrev_commit = 40aaf83
+        author_name = Paul Durand
+        author_email = paul.durand@example.com
+        committer_name = Paul Durand
+        committer_email = paul.durand@example.com
+        top_branches = ['master']
+        branches = ['master','develop']
 
 Licensing
 ---------

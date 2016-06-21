@@ -199,6 +199,31 @@ def getFileContent(path, section=None, fileFormat=None):
         },
         'yml',
         'version',
+        '',
+        'version.yml',
+        'data/version.yml',
+        {
+            'version': 'v1.1.0-3-g439e52',
+            'abbrev_commit': '40aaf83',
+            'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
+            'commit_date': '2016-03-01T09:33:33+0000',
+            'commit_timestamp': '1456824813',
+            'deploy_date': '2016-03-02T11:33:45+0000',
+            'deploy_timestamp': '1456918425',
+        },
+    ),
+    (
+        {
+            'version': 'v1.1.0-3-g439e52',
+            'abbrev_commit': '40aaf83',
+            'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
+            'commit_date': '2016-03-01T09:33:33+0000',
+            'commit_timestamp': '1456824813',
+            'deploy_date': '2016-03-02T11:33:45+0000',
+            'deploy_timestamp': '1456918425',
+        },
+        'yml',
+        'version',
         'parameters.git',
         'version.yml',
         'data/version_custom_section.yml',
@@ -215,6 +240,15 @@ def getFileContent(path, section=None, fileFormat=None):
                 }
             }
         },
+    ),
+    (
+        {},
+        'yml',
+        'version',
+        '',
+        'version.yml',
+        'data/empty.yml',
+        None,
     ),
     (
         {

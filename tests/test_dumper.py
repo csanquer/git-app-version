@@ -6,6 +6,7 @@ import os
 import shutil
 from pprint import pprint
 
+from git_app_version.helper.pyversion import PY3
 from git_app_version.dumper import Dumper as AppDumper
 import json
 import xmltodict
@@ -39,7 +40,7 @@ def getFileContent(path, section=None, fileFormat=None):
             return yaml.load(f)
     elif fileFormat == 'xml':
         with open(path, 'r') as f:
-            return xmltodict.parse(f.read())
+            return xmltodict.parse(f.read(), dict_constructor=dict)
     elif fileFormat == 'ini':
         config = configparser.RawConfigParser()
         config.read(path)
@@ -47,7 +48,10 @@ def getFileContent(path, section=None, fileFormat=None):
         data = {}
         if config.has_section(section):
             for k,v in config.items(section):
-                data[k] = v
+                if PY3:
+                    data[k] = v
+                else:
+                    data[k] = v.decode('utf-8')
 
         return data
     elif fileFormat == 'json':
@@ -57,7 +61,7 @@ def getFileContent(path, section=None, fileFormat=None):
         with open(path, 'r') as f:
             return f.read()
 
-@pytest.mark.parametrize("data,dataFormat,target,section,expectedTarget,expectedFile,expectedData", [
+@pytest.mark.parametrize("data,dataFormat,target,section,expectedTarget,expectedData", [
     (
         {
             'version': 'v1.1.0-3-g439e52',
@@ -67,12 +71,12 @@ def getFileContent(path, section=None, fileFormat=None):
             'commit_timestamp': '1456824813',
             'deploy_date': '2016-03-02T11:33:45+0000',
             'deploy_timestamp': '1456918425',
+            'branches': ['master', 'feature/my_feature']
         },
         'ini',
         'version',
         'app_version',
         'version.ini',
-        'data/version.ini',
         {
             'version': 'v1.1.0-3-g439e52',
             'abbrev_commit': '40aaf83',
@@ -81,6 +85,7 @@ def getFileContent(path, section=None, fileFormat=None):
             'commit_timestamp': '1456824813',
             'deploy_date': '2016-03-02T11:33:45+0000',
             'deploy_timestamp': '1456918425',
+            'branches': "['master', 'feature/my_feature']"
         },
     ),
     (
@@ -88,6 +93,7 @@ def getFileContent(path, section=None, fileFormat=None):
             'version': 'v1.1.0-3-g439e52',
             'abbrev_commit': '40aaf83',
             'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
+            'author_name': u'Se\u0301bastien Dupond',
             'commit_date': '2016-03-01T09:33:33+0000',
             'commit_timestamp': '1456824813',
             'deploy_date': '2016-03-02T11:33:45+0000',
@@ -97,11 +103,11 @@ def getFileContent(path, section=None, fileFormat=None):
         'version',
         'parameters.git',
         'version.ini',
-        'data/version_custom_section.ini',
         {
             'version': 'v1.1.0-3-g439e52',
             'abbrev_commit': '40aaf83',
             'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
+            'author_name': u'Se\u0301bastien Dupond',
             'commit_date': '2016-03-01T09:33:33+0000',
             'commit_timestamp': '1456824813',
             'deploy_date': '2016-03-02T11:33:45+0000',
@@ -120,9 +126,8 @@ def getFileContent(path, section=None, fileFormat=None):
         },
         'json',
         'version',
-        'app_version',
+        '',
         'version.json',
-        'data/version.json',
         {
             'version': 'v1.1.0-3-g439e52',
             'abbrev_commit': '40aaf83',
@@ -138,6 +143,7 @@ def getFileContent(path, section=None, fileFormat=None):
             'version': 'v1.1.0-3-g439e52',
             'abbrev_commit': '40aaf83',
             'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
+            'author_name': u'Se\u0301bastien Dupond',
             'commit_date': '2016-03-01T09:33:33+0000',
             'commit_timestamp': '1456824813',
             'deploy_date': '2016-03-02T11:33:45+0000',
@@ -147,13 +153,13 @@ def getFileContent(path, section=None, fileFormat=None):
         'version',
         'parameters.git',
         'version.json',
-        'data/version_custom_section.json',
         {
             'parameters': {
                 'git': {
                     'version': 'v1.1.0-3-g439e52',
                     'abbrev_commit': '40aaf83',
                     'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
+                    'author_name': u'Se\u0301bastien Dupond',
                     'commit_date': '2016-03-01T09:33:33+0000',
                     'commit_timestamp': '1456824813',
                     'deploy_date': '2016-03-02T11:33:45+0000',
@@ -174,34 +180,8 @@ def getFileContent(path, section=None, fileFormat=None):
         },
         'yml',
         'version',
-        'app_version',
-        'version.yml',
-        'data/version.yml',
-        {
-            'version': 'v1.1.0-3-g439e52',
-            'abbrev_commit': '40aaf83',
-            'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
-            'commit_date': '2016-03-01T09:33:33+0000',
-            'commit_timestamp': '1456824813',
-            'deploy_date': '2016-03-02T11:33:45+0000',
-            'deploy_timestamp': '1456918425',
-        },
-    ),
-    (
-        {
-            'version': 'v1.1.0-3-g439e52',
-            'abbrev_commit': '40aaf83',
-            'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
-            'commit_date': '2016-03-01T09:33:33+0000',
-            'commit_timestamp': '1456824813',
-            'deploy_date': '2016-03-02T11:33:45+0000',
-            'deploy_timestamp': '1456918425',
-        },
-        'yml',
-        'version',
         '',
         'version.yml',
-        'data/version.yml',
         {
             'version': 'v1.1.0-3-g439e52',
             'abbrev_commit': '40aaf83',
@@ -217,6 +197,7 @@ def getFileContent(path, section=None, fileFormat=None):
             'version': 'v1.1.0-3-g439e52',
             'abbrev_commit': '40aaf83',
             'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
+            'author_name': u'Se\u0301bastien Dupond',
             'commit_date': '2016-03-01T09:33:33+0000',
             'commit_timestamp': '1456824813',
             'deploy_date': '2016-03-02T11:33:45+0000',
@@ -226,13 +207,13 @@ def getFileContent(path, section=None, fileFormat=None):
         'version',
         'parameters.git',
         'version.yml',
-        'data/version_custom_section.yml',
         {
             'parameters': {
                 'git': {
                     'version': 'v1.1.0-3-g439e52',
                     'abbrev_commit': '40aaf83',
                     'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
+                    'author_name': u'Se\u0301bastien Dupond',
                     'commit_date': '2016-03-01T09:33:33+0000',
                     'commit_timestamp': '1456824813',
                     'deploy_date': '2016-03-02T11:33:45+0000',
@@ -247,7 +228,6 @@ def getFileContent(path, section=None, fileFormat=None):
         'version',
         '',
         'version.yml',
-        'data/empty.yml',
         None,
     ),
     (
@@ -262,9 +242,8 @@ def getFileContent(path, section=None, fileFormat=None):
         },
         'xml',
         'version',
-        'app_version',
+        '',
         'version.xml',
-        'data/version.xml',
         {
             'app_version': {
                 'version': 'v1.1.0-3-g439e52',
@@ -282,6 +261,7 @@ def getFileContent(path, section=None, fileFormat=None):
             'version': 'v1.1.0-3-g439e52',
             'abbrev_commit': '40aaf83',
             'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
+            'author_name': u'Se\u0301bastien Dupond',
             'commit_date': '2016-03-01T09:33:33+0000',
             'commit_timestamp': '1456824813',
             'deploy_date': '2016-03-02T11:33:45+0000',
@@ -291,13 +271,13 @@ def getFileContent(path, section=None, fileFormat=None):
         'version',
         'parameters.git',
         'version.xml',
-        'data/version_custom_section.xml',
         {
             'parameters': {
                 'git': {
                     'version': 'v1.1.0-3-g439e52',
                     'abbrev_commit': '40aaf83',
                     'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
+                    'author_name': u'Se\u0301bastien Dupond',
                     'commit_date': '2016-03-01T09:33:33+0000',
                     'commit_timestamp': '1456824813',
                     'deploy_date': '2016-03-02T11:33:45+0000',
@@ -307,11 +287,11 @@ def getFileContent(path, section=None, fileFormat=None):
         },
     )
 ])
-def test_dump(outputDir, data, dataFormat, target, section, expectedTarget, expectedFile,expectedData):
+def test_dump(outputDir, data, dataFormat, target, section, expectedTarget, expectedData):
     appdumper = AppDumper()
 
     cwd = os.path.realpath(os.path.dirname(__file__))
     resultTarget = appdumper.dump(data, dataFormat, target, outputDir, section)
 
     assert outputDir+'/'+expectedTarget == resultTarget
-    assert expectedData == getFileContent(cwd+'/'+expectedFile, section, dataFormat)
+    assert expectedData == getFileContent(outputDir+'/'+expectedTarget, section, dataFormat)

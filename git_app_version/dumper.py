@@ -3,6 +3,7 @@
 import os
 import json
 import xmltodict
+from collections import Iterable
 
 try:
     import configparser
@@ -14,6 +15,8 @@ try:
     from yaml import CDumper as Dumper
 except ImportError:
     from yaml import Dumper
+
+from git_app_version.helper.pyversion import PY3
 
 class Dumper(object):
 
@@ -54,14 +57,28 @@ class Dumper(object):
 
         return toDump
 
+    def __encode(self, input, encoding='utf-8'):
+        if isinstance(input, dict):
+            return {self.__encode(key, encoding): self.__encode(value, encoding) for key, value in input.iteritems()}
+        elif isinstance(input, list):
+            return [self.__encode(element, encoding) for element in input]
+        elif isinstance(input, unicode):
+            return input.encode(encoding)
+        else:
+            return input
+
     def dumpIni(self, data, target, namespace=None):
         target = target+'.ini'
         namespace = 'app_version' if namespace is None or namespace == '' else namespace
 
         ini = configparser.RawConfigParser()
         ini.add_section(namespace)
+
         for key,val in data.items():
-            ini.set(namespace, key, val)
+            if PY3:
+                ini.set(namespace, key, val)
+            else:
+                ini.set(namespace, key, self.__encode(val))
 
         with open(target, 'w') as f:
             ini.write(f)
@@ -74,7 +91,10 @@ class Dumper(object):
 
         with open(target, 'w') as f:
             xml = xmltodict.unparse(self.__createInfosToDump(data, namespace), encoding='utf-8', pretty=True, indent='  ')
-            f.write(xml)
+            if PY3:
+                f.write(xml)
+            else:
+                f.write(xml.encode('utf-8'))
 
             return target
 
@@ -95,7 +115,7 @@ class Dumper(object):
             if not data :
                 f.write("---\n")
             else :
-                yaml.dump(
+                yaml.safe_dump(
                     self.__createInfosToDump(data, namespace),
                     f,
                     default_flow_style=False,

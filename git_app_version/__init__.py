@@ -5,7 +5,7 @@ import argparse
 from git_app_version.git import Git
 from git_app_version.dumper import Dumper
 
-__version__ = '0.5.0'
+__version__ = '0.5.1'
 __DESCRIPTION__ = 'Get Git commit informations and store them in a INI/XML/YAML/JSON file.'
 
 def main():

@@ -1,0 +1,15 @@
+---
+checks:
+    python:
+        code_rating: true
+        duplicate_code: true
+filter:
+    excluded_paths:
+        - '*/test/*'
+
+tools:
+    external_code_coverage:
+        timeout: 600
+    pylint:
+        python_version: 3
+        config_file: '.pylintrc'

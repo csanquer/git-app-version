@@ -24,6 +24,7 @@ cache: pip
 
 install:
   - pip install -r dev-requirements.txt
+  - pip install scrutinizer-ocular
 
 script:
   - coverage run -m py.test
@@ -32,6 +33,7 @@ after_success:
   - coverage report -m
   - coverage html
   - coverage xml
+  - ocular --data-file ".coverage" --config-file ".coveragerc"
 
 deploy:
   provider: pypi

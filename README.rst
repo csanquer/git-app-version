@@ -3,9 +3,13 @@ Git App Version
 ===============
 
 .. image:: https://badge.fury.io/py/git-app-version.svg
-   :target: https://badge.fury.io/py/git-app-version
+    :target: https://badge.fury.io/py/git-app-version
 .. image:: https://travis-ci.org/csanquer/git-app-version.svg?branch=master
     :target: https://travis-ci.org/csanquer/git-app-version
+.. image:: https://scrutinizer-ci.com/g/csanquer/git-app-version/badges/quality-score.png?b=master
+    :target: https://scrutinizer-ci.com/g/csanquer/git-app-version/?branch=master
+.. image:: https://scrutinizer-ci.com/g/csanquer/git-app-version/badges/coverage.png?b=master
+    :target: https://scrutinizer-ci.com/g/csanquer/git-app-version/?branch=master
 
 A CLI tool written in Python to fetch Git commit informations and store them in an INI/XML/YAML/JSON file.
 

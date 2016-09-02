@@ -136,10 +136,6 @@ Commit informations
 
   *e.g.: ['master']*
 
-* **branches** : branches which the commit belongs,
-
-  *e.g.: ['master', 'develop']*
-
 * **committer_name** : Git committer name,
 
   *e.g.: Paul Durand*

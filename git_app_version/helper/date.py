@@ -1,28 +1,51 @@
 # -*- coding: utf-8 -*-
+"""
+    Date time helpers
 
+    to convert easily date to ISO format and timestamp
+"""
 from datetime import datetime
 import iso8601
 import pytz
 
+
 def utcnow():
+    """
+        return current UTC date
+    """
     return datetime.now(pytz.utc)
 
-def dateTimeFromIso8601(isodate, utc=False):
-    dt = iso8601.parse_date(isodate)
-    if utc:
-        return dt.astimezone(pytz.utc)
 
-    return dt
-
-def iso8601FromDateTime(dt):
+def datetime_from_iso8601(isodate, utc=False):
+    """
+        convert ISO 8601 date string to datetime
+    """
     try:
-        return dt.strftime('%Y-%m-%dT%H:%M:%S%z')
-    except Exception as exc:
+        date = iso8601.parse_date(isodate)
+        if utc:
+            return date.astimezone(pytz.utc)
+
+        return date
+    except (AttributeError, iso8601.ParseError):
+        return None
+
+
+def iso8601_from_datetime(date):
+    """
+        convert datetime to ISO 8601 date string
+    """
+    try:
+        return date.strftime('%Y-%m-%dT%H:%M:%S%z')
+    except (AttributeError, iso8601.ParseError):
         return ''
 
-def timestampFromDateTime(dt):
+
+def timestamp_from_datetime(date):
+    """
+        convert datetime to timestamp (UTC)
+    """
     try:
-        utcDt  = dt.replace(tzinfo=None) - dt.utcoffset()
-        return str(int((utcDt - datetime(1970, 1, 1)).total_seconds()))
-    except Exception as exc:
+        utc_date = date.replace(tzinfo=None) - date.utcoffset()
+        return str(int((utc_date - datetime(1970, 1, 1)).total_seconds()))
+    except (AttributeError, iso8601.ParseError):
         return ''

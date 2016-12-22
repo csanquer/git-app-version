@@ -9,28 +9,31 @@ https://github.com/pypa/sampleproject
 from setuptools import setup, find_packages
 # To use a consistent encoding
 from codecs import open
-from os import path
+import os
+import re
 
 from setuptools import setup
 
-from git_app_version import __version__
+here = os.path.abspath(os.path.dirname(__file__))
 
-here = path.abspath(path.dirname(__file__))
+def read(*parts):
+    with open(os.path.join(here, *parts), 'r', encoding='utf-8') as f:
+        return f.read()
 
-# Get the long description from the README file
-with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
-    long_description = f.read()
+def find_version(*file_paths):
+    version_file = read(*file_paths)
+    version_match = re.search(r"^__version__ = ['\"]([^'\"]*)['\"]",
+                              version_file, re.M)
+    if version_match:
+        return version_match.group(1)
+    raise RuntimeError("Unable to find version string.")
 
 setup(
     name='git-app-version',
-
-    # Versions should comply with PEP440.  For a discussion on single-sourcing
-    # the version across setup.py and the project code, see
-    # https://packaging.python.org/en/latest/single_source_version.html
-    version=__version__,
+    version=find_version("git_app_version", "version.py"),
 
     description='CLI tool to get Git commit informations and store them in a config file',
-    long_description=long_description,
+    long_description=read('README.rst'),
 
     # The project's main homepage.
     url='https://github.com/csanquer/git-app-version',
@@ -98,7 +101,13 @@ setup(
     # $ pip install -e .[dev,test]
     extras_require={
         'dev': ['check-manifest'],
-        'test': ['coverage','pytest', 'mock', 'tox'],
+        'test': [
+            'coverage',
+            'pytest',
+            'pylint',
+            'mock',
+            'tox'
+        ],
     },
 
     # If there are data files included in your packages that need to be
@@ -119,7 +128,7 @@ setup(
     # pip to create the appropriate form of executable for the target platform.
     entry_points={
         'console_scripts': [
-            'git-app-version=git_app_version:main',
+            'git-app-version=git_app_version.__main__:main',
         ],
     },
 )

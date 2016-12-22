@@ -19,3 +19,6 @@ trim_trailing_whitespace = false
 
 [Makefile]
 indent_style = tab
+
+[VERSION]
+insert_final_newline = false

@@ -4,16 +4,19 @@ python:
   - '3.3'
   - '3.4'
   - '3.5'
+  - '3.6'
   - '3.5-dev'
+  - '3.6-dev'
   - nightly
   - pypy
-  # - pypy3
+  - pypy3
 
 matrix:
   allow_failures:
     - python: '3.5-dev'
+    - python: '3.6-dev'
     - python: 'nightly'
-    # - python: pypy3
+    - python: pypy3
 
 addons:
   apt:
@@ -23,7 +26,7 @@ addons:
 cache: pip
 
 install:
-  - pip install -r dev-requirements.txt
+  - pip install -r requirements-dev.txt
   - pip install scrutinizer-ocular
 
 script:

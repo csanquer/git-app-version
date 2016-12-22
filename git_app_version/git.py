@@ -1,114 +1,151 @@
 # -*- coding: utf-8 -*-
-
-from git_app_version.helper.process import outputCommand, callCommand
-import git_app_version.helper.date as datehelper
+"""
+    Git manipulation
+"""
 import re
+from git_app_version.helper.process import output_command, call_command
+import git_app_version.helper.date as datehelper
+
 
 class Git(object):
-    def isGitRepository(self, cwd=None):
-        return callCommand(["git", "rev-parse"], cwd=cwd) == 0
 
-    def getDeployDate(self):
+    def is_git_repo(self, cwd=None):
+        return call_command(["git", "rev-parse"], cwd=cwd) == 0
+
+    def get_deploy_date(self):
         return datehelper.utcnow()
 
-    def getVersion(self, commit = 'HEAD', default=None, cwd=None):
-        version = outputCommand(["git", "describe", "--tag", "--always", commit], cwd=cwd).strip()
+    def get_version(self, commit='HEAD', default=None, cwd=None):
+        version = output_command(
+            ["git", "describe", "--tag", "--always", commit], cwd=cwd).strip()
         if version == '' or version is None:
             if not default:
-                 default = self.getAbbrevCommit(commit, cwd=cwd)
+                default = self.get_abbrev_commit(commit, cwd=cwd)
 
             version = default
 
         return version
 
-    def getBranches(self, commit = 'HEAD', cwd=None):
-        rawBranches = outputCommand(["git", "branch", "--no-color", "--remote","--contains="+commit], cwd=cwd).splitlines()
+    def get_branches(self, commit='HEAD', cwd=None):
+        raw_branches = output_command(["git",
+                                       "branch",
+                                       "--no-color",
+                                       "--remote",
+                                       "--contains=" + commit],
+                                      cwd=cwd).splitlines()
 
-        regexPoint = re.compile(r'->') # remove git reference pointing
+        regex_point = re.compile(r'->')  # remove git reference pointing
 
         branches = []
-        for rawBranch in rawBranches:
-            branch = rawBranch.strip()
-            match = regexPoint.search(branch)
-            if not match :
+        for raw_branch in raw_branches:
+            branch = raw_branch.strip()
+            match = regex_point.search(branch)
+            if not match:
                 branches.append(branch)
 
         return branches
 
-    def getTopBranches(self, branches = [], abbrevCommit = None, cwd=None):
-        topBranches = []
-        for branch in branches :
-            if abbrevCommit == self.getAbbrevCommit(branch, cwd=cwd):
-                topBranches.append(branch)
+    def get_top_branches(self, branches=None, abbrev_commit=None, cwd=None):
+        top_branch = []
 
-        return topBranches
+        if branches:
+            for branch in branches:
+                if abbrev_commit == self.get_abbrev_commit(branch, cwd=cwd):
+                    top_branch.append(branch)
 
-    def removeRemotePrefix(self, branches):
-        regexRemote = re.compile(r'^[^/]+/') # remove git remote prefix
+        return top_branch
 
-        cleanBranches = []
-        for branch in branches :
-            cleanBranches.append(regexRemote.sub('', branch))
+    def remove_remote_prefix(self, branches):
+        regex_remote = re.compile(r'^[^/]+/')  # remove git remote prefix
 
-        return cleanBranches
+        clean_branches = []
+        for branch in branches:
+            clean_branches.append(regex_remote.sub('', branch))
 
-    def getCommitterName(self, commit = 'HEAD', cwd=None):
-        return self._getLogField(field='cn', commit=commit, cwd=cwd)
+        return clean_branches
 
-    def getCommitterEmail(self, commit = 'HEAD', cwd=None):
-        return self._getLogField(field='ce', commit=commit, cwd=cwd)
+    def get_committer_name(self, commit='HEAD', cwd=None):
+        return self._get_log_field(field='cn', commit=commit, cwd=cwd)
 
-    def getAuthorName(self, commit = 'HEAD', cwd=None):
-        return self._getLogField(field='an', commit=commit, cwd=cwd)
+    def get_committer_email(self, commit='HEAD', cwd=None):
+        return self._get_log_field(field='ce', commit=commit, cwd=cwd)
 
-    def getAuthorEmail(self, commit = 'HEAD', cwd=None):
-        return self._getLogField(field='ae', commit=commit, cwd=cwd)
+    def get_author_name(self, commit='HEAD', cwd=None):
+        return self._get_log_field(field='an', commit=commit, cwd=cwd)
 
-    def _getLogField(self, field, commit = 'HEAD', cwd=None):
-        return outputCommand(["git", "log", "-1", "--pretty=tformat:%"+field, "--no-color", commit], cwd=cwd).strip()
+    def get_author_email(self, commit='HEAD', cwd=None):
+        return self._get_log_field(field='ae', commit=commit, cwd=cwd)
 
-    def getCommitDate(self, commit = 'HEAD', cwd=None):
-        return self._getDate(field='ci', commit=commit, cwd=cwd)
+    def _get_log_field(self, field, commit='HEAD', cwd=None):
+        return output_command(["git",
+                               "log",
+                               "-1",
+                               "--pretty=tformat:%" + field,
+                               "--no-color",
+                               commit],
+                              cwd=cwd).strip()
 
-    def getAuthorDate(self, commit = 'HEAD', cwd=None):
-        return self._getDate(field='ai', commit=commit, cwd=cwd)
+    def get_commit_date(self, commit='HEAD', cwd=None):
+        return self._get_date(field='ci', commit=commit, cwd=cwd)
 
-    def _getDate(self, field, commit = 'HEAD', cwd=None):
-        isodate = outputCommand(["git", "log", "-1", "--pretty=tformat:%"+field, "--no-color", "--date=local", commit], cwd=cwd).strip().replace(' ', 'T', 1).replace(' ', '')
-        try:
-            return datehelper.dateTimeFromIso8601(isodate, utc=True)
-        except Exception as exc:
-            return None
+    def get_author_date(self, commit='HEAD', cwd=None):
+        return self._get_date(field='ai', commit=commit, cwd=cwd)
 
-    def getFullCommit(self, commit = 'HEAD', cwd=None):
-        return outputCommand(["git", "rev-list", "--max-count=1", "--no-abbrev-commit", commit], cwd=cwd).strip()
+    def _get_date(self, field, commit='HEAD', cwd=None):
+        isodate = output_command(["git",
+                                  "log",
+                                  "-1",
+                                  "--pretty=tformat:%" + field,
+                                  "--no-color",
+                                  "--date=local",
+                                  commit],
+                                 cwd=cwd).strip().replace(' ',
+                                                          'T',
+                                                          1).replace(' ',
+                                                                     '')
 
-    def getAbbrevCommit(self, commit = 'HEAD', cwd=None):
-        return outputCommand(["git", "rev-list", "--max-count=1", "--abbrev-commit", commit], cwd=cwd).strip()
+        return datehelper.datetime_from_iso8601(isodate, utc=True)
 
-    def getInfos(self, commit = 'HEAD', cwd=None):
-        deployDate = self.getDeployDate()
-        abbrevCommit = self.getAbbrevCommit(commit, cwd=cwd)
-        commitDate = self.getCommitDate(commit, cwd=cwd)
-        authorDate = self.getAuthorDate(commit, cwd=cwd)
+    def get_full_commit(self, commit='HEAD', cwd=None):
+        return output_command(["git",
+                               "rev-list",
+                               "--max-count=1",
+                               "--no-abbrev-commit",
+                               commit],
+                              cwd=cwd).strip()
 
-        branches = self.getBranches(commit, cwd=cwd)
-        topBranches = self.getTopBranches(branches=branches, abbrevCommit=abbrevCommit, cwd=cwd)
+    def get_abbrev_commit(self, commit='HEAD', cwd=None):
+        return output_command(["git",
+                               "rev-list",
+                               "--max-count=1",
+                               "--abbrev-commit",
+                               commit],
+                              cwd=cwd).strip()
+
+    def get_infos(self, commit='HEAD', cwd=None):
+        deploy_date = self.get_deploy_date()
+        abbrev_commit = self.get_abbrev_commit(commit, cwd=cwd)
+        commit_date = self.get_commit_date(commit, cwd=cwd)
+        author_date = self.get_author_date(commit, cwd=cwd)
+
+        branches = self.get_branches(commit, cwd=cwd)
+        top_branch = self.get_top_branches(
+            branches=branches, abbrev_commit=abbrev_commit, cwd=cwd)
 
         return {
-            'branches': self.removeRemotePrefix(branches),
-            'top_branches': self.removeRemotePrefix(topBranches),
-            'version': self.getVersion(commit, default=abbrevCommit, cwd=cwd),
-            'abbrev_commit': abbrevCommit,
-            'full_commit': self.getFullCommit(commit, cwd=cwd),
-            'author_name': self.getAuthorName(commit, cwd=cwd),
-            'author_email': self.getAuthorEmail(commit, cwd=cwd),
-            'committer_name': self.getCommitterName(commit, cwd=cwd),
-            'committer_email': self.getCommitterEmail(commit, cwd=cwd),
-            'commit_date': datehelper.iso8601FromDateTime(commitDate),
-            'commit_timestamp': datehelper.timestampFromDateTime(commitDate),
-            'author_date': datehelper.iso8601FromDateTime(authorDate),
-            'author_timestamp': datehelper.timestampFromDateTime(authorDate),
-            'deploy_date': datehelper.iso8601FromDateTime(deployDate),
-            'deploy_timestamp': datehelper.timestampFromDateTime(deployDate),
+            'branches': self.remove_remote_prefix(branches),
+            'top_branches': self.remove_remote_prefix(top_branch),
+            'version': self.get_version(commit, default=abbrev_commit, cwd=cwd),
+            'abbrev_commit': abbrev_commit,
+            'full_commit': self.get_full_commit(commit, cwd=cwd),
+            'author_name': self.get_author_name(commit, cwd=cwd),
+            'author_email': self.get_author_email(commit, cwd=cwd),
+            'committer_name': self.get_committer_name(commit, cwd=cwd),
+            'committer_email': self.get_committer_email(commit, cwd=cwd),
+            'commit_date': datehelper.iso8601_from_datetime(commit_date),
+            'commit_timestamp': datehelper.timestamp_from_datetime(commit_date),
+            'author_date': datehelper.iso8601_from_datetime(author_date),
+            'author_timestamp': datehelper.timestamp_from_datetime(author_date),
+            'deploy_date': datehelper.iso8601_from_datetime(deploy_date),
+            'deploy_timestamp': datehelper.timestamp_from_datetime(deploy_date),
         }

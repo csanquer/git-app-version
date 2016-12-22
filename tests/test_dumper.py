@@ -7,14 +7,18 @@ import shutil
 from pprint import pprint
 
 from git_app_version.helper.pyversion import PY3
-from git_app_version.dumper import Dumper as AppDumper
+from git_app_version.dumper import FileDumper as AppDumper
 import json
 import xmltodict
 
+# import configparser
+
+# from backports import configparser
+#
 try:
-    import configparser
-except ImportError:
     import ConfigParser as configparser
+except ImportError:
+    import configparser
 
 import yaml
 try:
@@ -22,10 +26,8 @@ try:
 except ImportError:
     from yaml import Loader,Dumper
 
-from pprint import pprint,pformat
-
 @pytest.fixture
-def outputDir():
+def output_dir():
     cwd = os.path.realpath(os.path.dirname(__file__))
     path = cwd+'/output'
     if os.path.exists(path):
@@ -34,7 +36,7 @@ def outputDir():
 
     return path
 
-def getFileContent(path, section=None, fileFormat=None):
+def get_file_content(path, section=None, fileFormat=None):
     if fileFormat == 'yml' or fileFormat == 'yaml':
         with open(path, 'r') as f:
             return yaml.load(f)
@@ -61,12 +63,13 @@ def getFileContent(path, section=None, fileFormat=None):
         with open(path, 'r') as f:
             return f.read()
 
-@pytest.mark.parametrize("data,dataFormat,target,section,expectedTarget,expectedData", [
+@pytest.mark.parametrize("data,data_format,target,section,expected_target,expected_data", [
     (
         {
             'version': 'v1.1.0-3-g439e52',
             'abbrev_commit': '40aaf83',
             'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
+            'author_name': u'Se\u0301bastien Dupond',
             'commit_date': '2016-03-01T09:33:33+0000',
             'commit_timestamp': '1456824813',
             'deploy_date': '2016-03-02T11:33:45+0000',
@@ -81,6 +84,7 @@ def getFileContent(path, section=None, fileFormat=None):
             'version': 'v1.1.0-3-g439e52',
             'abbrev_commit': '40aaf83',
             'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
+            'author_name': u'Se\u0301bastien Dupond',
             'commit_date': '2016-03-01T09:33:33+0000',
             'commit_timestamp': '1456824813',
             'deploy_date': '2016-03-02T11:33:45+0000',
@@ -287,11 +291,11 @@ def getFileContent(path, section=None, fileFormat=None):
         },
     )
 ])
-def test_dump(outputDir, data, dataFormat, target, section, expectedTarget, expectedData):
+def test_dump(output_dir, data, data_format, target, section, expected_target, expected_data):
     appdumper = AppDumper()
 
     cwd = os.path.realpath(os.path.dirname(__file__))
-    resultTarget = appdumper.dump(data, dataFormat, target, outputDir, section)
+    resultTarget = appdumper.dump(data, data_format, target, output_dir, section)
 
-    assert outputDir+'/'+expectedTarget == resultTarget
-    assert expectedData == getFileContent(outputDir+'/'+expectedTarget, section, dataFormat)
+    assert output_dir+'/'+expected_target == resultTarget
+    assert expected_data == get_file_content(output_dir+'/'+expected_target, section, data_format)

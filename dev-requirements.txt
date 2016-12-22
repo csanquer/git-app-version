@@ -1,9 +1,0 @@
-iso8601
-pyyaml
-pytz
-xmltodict
-tzlocal
-pytest
-mock
-coverage
-tox

@@ -2,126 +2,138 @@
 
 import os
 import json
+
 import xmltodict
-from collections import Iterable
-
-try:
-    import configparser
-except ImportError:
-    import ConfigParser as configparser
-
-import yaml
-try:
-    from yaml import CDumper as Dumper
-except ImportError:
-    from yaml import Dumper
-
 from git_app_version.helper.pyversion import PY3
 
-class Dumper(object):
+try:
+    import ConfigParser as configparser
+except ImportError:
+    import configparser
 
-    def dump(self, data = {}, format = 'json', target = None, cwd=None, namespace=''):
-        target = self.__checkTarget(target, cwd)
-        if format == 'yaml' or format == 'yml':
-            return self.dumpYaml(data, target, namespace)
-        elif format == 'xml':
-            return self.dumpXml(data, target, namespace)
-        elif format == 'ini':
-            return self.dumpIni(data, target, namespace)
+import yaml
+
+
+class FileDumper(object):
+
+    def dump(
+            self,
+            data=None,
+            fileformat='json',
+            target=None,
+            cwd=None,
+            namespace=''):
+        target = self.__check_target(target, cwd)
+        if fileformat == 'yaml' or fileformat == 'yml':
+            return self.dump_yaml(data, target, namespace)
+        elif fileformat == 'xml':
+            return self.dump_xml(data, target, namespace)
+        elif fileformat == 'ini':
+            return self.dump_ini(data, target, namespace)
         else:
-            return self.dumpJson(data, target, namespace)
+            return self.dump_json(data, target, namespace)
 
-    def __checkTarget(self, target, cwd=None):
+    def __check_target(self, target, cwd=None):
         if not os.path.isabs(target):
             if cwd is None or not os.path.exists(cwd):
                 cwd = os.getcwd()
 
-            target = cwd+'/'+target
+            target = cwd + '/' + target
 
-        self.__makeParentDir(target)
+        self.__make_parent_dir(target)
 
         return target
 
-    def __makeParentDir(self, target):
-        parentDir = os.path.dirname(target)
-        if not os.path.exists(parentDir):
-            os.makedirs(parentDir, 493) # 493 in decimal as 755 in octal
+    def __make_parent_dir(self, target):
+        parent_dir = os.path.dirname(target)
+        if not os.path.exists(parent_dir):
+            os.makedirs(parent_dir, 493)  # 493 in decimal as 755 in octal
 
-    def __createInfosToDump(self, infos, namespace=None):
-        toDump = infos
-        if namespace is not None and namespace != '' :
+    def __create_infos_to_dump(self, infos, namespace=None):
+        to_dump = infos
+        if namespace is not None and namespace != '':
             namespaces = namespace.split('.')
             namespaces.reverse()
-            for name in namespaces :
-                toDump = { name: toDump }
+            for name in namespaces:
+                to_dump = {name: to_dump}
 
-        return toDump
+        return to_dump
 
-    def __encode(self, input, encoding='utf-8'):
-        if isinstance(input, dict):
-            return {self.__encode(key, encoding): self.__encode(value, encoding) for key, value in input.iteritems()}
-        elif isinstance(input, list):
-            return [self.__encode(element, encoding) for element in input]
-        elif isinstance(input, unicode):
-            return input.encode(encoding)
+    def __encode(self, item, encoding='utf-8'):
+        if isinstance(item, unicode):
+            return item.encode(encoding)
         else:
-            return input
+            return item
 
-    def dumpIni(self, data, target, namespace=None):
-        target = target+'.ini'
+    def __flatten(self, item):
+        if isinstance(item, list):
+            if len(item):
+                return "['{}']".format("', '".join(item))
+            return None
+        else:
+            return item
+
+    def dump_ini(self, data, target, namespace=None):
+        target = target + '.ini'
         namespace = 'app_version' if namespace is None or namespace == '' else namespace
 
         ini = configparser.RawConfigParser()
         ini.add_section(namespace)
 
-        for key,val in data.items():
+        for key, val in data.items():
             if PY3:
                 ini.set(namespace, key, val)
             else:
-                ini.set(namespace, key, self.__encode(val))
+                ini.set(namespace, key, self.__encode(self.__flatten(val)))
 
-        with open(target, 'w') as f:
-            ini.write(f)
+        with open(target, 'w') as fp:
+            ini.write(fp)
 
         return target
 
-    def dumpXml(self, data, target, namespace=None):
-        target = target+'.xml'
+    def dump_xml(self, data, target, namespace=None):
+        target = target + '.xml'
         namespace = 'app_version' if namespace is None or namespace == '' else namespace
 
-        with open(target, 'w') as f:
-            xml = xmltodict.unparse(self.__createInfosToDump(data, namespace), encoding='utf-8', pretty=True, indent='  ')
+        with open(target, 'w') as fp:
+            xml = xmltodict.unparse(
+                self.__create_infos_to_dump(
+                    data,
+                    namespace),
+                encoding='utf-8',
+                pretty=True,
+                indent='  ')
             if PY3:
-                f.write(xml)
+                fp.write(xml)
             else:
-                f.write(xml.encode('utf-8'))
+                fp.write(xml.encode('utf-8'))
 
             return target
 
-    def dumpJson(self, data, target, namespace=None):
-        target = target+'.json'
+    def dump_json(self, data, target, namespace=None):
+        target = target + '.json'
 
-        data1 = self.__createInfosToDump(data, namespace)
+        data1 = self.__create_infos_to_dump(data, namespace)
 
-        with open(target, 'w') as f:
-            json.dump(data1, f, indent=2)
+        with open(target, 'w') as fp:
+            json.dump(data1, fp, indent=2)
 
         return target
 
-    def dumpYaml(self, data, target, namespace=None):
-        target = target+'.yml'
+    def dump_yaml(self, data, target, namespace=None):
+        target = target + '.yml'
 
-        with open(target, 'w') as f:
-            if not data :
-                f.write("---\n")
-            else :
+        with open(target, 'w') as fp:
+            if not data:
+                fp.write("---\n")
+            else:
                 yaml.safe_dump(
-                    self.__createInfosToDump(data, namespace),
-                    f,
+                    self.__create_infos_to_dump(data, namespace),
+                    fp,
                     default_flow_style=False,
                     explicit_start=True,
                     allow_unicode=True,
-                    default_style='\'' # force quoting to prevent abbrev_commit to be read as a float
+                    default_style='\''  # force quoting to prevent abbrev_commit to be read as a float
                 )
 
         return target

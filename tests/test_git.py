@@ -7,171 +7,169 @@ from git_app_version.git import Git
 from datetime import datetime
 import pytz
 
-from pprint import pprint,pformat
-
 @patch('git_app_version.helper.process.subprocess')
-@pytest.mark.parametrize("cmdResult,expected", [
+@pytest.mark.parametrize("cmd_result,expected", [
     (0, True),
     (1, False),
 ])
-def test_isGitRepository(mockSubProcess, cmdResult, expected):
+def test_is_git_repo(mock_sub_process, cmd_result, expected):
     git = Git()
-    mockSubProcess.call.return_value = cmdResult
+    mock_sub_process.call.return_value = cmd_result
 
-    assert git.isGitRepository(None) == expected
+    assert git.is_git_repo(None) == expected
 
 
 @patch('git_app_version.helper.date.datetime')
-@pytest.mark.parametrize("mockDtNow,expected", [
+@pytest.mark.parametrize("mock_dt_now,expected", [
     (datetime(2015, 12, 21, 11, 33, 45), datetime(2015, 12, 21, 11, 33, 45)),
 ])
-def test_getDeployDate(mockDt, mockDtNow, expected):
+def test_get_deploy_date(mock_dt, mock_dt_now, expected):
     git = Git()
     tz = pytz.utc
 
     expectedDate = tz.localize(expected)
-    mockDt.now.return_value = tz.localize(mockDtNow)
+    mock_dt.now.return_value = tz.localize(mock_dt_now)
 
-    assert expectedDate == git.getDeployDate()
+    assert expectedDate == git.get_deploy_date()
 
 @patch('git_app_version.helper.process.subprocess')
-@pytest.mark.parametrize("cmdResult,expected", [
+@pytest.mark.parametrize("cmd_result,expected", [
     ('40aaf83', '40aaf83'),
     ('', ''),
 ])
-def test_getAbbrevCommit(mockSubProcess, cmdResult, expected):
+def test_get_abbrev_commit(mock_sub_process, cmd_result, expected):
     git = Git()
-    mockSubProcess.check_output.return_value = cmdResult
+    mock_sub_process.check_output.return_value = cmd_result
 
-    assert git.getAbbrevCommit() == expected
+    assert git.get_abbrev_commit() == expected
 
 @patch('git_app_version.helper.process.subprocess')
-@pytest.mark.parametrize("cmdResult,expected", [
+@pytest.mark.parametrize("cmd_result,expected", [
     ('40aaf83894b98898895d478f8b7cc4a866b1d62c', '40aaf83894b98898895d478f8b7cc4a866b1d62c'),
     ('', ''),
 ])
-def test_getFullCommit(mockSubProcess, cmdResult, expected):
+def test_get_full_commit(mock_sub_process, cmd_result, expected):
     git = Git()
-    mockSubProcess.check_output.return_value = cmdResult
+    mock_sub_process.check_output.return_value = cmd_result
 
-    assert git.getFullCommit() == expected
+    assert git.get_full_commit() == expected
 
 
 @patch('git_app_version.helper.process.subprocess')
-@pytest.mark.parametrize("cmdResult,expected", [
+@pytest.mark.parametrize("cmd_result,expected", [
     ('Paul Dupond', 'Paul Dupond'),
     ('', ''),
 ])
-def test_getCommitterName(mockSubProcess, cmdResult, expected):
+def test_get_committer_name(mock_sub_process, cmd_result, expected):
     git = Git()
-    mockSubProcess.check_output.return_value = cmdResult
-    assert git.getCommitterName() == expected
+    mock_sub_process.check_output.return_value = cmd_result
+    assert git.get_committer_name() == expected
 
 @patch('git_app_version.helper.process.subprocess')
-@pytest.mark.parametrize("cmdResult,expected", [
+@pytest.mark.parametrize("cmd_result,expected", [
     ('paul.dupond@example.com', 'paul.dupond@example.com'),
     ('', ''),
 ])
-def test_getCommitterEmail(mockSubProcess, cmdResult, expected):
+def test_get_committer_email(mock_sub_process, cmd_result, expected):
     git = Git()
-    mockSubProcess.check_output.return_value = cmdResult
-    assert git.getCommitterEmail() == expected
+    mock_sub_process.check_output.return_value = cmd_result
+    assert git.get_committer_email() == expected
 
 @patch('git_app_version.helper.process.subprocess')
-@pytest.mark.parametrize("cmdResult,expected", [
+@pytest.mark.parametrize("cmd_result,expected", [
     ('Paul Dupond', 'Paul Dupond'),
     ('', ''),
 ])
-def test_getAuthorName(mockSubProcess, cmdResult, expected):
+def test_get_author_name(mock_sub_process, cmd_result, expected):
     git = Git()
-    mockSubProcess.check_output.return_value = cmdResult
-    assert git.getAuthorName() == expected
+    mock_sub_process.check_output.return_value = cmd_result
+    assert git.get_author_name() == expected
 
 @patch('git_app_version.helper.process.subprocess')
-@pytest.mark.parametrize("cmdResult,expected", [
+@pytest.mark.parametrize("cmd_result,expected", [
     ('paul.dupond@example.com', 'paul.dupond@example.com'),
     ('', ''),
 ])
-def test_getAuthorEmail(mockSubProcess, cmdResult, expected):
+def test_get_author_email(mock_sub_process, cmd_result, expected):
     git = Git()
-    mockSubProcess.check_output.return_value = cmdResult
-    assert git.getAuthorEmail() == expected
+    mock_sub_process.check_output.return_value = cmd_result
+    assert git.get_author_email() == expected
 
 @patch('git_app_version.helper.process.subprocess')
-@pytest.mark.parametrize("cmdResult,expected,expectedTZ", [
+@pytest.mark.parametrize("cmd_result,expected,expectedTZ", [
     ('2016-01-01 00:33:33 +0100', datetime(2016, 1, 1, 0, 33, 33), 'Europe/Paris'),
     ('', None, None),
 ])
-def test_getCommitDate(mockSubProcess, cmdResult, expected, expectedTZ):
+def test_get_commit_date(mock_sub_process, cmd_result, expected, expectedTZ):
     git = Git()
-    mockSubProcess.check_output.return_value = cmdResult
+    mock_sub_process.check_output.return_value = cmd_result
 
     if isinstance(expected, datetime):
         tz = pytz.timezone(expectedTZ)
         expected = tz.localize(expected)
 
-    assert git.getCommitDate() == expected
+    assert git.get_commit_date() == expected
 
 @patch('git_app_version.helper.process.subprocess')
-@pytest.mark.parametrize("cmdResult,expected,expectedTZ", [
+@pytest.mark.parametrize("cmd_result,expected,expectedTZ", [
     ('2016-01-01 00:33:33 +0100', datetime(2016, 1, 1, 0, 33, 33), 'Europe/Paris'),
     ('', None, None),
 ])
-def test_getAuthorDate(mockSubProcess, cmdResult, expected, expectedTZ):
+def test_get_author_date(mock_sub_process, cmd_result, expected, expectedTZ):
     git = Git()
-    mockSubProcess.check_output.return_value = cmdResult
+    mock_sub_process.check_output.return_value = cmd_result
 
     if isinstance(expected, datetime):
         tz = pytz.timezone(expectedTZ)
         expected = tz.localize(expected)
 
-    assert git.getAuthorDate() == expected
+    assert git.get_author_date() == expected
 
 @patch('git_app_version.helper.process.subprocess')
-@pytest.mark.parametrize("cmdResults,default,expected", [
+@pytest.mark.parametrize("cmd_results,default,expected", [
     (('v1.1.0-3-g439e52', '40aaf83'), None, 'v1.1.0-3-g439e52'),
     (('','40aaf83'), None, '40aaf83'),
     (('','40aaf83'), '8fa82b6', '8fa82b6'),
 ])
-def test_getVersion(mockSubProcess, cmdResults, default, expected):
+def test_get_version(mock_sub_process, cmd_results, default, expected):
     git = Git()
-    mockSubProcess.check_output.side_effect = cmdResults
+    mock_sub_process.check_output.side_effect = cmd_results
 
-    assert git.getVersion(default=default) == expected
+    assert git.get_version(default=default) == expected
 
 @patch('git_app_version.helper.process.subprocess')
-@pytest.mark.parametrize("cmdResult,commit,expected", [
+@pytest.mark.parametrize("cmd_result,commit,expected", [
     ('', 'HEAD', []),
     ("  origin/HEAD -> origin/master\n  origin/master\n  origin/feature/my_feature\n", 'HEAD', ['origin/master', 'origin/feature/my_feature'])
 ])
-def test_getBranches(mockSubProcess, cmdResult, commit, expected):
+def test_get_branches(mock_sub_process, cmd_result, commit, expected):
     git = Git()
-    mockSubProcess.check_output.return_value = cmdResult
+    mock_sub_process.check_output.return_value = cmd_result
 
-    assert git.getBranches(commit=commit) == expected
+    assert git.get_branches(commit=commit) == expected
 
 @patch('git_app_version.helper.process.subprocess')
-@pytest.mark.parametrize("cmdResults,branches,abbrevCommit,expected", [
+@pytest.mark.parametrize("cmd_results,branches,abbrevCommit,expected", [
     (('40aaf83', 'a7b5290'), ['origin/master', 'origin/feature/my_feature'], '40aaf83', ['origin/master']),
 ])
-def test_getTopBranches(mockSubProcess, cmdResults, branches, abbrevCommit, expected):
+def test_get_top_branches(mock_sub_process, cmd_results, branches, abbrevCommit, expected):
     git = Git()
-    mockSubProcess.check_output.side_effect = cmdResults
+    mock_sub_process.check_output.side_effect = cmd_results
 
-    assert git.getTopBranches(branches=branches, abbrevCommit=abbrevCommit) == expected
+    assert git.get_top_branches(branches=branches, abbrev_commit=abbrevCommit) == expected
 
 @pytest.mark.parametrize("branches,expected", [
     (['origin/master', 'origin/feature/my_feature'], ['master', 'feature/my_feature']),
 ])
-def test_removeRemotePrefix(branches, expected):
+def test_remove_remote_prefix(branches, expected):
     git = Git()
 
-    assert git.removeRemotePrefix(branches=branches) == expected
+    assert git.remove_remote_prefix(branches=branches) == expected
 
 
 @patch('git_app_version.helper.date.datetime')
 @patch('git_app_version.helper.process.subprocess')
-@pytest.mark.parametrize("cmdResults,now,expected", [
+@pytest.mark.parametrize("cmd_results,now,expected", [
     (
         (
             '40aaf83',
@@ -207,13 +205,13 @@ def test_removeRemotePrefix(branches, expected):
         }
     )
 ])
-def test_getInfos(mockSubProcess, mockDt, now, cmdResults, expected):
+def test_get_infos(mock_sub_process, mock_dt, now, cmd_results, expected):
     git = Git()
 
     tz = pytz.utc
-    mockDt.now.return_value = tz.localize(now)
-    mockDt.side_effect = lambda *args, **kw: datetime(*args, **kw)
+    mock_dt.now.return_value = tz.localize(now)
+    mock_dt.side_effect = lambda *args, **kw: datetime(*args, **kw)
 
-    mockSubProcess.check_output.side_effect = cmdResults
+    mock_sub_process.check_output.side_effect = cmd_results
 
-    assert git.getInfos() == expected
+    assert git.get_infos() == expected

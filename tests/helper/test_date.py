@@ -5,10 +5,8 @@ import pytest
 
 from git_app_version.helper.date import *
 from datetime import datetime
-# import iso8601
 import pytz
 
-# from pprint import pprint,pformat
 
 @patch('git_app_version.helper.date.datetime')
 @pytest.mark.parametrize("mockInput,expected", [

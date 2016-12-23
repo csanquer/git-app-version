@@ -151,6 +151,7 @@ def test_get_branches(mock_sub_process, cmd_result, commit, expected):
 @patch('git_app_version.helper.process.subprocess')
 @pytest.mark.parametrize("cmd_results,branches,abbrevCommit,expected", [
     (('40aaf83', 'a7b5290'), ['origin/master', 'origin/feature/my_feature'], '40aaf83', ['origin/master']),
+    (('40aaf83'), [], '', []),
 ])
 def test_get_top_branches(mock_sub_process, cmd_results, branches, abbrevCommit, expected):
     git = Git()

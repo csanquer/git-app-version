@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+import sys
 import argparse
 import git_app_version.version
 from git_app_version.git import Git
@@ -10,7 +11,7 @@ __version__ = git_app_version.version.__version__
 __DESCRIPTION__ = 'Get Git commit informations and store them in a INI/XML/YAML/JSON file.'
 
 
-def main():
+def main(args=None):
     parser = argparse.ArgumentParser(
         prog='git-app-version',
         description=__DESCRIPTION__)
@@ -63,20 +64,20 @@ def main():
         help='namespace like notation in version file, use dot separator to segment namespaces e.g.: \'foo.bar.git\'. Default is \'app_version\' for XML and INI and no namespace for JSON and YAML.',
         default='')
 
-    args = parser.parse_args()
+    options = parser.parse_args(sys.argv[1:] if args is None else args)
 
     try:
         vcs = Git()
 
-        if not vcs.is_git_repo(args.repository):
+        if not vcs.is_git_repo(options.repository):
             raise Exception(
                 'The directory \'' +
-                args.repository +
+                options.repository +
                 '\' is not a git repository.')
 
-        data = vcs.get_infos(commit=args.commit, cwd=args.repository)
+        data = vcs.get_infos(commit=options.commit, cwd=options.repository)
 
-        if args.verbose > 1 and not args.quiet:
+        if not options.quiet and options.verbose is not None and options.verbose  >= 1:
             print('Git commit :')
             keys = sorted(data.keys())
             for key in keys:
@@ -88,16 +89,19 @@ def main():
         dumper = FileDumper()
         dest = dumper.dump(
             data=data,
-            fileformat=args.format,
-            target=args.output,
-            cwd=args.repository,
-            namespace=args.namespace)
-        if not args.quiet:
-            print("Git commit informations stored in " + dest)
+            fileformat=options.format,
+            target=options.output,
+            cwd=options.repository,
+            namespace=options.namespace)
+        if not options.quiet:
+            print("Git commit informations stored in "+dest)
+
+        return 0
 
     except Exception as exc:
-        print("Error Writing version config file : ", exc)
-        exit(1)
+        print("Error Writing version config file : "+str(exc))
+
+        return 1
 
 if __name__ == '__main__':
-    main()
+    sys.exit(main())

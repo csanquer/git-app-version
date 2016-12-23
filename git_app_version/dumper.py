@@ -35,9 +35,7 @@ class FileDumper(object):
 
     def __check_target(self, target, cwd=None):
         if not os.path.isabs(target):
-            if cwd is None or not os.path.exists(cwd):
-                cwd = os.getcwd()
-
+            cwd = cwd if cwd else os.getcwd()
             target = cwd + '/' + target
 
         self.__make_parent_dir(target)
@@ -67,9 +65,10 @@ class FileDumper(object):
 
     def __flatten(self, item):
         if isinstance(item, list):
+            flattened_list = ''
             if len(item):
-                return "['{}']".format("', '".join(item))
-            return None
+                flattened_list = "'{}'".format("', '".join(item))
+            return "[{}]".format(flattened_list)
         else:
             return item
 
@@ -81,10 +80,10 @@ class FileDumper(object):
         ini.add_section(namespace)
 
         for key, val in data.items():
-            if PY3:
-                ini.set(namespace, key, val)
-            else:
-                ini.set(namespace, key, self.__encode(self.__flatten(val)))
+            if not PY3:
+                val = self.__encode(self.__flatten(val))
+
+            ini.set(namespace, key, val)
 
         with open(target, 'w') as fp:
             ini.write(fp)
@@ -103,10 +102,10 @@ class FileDumper(object):
                 encoding='utf-8',
                 pretty=True,
                 indent='  ')
-            if PY3:
-                fp.write(xml)
-            else:
-                fp.write(xml.encode('utf-8'))
+            if not PY3:
+                xml = xml.encode('utf-8')
+
+            fp.write(xml)
 
             return target
 

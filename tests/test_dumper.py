@@ -32,7 +32,7 @@ def output_dir():
     path = cwd+'/output'
     if os.path.exists(path):
         shutil.rmtree(path)
-    os.makedirs(path, 493)
+    # os.makedirs(path, 493)
 
     return path
 
@@ -294,7 +294,6 @@ def get_file_content(path, section=None, fileFormat=None):
 def test_dump(output_dir, data, data_format, target, section, expected_target, expected_data):
     appdumper = AppDumper()
 
-    cwd = os.path.realpath(os.path.dirname(__file__))
     resultTarget = appdumper.dump(data, data_format, target, output_dir, section)
 
     assert output_dir+'/'+expected_target == resultTarget

@@ -45,13 +45,12 @@ class Git(object):
 
         return branches
 
-    def get_top_branches(self, branches=None, abbrev_commit=None, cwd=None):
+    def get_top_branches(self, branches, abbrev_commit=None, cwd=None):
         top_branch = []
 
-        if branches:
-            for branch in branches:
-                if abbrev_commit == self.get_abbrev_commit(branch, cwd=cwd):
-                    top_branch.append(branch)
+        for branch in branches:
+            if abbrev_commit == self.get_abbrev_commit(branch, cwd=cwd):
+                top_branch.append(branch)
 
         return top_branch
 

@@ -103,7 +103,7 @@ setup(
         'dev': ['check-manifest'],
         'test': [
             'coverage',
-            'pytest',
+            'pytest >=3.0',
             'pylint',
             'mock',
             'tox'

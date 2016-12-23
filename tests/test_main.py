@@ -40,8 +40,8 @@ def test_version(capsys):
         git_app_version_main((arg))
 
     out, err = capsys.readouterr()
-    std_to_test = out if PY3 else err
-    assert std_to_test == 'git-app-version '+git_app_version.version.__version__+"\n"
+    expected = 'git-app-version '+git_app_version.version.__version__+"\n"
+    assert out == expected or err == expected
 
 def test_not_git_repository(tmpdir, capsys):
     arg = []

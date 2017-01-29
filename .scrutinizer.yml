@@ -1,4 +1,7 @@
 ---
+before_commands:
+    - sudo pip3 install -r requirements-dev.txt
+
 checks:
     python:
         code_rating: true

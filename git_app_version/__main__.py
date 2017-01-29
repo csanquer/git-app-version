@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-
+'''
+    Main module
+'''
 import argparse
 import os
 import sys
@@ -14,6 +16,9 @@ __DESCRIPTION__ = 'Get Git commit informations'
 
 
 def main(args=None):
+    '''
+        Main CLI function
+    '''
     parser = argparse.ArgumentParser(
         prog='git-app-version',
         description=__DESCRIPTION__)
@@ -91,9 +96,9 @@ def main(args=None):
             keys = sorted(data.keys())
             for key in keys:
                 try:
-                    print (key + ' = ' + data[key])
+                    print(key + ' = ' + data[key])
                 except TypeError:
-                    print (key + ' = ' + ' '.join(data[key]))
+                    print(key + ' = ' + ' '.join(data[key]))
 
         dumper = FileDumper()
         dest = dumper.dump(

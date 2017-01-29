@@ -35,18 +35,32 @@ install: $(VIRTUAL_ENV)
 install-dev: $(VIRTUAL_ENV)
 	$(PIP) install -r $(PYTHON_REQUIREMENTS_DEV_FILE)
 
+# Python coding standards
+autopep8: install-dev
+	$(VIRTUAL_ENV)/bin/autopep8 --in-place -r -a git_app_version tests
+
+pep8: install-dev
+	$(VIRTUAL_ENV)/bin/pep8 git_app_version tests
+
+flake8: install-dev
+	$(VIRTUAL_ENV)/bin/flake8 git_app_version tests
+
+isort: install-dev
+	$(VIRTUAL_ENV)/bin/isort -rc git_app_version tests
+
 lint: install-dev
-	$(VIRTUAL_ENV)/bin/pylint git_app_version -f colorized
+	$(VIRTUAL_ENV)/bin/pylint git_app_version -f colorized || exit 0
 
 lint-html: install-dev
-	$(VIRTUAL_ENV)/bin/pylint git_app_version -f html > pylint.html
+	$(VIRTUAL_ENV)/bin/pylint git_app_version -f html > pylint.html || exit 0
 
 lint3: install-dev
-	$(VIRTUAL_ENV)/bin/pylint --py3k git_app_version -f colorized
+	$(VIRTUAL_ENV)/bin/pylint --py3k git_app_version -f colorized || exit 0
 
 lint3-html: install-dev
-	$(VIRTUAL_ENV)/bin/pylint --py3k git_app_version -f html > pylint.html
+	$(VIRTUAL_ENV)/bin/pylint --py3k git_app_version -f html > pylint.html || exit 0
 
+# Tests
 test:
 	$(VIRTUAL_ENV)/bin/coverage erase
 	$(VIRTUAL_ENV)/bin/coverage run -m py.test

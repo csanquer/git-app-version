@@ -3,8 +3,9 @@
     Git manipulation
 """
 import re
-from git_app_version.helper.process import output_command, call_command
-import git_app_version.helper.date as datehelper
+
+import git_app_version.helper.date as dthelper
+from git_app_version.helper.process import call_command, output_command
 
 
 class Git(object):
@@ -13,7 +14,7 @@ class Git(object):
         return call_command(["git", "rev-parse"], cwd=cwd) == 0
 
     def get_deploy_date(self):
-        return datehelper.utcnow()
+        return dthelper.utcnow()
 
     def get_version(self, commit='HEAD', default=None, cwd=None):
         version = output_command(
@@ -103,7 +104,7 @@ class Git(object):
                                                           1).replace(' ',
                                                                      '')
 
-        return datehelper.datetime_from_iso8601(isodate, utc=True)
+        return dthelper.datetime_from_iso8601(isodate, utc=True)
 
     def get_full_commit(self, commit='HEAD', cwd=None):
         return output_command(["git",
@@ -134,17 +135,18 @@ class Git(object):
         return {
             'branches': self.remove_remote_prefix(branches),
             'top_branches': self.remove_remote_prefix(top_branch),
-            'version': self.get_version(commit, default=abbrev_commit, cwd=cwd),
+            'version': self.get_version(commit, default=abbrev_commit,
+                                        cwd=cwd),
             'abbrev_commit': abbrev_commit,
             'full_commit': self.get_full_commit(commit, cwd=cwd),
             'author_name': self.get_author_name(commit, cwd=cwd),
             'author_email': self.get_author_email(commit, cwd=cwd),
             'committer_name': self.get_committer_name(commit, cwd=cwd),
             'committer_email': self.get_committer_email(commit, cwd=cwd),
-            'commit_date': datehelper.iso8601_from_datetime(commit_date),
-            'commit_timestamp': datehelper.timestamp_from_datetime(commit_date),
-            'author_date': datehelper.iso8601_from_datetime(author_date),
-            'author_timestamp': datehelper.timestamp_from_datetime(author_date),
-            'deploy_date': datehelper.iso8601_from_datetime(deploy_date),
-            'deploy_timestamp': datehelper.timestamp_from_datetime(deploy_date),
+            'commit_date': dthelper.iso8601_from_datetime(commit_date),
+            'commit_timestamp': dthelper.timestamp_from_datetime(commit_date),
+            'author_date': dthelper.iso8601_from_datetime(author_date),
+            'author_timestamp': dthelper.timestamp_from_datetime(author_date),
+            'deploy_date': dthelper.iso8601_from_datetime(deploy_date),
+            'deploy_timestamp': dthelper.timestamp_from_datetime(deploy_date),
         }

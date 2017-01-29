@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 
-from mock import patch
+from datetime import datetime
+
 import pytest
+import pytz
+from mock import patch
 
 from git_app_version.git import Git
-from datetime import datetime
-import pytz
+
 
 @patch('git_app_version.helper.process.subprocess')
 @pytest.mark.parametrize("cmd_result,expected", [
@@ -32,6 +34,7 @@ def test_get_deploy_date(mock_dt, mock_dt_now, expected):
 
     assert expectedDate == git.get_deploy_date()
 
+
 @patch('git_app_version.helper.process.subprocess')
 @pytest.mark.parametrize("cmd_result,expected", [
     ('40aaf83', '40aaf83'),
@@ -43,9 +46,11 @@ def test_get_abbrev_commit(mock_sub_process, cmd_result, expected):
 
     assert git.get_abbrev_commit() == expected
 
+
 @patch('git_app_version.helper.process.subprocess')
 @pytest.mark.parametrize("cmd_result,expected", [
-    ('40aaf83894b98898895d478f8b7cc4a866b1d62c', '40aaf83894b98898895d478f8b7cc4a866b1d62c'),
+    ('40aaf83894b98898895d478f8b7cc4a866b1d62c',
+     '40aaf83894b98898895d478f8b7cc4a866b1d62c'),
     ('', ''),
 ])
 def test_get_full_commit(mock_sub_process, cmd_result, expected):
@@ -65,6 +70,7 @@ def test_get_committer_name(mock_sub_process, cmd_result, expected):
     mock_sub_process.check_output.return_value = cmd_result
     assert git.get_committer_name() == expected
 
+
 @patch('git_app_version.helper.process.subprocess')
 @pytest.mark.parametrize("cmd_result,expected", [
     ('paul.dupond@example.com', 'paul.dupond@example.com'),
@@ -74,6 +80,7 @@ def test_get_committer_email(mock_sub_process, cmd_result, expected):
     git = Git()
     mock_sub_process.check_output.return_value = cmd_result
     assert git.get_committer_email() == expected
+
 
 @patch('git_app_version.helper.process.subprocess')
 @pytest.mark.parametrize("cmd_result,expected", [
@@ -85,6 +92,7 @@ def test_get_author_name(mock_sub_process, cmd_result, expected):
     mock_sub_process.check_output.return_value = cmd_result
     assert git.get_author_name() == expected
 
+
 @patch('git_app_version.helper.process.subprocess')
 @pytest.mark.parametrize("cmd_result,expected", [
     ('paul.dupond@example.com', 'paul.dupond@example.com'),
@@ -95,9 +103,11 @@ def test_get_author_email(mock_sub_process, cmd_result, expected):
     mock_sub_process.check_output.return_value = cmd_result
     assert git.get_author_email() == expected
 
+
 @patch('git_app_version.helper.process.subprocess')
 @pytest.mark.parametrize("cmd_result,expected,expectedTZ", [
-    ('2016-01-01 00:33:33 +0100', datetime(2016, 1, 1, 0, 33, 33), 'Europe/Paris'),
+    ('2016-01-01 00:33:33 +0100', datetime(2016, 1, 1, 0, 33, 33),
+     'Europe/Paris'),
     ('', None, None),
 ])
 def test_get_commit_date(mock_sub_process, cmd_result, expected, expectedTZ):
@@ -110,9 +120,11 @@ def test_get_commit_date(mock_sub_process, cmd_result, expected, expectedTZ):
 
     assert git.get_commit_date() == expected
 
+
 @patch('git_app_version.helper.process.subprocess')
 @pytest.mark.parametrize("cmd_result,expected,expectedTZ", [
-    ('2016-01-01 00:33:33 +0100', datetime(2016, 1, 1, 0, 33, 33), 'Europe/Paris'),
+    ('2016-01-01 00:33:33 +0100', datetime(2016, 1, 1, 0, 33, 33),
+     'Europe/Paris'),
     ('', None, None),
 ])
 def test_get_author_date(mock_sub_process, cmd_result, expected, expectedTZ):
@@ -125,11 +137,12 @@ def test_get_author_date(mock_sub_process, cmd_result, expected, expectedTZ):
 
     assert git.get_author_date() == expected
 
+
 @patch('git_app_version.helper.process.subprocess')
 @pytest.mark.parametrize("cmd_results,default,expected", [
     (('v1.1.0-3-g439e52', '40aaf83'), None, 'v1.1.0-3-g439e52'),
-    (('','40aaf83'), None, '40aaf83'),
-    (('','40aaf83'), '8fa82b6', '8fa82b6'),
+    (('', '40aaf83'), None, '40aaf83'),
+    (('', '40aaf83'), '8fa82b6', '8fa82b6'),
 ])
 def test_get_version(mock_sub_process, cmd_results, default, expected):
     git = Git()
@@ -137,10 +150,13 @@ def test_get_version(mock_sub_process, cmd_results, default, expected):
 
     assert git.get_version(default=default) == expected
 
+
 @patch('git_app_version.helper.process.subprocess')
 @pytest.mark.parametrize("cmd_result,commit,expected", [
     ('', 'HEAD', []),
-    ("  origin/HEAD -> origin/master\n  origin/master\n  origin/feature/my_feature\n", 'HEAD', ['origin/master', 'origin/feature/my_feature'])
+    ("  origin/HEAD -> origin/master\n  origin/master\n"
+     "  origin/feature/my_feature\n",
+     'HEAD', ['origin/master', 'origin/feature/my_feature'])
 ])
 def test_get_branches(mock_sub_process, cmd_result, commit, expected):
     git = Git()
@@ -148,19 +164,27 @@ def test_get_branches(mock_sub_process, cmd_result, commit, expected):
 
     assert git.get_branches(commit=commit) == expected
 
+
 @patch('git_app_version.helper.process.subprocess')
 @pytest.mark.parametrize("cmd_results,branches,abbrevCommit,expected", [
-    (('40aaf83', 'a7b5290'), ['origin/master', 'origin/feature/my_feature'], '40aaf83', ['origin/master']),
+    (('40aaf83', 'a7b5290'), [
+     'origin/master', 'origin/feature/my_feature'],
+     '40aaf83', ['origin/master']),
     (('40aaf83'), [], '', []),
 ])
-def test_get_top_branches(mock_sub_process, cmd_results, branches, abbrevCommit, expected):
+def test_get_top_branches(mock_sub_process, cmd_results,
+                          branches, abbrevCommit, expected):
     git = Git()
     mock_sub_process.check_output.side_effect = cmd_results
 
-    assert git.get_top_branches(branches=branches, abbrev_commit=abbrevCommit) == expected
+    assert git.get_top_branches(
+        branches=branches,
+        abbrev_commit=abbrevCommit) == expected
+
 
 @pytest.mark.parametrize("branches,expected", [
-    (['origin/master', 'origin/feature/my_feature'], ['master', 'feature/my_feature']),
+    (['origin/master', 'origin/feature/my_feature'],
+     ['master', 'feature/my_feature']),
 ])
 def test_remove_remote_prefix(branches, expected):
     git = Git()
@@ -176,7 +200,8 @@ def test_remove_remote_prefix(branches, expected):
             '40aaf83',
             '2016-03-01 10:33:33 +0100',
             '2016-03-02 14:10:48 +0100',
-            "  origin/HEAD -> origin/master\n  origin/master\n  origin/feature/my_feature\n",
+            "  origin/HEAD -> origin/master\n  origin/master\n"
+            "  origin/feature/my_feature\n",
             '40aaf83',
             '83bc5f1',
             'v1.1.0-3-g439e52',

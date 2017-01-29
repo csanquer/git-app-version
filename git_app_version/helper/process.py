@@ -31,6 +31,7 @@ def output_command(args, cwd=None):
 
     return output if PY3 else output.decode('utf-8')
 
+
 def call_command(args, cwd=None):
     """
         run a shell command and return its exit code

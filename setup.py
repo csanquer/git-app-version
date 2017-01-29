@@ -92,7 +92,8 @@ setup(
         'pyyaml',
         'pytz',
         'xmltodict',
-        'tzlocal'
+        'tzlocal',
+        'gitpython'
     ],
 
     # List additional groups of dependencies here (e.g. development
@@ -104,9 +105,13 @@ setup(
         'test': [
             'coverage',
             'pytest >=3.0',
-            'pylint',
             'mock',
-            'tox'
+            'tox',
+            'pylint',
+            'pep8',
+            'autopep8',
+            'flake8',
+            'isort'
         ],
     },
 

@@ -1,14 +1,16 @@
 # -*- coding: utf-8 -*-
 
+import argparse
 import os
 import sys
-import argparse
+
 import git_app_version.version
-from git_app_version.git import Git
 from git_app_version.dumper import FileDumper
+from git_app_version.git import Git
 
 __version__ = git_app_version.version.__version__
-__DESCRIPTION__ = 'Get Git commit informations and store them in a INI/XML/YAML/JSON file.'
+__DESCRIPTION__ = 'Get Git commit informations'
+' and store them in a INI/XML/YAML/JSON file.'
 
 
 def main(args=None):
@@ -47,21 +49,26 @@ def main(args=None):
         '--output',
         metavar='path',
         type=str,
-        help='output file path (without extension). Default is \'<repository-path>/version\'.',
+        help='output file path (without extension).'
+        ' Default is \'<repository-path>/version\'.',
         default='version')
     parser.add_argument(
         '-f',
         '--format',
         metavar='format',
         type=str,
-        help='output file format and extension (ini/xml/yml/json). Default is json.',
+        help='output file format and extension (ini/xml/yml/json).'
+        ' Default is json.',
         default='json')
     parser.add_argument(
         '-n',
         '--namespace',
         metavar='namespace',
         type=str,
-        help='namespace like notation in version file, use dot separator to segment namespaces e.g.: \'foo.bar.git\'. Default is \'app_version\' for XML and INI and no namespace for JSON and YAML.',
+        help='namespace like notation in version file,'
+        ' use dot separator to segment namespaces e.g.: \'foo.bar.git\'.'
+        ' Default is \'app_version\' for XML and INI'
+        ' and no namespace for JSON and YAML.',
         default='')
 
     options = parser.parse_args(sys.argv[1:] if args is None else args)
@@ -70,14 +77,16 @@ def main(args=None):
         vcs = Git()
 
         if not vcs.is_git_repo(options.repository):
-            raise Exception(
+            raise ValueError(
                 'The directory \'' +
                 options.repository +
                 '\' is not a git repository.')
 
         data = vcs.get_infos(commit=options.commit, cwd=options.repository)
 
-        if not options.quiet and options.verbose is not None and options.verbose  >= 1:
+        if (not options.quiet and options.verbose is not None and
+                options.verbose >= 1):
+
             print('Git commit :')
             keys = sorted(data.keys())
             for key in keys:
@@ -94,14 +103,15 @@ def main(args=None):
             cwd=options.repository,
             namespace=options.namespace)
         if not options.quiet:
-            print("Git commit informations stored in "+dest)
+            print("Git commit informations stored in " + dest)
 
         return 0
 
-    except Exception as exc:
-        print("Error Writing version config file : "+str(exc))
+    except (RuntimeError, ValueError, TypeError) as exc:
+        print("Error Writing version config file : " + str(exc))
 
         return 1
+
 
 if __name__ == '__main__':
     sys.exit(main())

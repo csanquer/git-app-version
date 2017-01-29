@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 
-import os
 import json
+import os
 
 import xmltodict
+import yaml
+
 from git_app_version.helper.pyversion import PY3
 
 try:
     import ConfigParser as configparser
 except ImportError:
     import configparser
-
-import yaml
 
 
 class FileDumper(object):
@@ -74,7 +74,9 @@ class FileDumper(object):
 
     def dump_ini(self, data, target, namespace=None):
         target = target + '.ini'
-        namespace = 'app_version' if namespace is None or namespace == '' else namespace
+
+        if namespace is None or namespace == '':
+            namespace = 'app_version'
 
         ini = configparser.RawConfigParser()
         ini.add_section(namespace)
@@ -92,7 +94,8 @@ class FileDumper(object):
 
     def dump_xml(self, data, target, namespace=None):
         target = target + '.xml'
-        namespace = 'app_version' if namespace is None or namespace == '' else namespace
+        if namespace is None or namespace == '':
+            namespace = 'app_version'
 
         with open(target, 'w') as fp:
             xml = xmltodict.unparse(
@@ -132,7 +135,9 @@ class FileDumper(object):
                     default_flow_style=False,
                     explicit_start=True,
                     allow_unicode=True,
-                    default_style='\''  # force quoting to prevent abbrev_commit to be read as a float
+                    # force quoting
+                    # to prevent abbrev_commit to be read as a float
+                    default_style='\''
                 )
 
         return target

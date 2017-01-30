@@ -8,7 +8,7 @@ import sys
 
 import git_app_version.version
 from git_app_version.dumper import FileDumper
-from git_app_version.git import Git
+from git_app_version.githandler import GitHandler
 
 __version__ = git_app_version.version.__version__
 __DESCRIPTION__ = 'Get Git commit informations'
@@ -79,13 +79,7 @@ def main(args=None):
     options = parser.parse_args(sys.argv[1:] if args is None else args)
 
     try:
-        vcs = Git()
-
-        if not vcs.is_git_repo(options.repository):
-            raise ValueError(
-                'The directory \'' +
-                options.repository +
-                '\' is not a git repository.')
+        vcs = GitHandler(options.repository)
 
         data = vcs.get_infos(commit=options.commit, cwd=options.repository)
 

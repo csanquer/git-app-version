@@ -7,6 +7,7 @@ import pytest
 
 import git_app_version.version
 from git_app_version.__main__ import main as git_app_version_main
+from test_helpers import git_utils
 
 
 @pytest.fixture()
@@ -17,24 +18,6 @@ def tmpdir(tmpdir_factory):
     os.chdir(new_cwd_path)
     yield new_cwd_path
     os.chdir(cwd)
-
-
-def _git_commit(message):
-    os.system('git commit --allow-empty -m "{}"'.format(message))
-
-
-def _git_tag(version):
-    _git_commit("release: {}".format(version))
-    os.system('git tag -am {0} {0}'.format(version))
-
-
-def _git_init(version='0.1.2'):
-    os.system('git init')
-    os.system('git config user.email "user@example.com"')
-    os.system('git config user.name "User Test"')
-
-    _git_commit('initial commit')
-    _git_tag(version)
 
 
 def test_version(capsys):
@@ -60,7 +43,7 @@ def test_not_git_repository(tmpdir, capsys):
 def test_quiet(tmpdir, capsys):
     arg = ['-q']
 
-    _git_init()
+    git_utils.default_init()
     capsys.readouterr()
 
     exit_code = git_app_version_main((arg))
@@ -77,7 +60,7 @@ def test_quiet(tmpdir, capsys):
 def test_verbose(tmpdir, capsys):
     arg = ['-v']
 
-    _git_init()
+    git_utils.default_init()
     capsys.readouterr()
 
     exit_code = git_app_version_main((arg))
@@ -97,7 +80,7 @@ def test_verbose(tmpdir, capsys):
 def test_json(tmpdir, capsys):
     arg = []
 
-    _git_init()
+    git_utils.default_init()
     capsys.readouterr()
 
     exit_code = git_app_version_main((arg))

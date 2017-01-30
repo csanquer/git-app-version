@@ -4,36 +4,41 @@
 """
 import re
 
+from git import GitCommandError, Repo
+from git.exc import InvalidGitRepositoryError, NoSuchPathError
+
 import git_app_version.helper.date as dthelper
-from git_app_version.helper.process import call_command, output_command
 
 
-class Git(object):
+class GitHandler(object):
 
-    def is_git_repo(self, cwd=None):
-        return call_command(["git", "rev-parse"], cwd=cwd) == 0
+    def __init__(self, path):
+        try:
+            self.repo = Repo(path)
+        except (InvalidGitRepositoryError, NoSuchPathError):
+            raise ValueError(
+                'The directory \'{}\' is not a git repository.'.format(path))
 
     def get_deploy_date(self):
         return dthelper.utcnow()
 
-    def get_version(self, commit='HEAD', default=None, cwd=None):
-        version = output_command(
-            ["git", "describe", "--tag", "--always", commit], cwd=cwd).strip()
-        if version == '' or version is None:
-            if not default:
-                default = self.get_abbrev_commit(commit, cwd=cwd)
+    def get_version(self, commit='HEAD', default='', cwd=None):
+        try:
+            version = self.repo.git.describe(
+                '--tag', '--always', commit).strip()
+        except GitCommandError:
+            version = ''
 
+        if not version:
             version = default
 
         return version
 
     def get_branches(self, commit='HEAD', cwd=None):
-        raw_branches = output_command(["git",
-                                       "branch",
-                                       "--no-color",
-                                       "--remote",
-                                       "--contains=" + commit],
-                                      cwd=cwd).splitlines()
+        raw = self.repo.git.branch("--no-color",
+                                   "--remote",
+                                   "--contains=" + commit)
+        raw_branches = raw.splitlines()
 
         regex_point = re.compile(r'->')  # remove git reference pointing
 
@@ -65,62 +70,28 @@ class Git(object):
         return clean_branches
 
     def get_committer_name(self, commit='HEAD', cwd=None):
-        return self._get_log_field(field='cn', commit=commit, cwd=cwd)
+        return self.repo.commit(commit).committer.name
 
     def get_committer_email(self, commit='HEAD', cwd=None):
-        return self._get_log_field(field='ce', commit=commit, cwd=cwd)
+        return self.repo.commit(commit).committer.email
 
     def get_author_name(self, commit='HEAD', cwd=None):
-        return self._get_log_field(field='an', commit=commit, cwd=cwd)
+        return self.repo.commit(commit).author.name
 
     def get_author_email(self, commit='HEAD', cwd=None):
-        return self._get_log_field(field='ae', commit=commit, cwd=cwd)
-
-    def _get_log_field(self, field, commit='HEAD', cwd=None):
-        return output_command(["git",
-                               "log",
-                               "-1",
-                               "--pretty=tformat:%" + field,
-                               "--no-color",
-                               commit],
-                              cwd=cwd).strip()
+        return self.repo.commit(commit).author.email
 
     def get_commit_date(self, commit='HEAD', cwd=None):
-        return self._get_date(field='ci', commit=commit, cwd=cwd)
+        return self.repo.commit(commit).committed_datetime
 
     def get_author_date(self, commit='HEAD', cwd=None):
-        return self._get_date(field='ai', commit=commit, cwd=cwd)
-
-    def _get_date(self, field, commit='HEAD', cwd=None):
-        isodate = output_command(["git",
-                                  "log",
-                                  "-1",
-                                  "--pretty=tformat:%" + field,
-                                  "--no-color",
-                                  "--date=local",
-                                  commit],
-                                 cwd=cwd).strip().replace(' ',
-                                                          'T',
-                                                          1).replace(' ',
-                                                                     '')
-
-        return dthelper.datetime_from_iso8601(isodate, utc=True)
+        return self.repo.commit(commit).authored_datetime
 
     def get_full_commit(self, commit='HEAD', cwd=None):
-        return output_command(["git",
-                               "rev-list",
-                               "--max-count=1",
-                               "--no-abbrev-commit",
-                               commit],
-                              cwd=cwd).strip()
+        return self.repo.commit(commit).hexsha
 
     def get_abbrev_commit(self, commit='HEAD', cwd=None):
-        return output_command(["git",
-                               "rev-list",
-                               "--max-count=1",
-                               "--abbrev-commit",
-                               commit],
-                              cwd=cwd).strip()
+        return self.repo.commit(commit).hexsha[0:7]
 
     def get_infos(self, commit='HEAD', cwd=None):
         deploy_date = self.get_deploy_date()

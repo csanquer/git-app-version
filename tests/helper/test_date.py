@@ -38,6 +38,10 @@ def test_datetime_from_iso8601(isodate, utc, expected, expected_tz):
     assert expected_date == datetime_from_iso8601(isodate, utc)
 
 
+def test_datetime_from_iso8601_empty():
+    assert datetime_from_iso8601('', True) is None
+
+
 @pytest.mark.parametrize("input,input_tz,expected", [
     (datetime(2015, 12, 21, 11, 33, 45), 'Europe/Paris',
      "2015-12-21T11:33:45+0100"),

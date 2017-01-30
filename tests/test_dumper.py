@@ -45,6 +45,9 @@ def get_file_content(path, section=None, fileFormat=None):
         config.read(path)
 
         data = {}
+        if not section:
+            section = 'app_version'
+
         if config.has_section(section):
             for k, v in config.items(section):
                 if PY3:
@@ -78,7 +81,7 @@ def get_file_content(path, section=None, fileFormat=None):
             },
             'ini',
             'version',
-            'app_version',
+            '',
             'version.ini',
             {
                 'version': 'v1.1.0-3-g439e52',

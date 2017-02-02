@@ -87,8 +87,8 @@ class FileDumper(object):
 
             ini.set(namespace, key, val)
 
-        with open(target, 'w') as fp:
-            ini.write(fp)
+        with open(target, 'w') as fpt:
+            ini.write(fpt)
 
         return target
 
@@ -97,7 +97,7 @@ class FileDumper(object):
         if namespace is None or namespace == '':
             namespace = 'app_version'
 
-        with open(target, 'w') as fp:
+        with open(target, 'w') as fpt:
             xml = xmltodict.unparse(
                 self.__create_infos_to_dump(
                     data,
@@ -108,7 +108,7 @@ class FileDumper(object):
             if not PY3:
                 xml = xml.encode('utf-8')
 
-            fp.write(xml)
+            fpt.write(xml)
 
             return target
 
@@ -117,21 +117,21 @@ class FileDumper(object):
 
         data1 = self.__create_infos_to_dump(data, namespace)
 
-        with open(target, 'w') as fp:
-            json.dump(data1, fp, indent=2)
+        with open(target, 'w') as fpt:
+            json.dump(data1, fpt, indent=2)
 
         return target
 
     def dump_yaml(self, data, target, namespace=None):
         target = target + '.yml'
 
-        with open(target, 'w') as fp:
+        with open(target, 'w') as fpt:
             if not data:
-                fp.write("---\n")
+                fpt.write("---\n")
             else:
                 yaml.safe_dump(
                     self.__create_infos_to_dump(data, namespace),
-                    fp,
+                    fpt,
                     default_flow_style=False,
                     explicit_start=True,
                     allow_unicode=True,

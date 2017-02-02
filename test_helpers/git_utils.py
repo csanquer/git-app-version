@@ -32,8 +32,8 @@ def tag(repo, version, author=None, date=None):
 
     return commit_obj
 
-def branch(repo, branch, start='HEAD'):
-    return repo.create_head(branch, commit=start)
+def branch(repo, name, start='HEAD'):
+    return repo.create_head(name, commit=start)
 
 def clone(remote_repo, path):
     return remote_repo.clone(path)

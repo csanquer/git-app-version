@@ -2,115 +2,98 @@
 '''
     Main module
 '''
-import argparse
 import os
-import sys
+
+import click
+from tabulate import tabulate
 
 import git_app_version.version
 from git_app_version.dumper import FileDumper
 from git_app_version.githandler import GitHandler
 
 __version__ = git_app_version.version.__version__
-__DESCRIPTION__ = 'Get Git commit informations'
-' and store them in a INI/XML/YAML/JSON file.'
 
 
-def main(args=None):
+def print_version(ctx, param, value):
+    if not value or ctx.resilient_parsing:
+        return
+    click.echo('git-app-version ' + __version__)
+    ctx.exit()
+
+
+CONTEXT_SETTINGS = {'help_option_names': ['-h', '--help']}
+
+
+@click.command(context_settings=CONTEXT_SETTINGS)
+@click.option('--version', '-V', is_flag=True, callback=print_version,
+              expose_value=False, is_eager=True)
+# @click.option('--verbose', '-v', count=True)
+@click.option('--quiet', '-q', is_flag=True, help='silent mode')
+@click.option('--output', '-o', default='version',
+              help='output file path (without extension).'
+              ' Default is \'<repository-path>/version\'.')
+@click.option('--format', '-f', 'output_formats',
+              type=click.Choice(['json', 'yml', 'xml', 'ini']),
+              multiple=True, default=['json'],
+              help='output file format and extension, Default is json.')
+@click.option('--namespace', '-n', default='',
+              help='namespace like notation in version file, use dot separator'
+              ' to segment namespaces e.g.: \'foo.bar.git\'.'
+              ' Default is \'app_version\' for XML and INI'
+              ' and no namespace for JSON and YAML.')
+@click.argument('repository', type=click.Path(
+    exists=True, resolve_path=True, file_okay=False, readable=True),
+    default=os.getcwd())
+@click.argument('commit', default='HEAD')
+@click.pass_context
+def dump(ctx, repository, commit, output, output_formats, namespace, quiet):
     '''
-        Main CLI function
-    '''
-    parser = argparse.ArgumentParser(
-        prog='git-app-version',
-        description=__DESCRIPTION__)
-    parser.add_argument(
-        '-V',
-        '--version',
-        action='version',
-        version='%(prog)s ' +
-        __version__,
-        help='display tool version')
-    parser.add_argument('-v', '--verbose', action='count',
-                        help='increase verbosity : use -v or -vv')
-    parser.add_argument(
-        '-q',
-        '--quiet',
-        action='store_true',
-        help='silent mode')
-    parser.add_argument(
-        'repository',
-        nargs='?',
-        metavar='path',
-        type=str,
-        help='git repository path. Default is the current directory.',
-        default=os.getcwd())
-    parser.add_argument(
-        'commit',
-        nargs='?',
-        type=str,
-        help='git commit to check. Default is HEAD.',
-        default='HEAD')
-    parser.add_argument(
-        '-o',
-        '--output',
-        metavar='path',
-        type=str,
-        help='output file path (without extension).'
-        ' Default is \'<repository-path>/version\'.',
-        default='version')
-    parser.add_argument(
-        '-f',
-        '--format',
-        metavar='format',
-        type=str,
-        help='output file format and extension (ini/xml/yml/json).'
-        ' Default is json.',
-        default='json')
-    parser.add_argument(
-        '-n',
-        '--namespace',
-        metavar='namespace',
-        type=str,
-        help='namespace like notation in version file,'
-        ' use dot separator to segment namespaces e.g.: \'foo.bar.git\'.'
-        ' Default is \'app_version\' for XML and INI'
-        ' and no namespace for JSON and YAML.',
-        default='')
+    Get Git commit informations and store them in a INI/XML/YAML/JSON file
 
-    options = parser.parse_args(sys.argv[1:] if args is None else args)
+    \b
+    REPOSITORY git repository path, Default is the current directory.
+    COMMIT     git commit to check, Default is HEAD.
+    '''
 
     try:
-        vcs = GitHandler(options.repository)
+        vcs = GitHandler(repository)
 
-        data = vcs.get_infos(commit=options.commit)
+        data = vcs.get_infos(commit=commit)
 
-        if (not options.quiet and options.verbose is not None and
-                options.verbose >= 1):
-
-            print('Git commit :')
-            keys = sorted(data.keys())
-            for key in keys:
-                try:
-                    print(key + ' = ' + data[key])
-                except TypeError:
-                    print(key + ' = ' + ' '.join(data[key]))
+        if not quiet:
+            print_commit_table(data)
 
         dumper = FileDumper()
-        dest = dumper.dump(
-            data=data,
-            fileformat=options.format,
-            target=options.output,
-            cwd=options.repository,
-            namespace=options.namespace)
-        if not options.quiet:
-            print("Git commit informations stored in " + dest)
+        if not quiet and len(output_formats):
+            click.echo("written to :")
 
-        return 0
+        for output_format in output_formats:
+            dest = dumper.dump(
+                data=data,
+                fileformat=output_format,
+                target=output,
+                cwd=repository,
+                namespace=namespace)
+            if not quiet:
+                click.echo(dest)
+
+        ctx.exit(0)
 
     except (RuntimeError, ValueError, TypeError) as exc:
-        print("Error Writing version config file : " + str(exc))
+        click.echo("Error Writing version config file : " + str(exc))
+        ctx.exit(1)
 
-        return 1
 
+def print_commit_table(data):
+    click.echo('Git commit :')
+    keys = sorted(data.keys())
+    table = []
+    for key in keys:
+        if isinstance(data[key], list):
+            item = ' '.join(data[key])
+        else:
+            item = data[key]
 
-if __name__ == '__main__':
-    sys.exit(main())
+        table.append([key, item])
+
+    click.echo(tabulate(table, tablefmt='simple'))

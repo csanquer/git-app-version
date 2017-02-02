@@ -93,7 +93,9 @@ setup(
         'pytz',
         'xmltodict',
         'tzlocal',
-        'gitpython'
+        'gitpython',
+        'tabulate >= 0.7.0',
+        'click >= 6.0'
     ],
 
     # List additional groups of dependencies here (e.g. development
@@ -133,7 +135,7 @@ setup(
     # pip to create the appropriate form of executable for the target platform.
     entry_points={
         'console_scripts': [
-            'git-app-version=git_app_version.__main__:main',
+            'git-app-version=git_app_version.__main__:dump',
         ],
     },
 )

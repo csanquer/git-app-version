@@ -46,32 +46,27 @@ Help result
 
 .. code:: shell
 
-    usage: git-app-version [-h] [-V] [-v] [-q] [-o path] [-f format]
-                           [-n namespace]
-                           [path] [commit]
+    Usage: git-app-version [OPTIONS] [REPOSITORY] [COMMIT]
 
-    Get Git commit informations and store them in a INI/XML/YAML/JSON file.
+      Get Git commit informations and store them in a INI/XML/YAML/JSON file
 
-    positional arguments:
-      path                  git repository path. Default is the current directory.
-      commit                git commit to check. Default is HEAD.
+      REPOSITORY git repository path, Default is the current directory.
+      COMMIT     git commit to check, Default is HEAD.
 
-    optional arguments:
-      -h, --help            show this help message and exit
-      -V, --version         display tool version
-      -v, --verbose         increase verbosity : use -v or -vv
-      -q, --quiet           silent mode
-      -o path, --output path
-                            output file path (without extension). Default is
-                            '<repository-path>/version'.
-      -f format, --format format
-                            output file format and extension (ini/xml/yml/json).
-                            Default is json.
-      -n namespace, --namespace namespace
-                            namespace like notation in version file, use dot
-                            separator to segment namespaces e.g.: 'foo.bar.git'.
-                            Default is 'app_version' for XML and INI and no
-                            namespace for JSON and YAML.
+    Options:
+      -V, --version
+      -q, --quiet                     silent mode
+      -o, --output TEXT               output file path (without extension).
+                                      Default is '<repository-path>/version'.
+      -f, --format [json|yml|xml|ini]
+                                      output file format and extension, Default is
+                                      json.
+      -n, --namespace TEXT            namespace like notation in version file, use
+                                      dot separator to segment namespaces e.g.:
+                                      'foo.bar.git'. Default is 'app_version' for
+                                      XML and INI and no namespace for JSON and
+                                      YAML.
+      -h, --help                      Show this message and exit.
 
 
 
@@ -86,7 +81,40 @@ To store git commit informations into a json file
 
     git-app-version -o version -f json
 
+
+output :
+
+.. code:: shell
+
+    Git commit :
+    ----------------  ----------------------------------------
+    abbrev_commit     40aaf83
+    author_date       2015-09-05T16:14:16+0000
+    author_email      paul.durand@example.com
+    author_name       Paul Durand
+    author_timestamp  1441469656
+    branches          master develop
+    commit_date       2015-09-05T16:14:16+0000
+    commit_timestamp  1441469656
+    committer_email   paul.durand@example.com
+    committer_name    Paul Durand
+    deploy_date       2016-06-21T09:33:01+0000
+    deploy_timestamp  1466501581
+    full_commit       40aaf83894b98898895d478f8b7cc4a866b1d62c
+    top_branches      master
+    version           v1.1.0-3-g439e52
+    ----------------  ----------------------------------------
+    written to :
+    <my-git-repository>/version.json
+
 This will generate a version.json file in the current directory (if this directory is a git repository).
+
+You can generate several format at once :
+
+.. code:: shell
+
+    git-app-version -o version -f json -f yml -f xml -f ini
+
 
 Commit informations
 ^^^^^^^^^^^^^^^^^^^

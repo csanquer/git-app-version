@@ -6,7 +6,7 @@ import pytest
 import pytz
 from mock import patch
 
-from git_app_version.helper.date import *
+import git_app_version.helper.date as date_helper
 
 
 @patch('git_app_version.helper.date.datetime')
@@ -19,7 +19,7 @@ def test_utcnow(mock_dt, mockInput, expected):
     expected_date = tz.localize(expected)
     mock_dt.now.return_value = tz.localize(mockInput)
 
-    assert expected_date == utcnow()
+    assert expected_date == date_helper.utcnow()
 
 
 @pytest.mark.parametrize("isodate,utc,expected,expected_tz", [
@@ -35,11 +35,11 @@ def test_datetime_from_iso8601(isodate, utc, expected, expected_tz):
     tz = pytz.timezone(expected_tz)
     expected_date = tz.localize(expected)
 
-    assert expected_date == datetime_from_iso8601(isodate, utc)
+    assert expected_date == date_helper.datetime_from_iso8601(isodate, utc)
 
 
 def test_datetime_from_iso8601_empty():
-    assert datetime_from_iso8601('', True) is None
+    assert date_helper.datetime_from_iso8601('', True) is None
 
 
 @pytest.mark.parametrize("input,input_tz,expected", [
@@ -53,7 +53,7 @@ def test_iso8601_from_datetime(input, input_tz, expected):
         tz = pytz.timezone(input_tz)
         input = tz.localize(input)
 
-    assert expected == iso8601_from_datetime(input)
+    assert expected == date_helper.iso8601_from_datetime(input)
 
 
 @pytest.mark.parametrize("dt,input_tz,expected", [
@@ -66,4 +66,4 @@ def test_timestamp_from_datetime(dt, input_tz, expected):
         tz = pytz.timezone(input_tz)
         dt = tz.localize(dt)
 
-    assert expected == timestamp_from_datetime(dt)
+    assert expected == date_helper.timestamp_from_datetime(dt)

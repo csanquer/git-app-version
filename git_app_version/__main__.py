@@ -81,7 +81,7 @@ def main(args=None):
     try:
         vcs = GitHandler(options.repository)
 
-        data = vcs.get_infos(commit=options.commit, cwd=options.repository)
+        data = vcs.get_infos(commit=options.commit)
 
         if (not options.quiet and options.verbose is not None and
                 options.verbose >= 1):

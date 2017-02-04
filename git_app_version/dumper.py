@@ -30,6 +30,8 @@ class FileDumper(object):
             return self.dump_xml(data, target, namespace)
         elif fileformat == 'ini':
             return self.dump_ini(data, target, namespace)
+        elif fileformat == 'sh':
+            return self.dump_sh(data, target)
         else:
             return self.dump_json(data, target, namespace)
 
@@ -71,6 +73,17 @@ class FileDumper(object):
             return "[{}]".format(flattened_list)
         else:
             return item
+
+    def dump_sh(self, data, target):
+        target = target + '.sh'
+
+        with open(target, 'w') as fpt:
+            for key, val in data.items():
+                if not PY3:
+                    val = self.__encode(self.__flatten(val))
+                fpt.write("{}=\"{}\"\n".format(key, val))
+
+        return target
 
     def dump_ini(self, data, target, namespace=None):
         target = target + '.ini'

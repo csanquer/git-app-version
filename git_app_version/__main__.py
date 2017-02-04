@@ -33,14 +33,15 @@ CONTEXT_SETTINGS = {'help_option_names': ['-h', '--help']}
               help='output file path (without extension).'
               ' Default is \'<repository-path>/version\'.')
 @click.option('--format', '-f', 'output_formats',
-              type=click.Choice(['json', 'yml', 'xml', 'ini']),
+              type=click.Choice(['json', 'yml', 'xml', 'ini', 'sh']),
               multiple=True, default=['json'],
               help='output file format and extension, Default is json.')
 @click.option('--namespace', '-n', default='',
               help='namespace like notation in version file, use dot separator'
               ' to segment namespaces e.g.: \'foo.bar.git\'.'
               ' Default is \'app_version\' for XML and INI'
-              ' and no namespace for JSON and YAML.')
+              ' and no namespace for JSON and YAML.'
+              ' Never used for Shell file.')
 @click.argument('repository', type=click.Path(
     exists=True, resolve_path=True, file_okay=False, readable=True),
     default=os.getcwd())
@@ -48,7 +49,7 @@ CONTEXT_SETTINGS = {'help_option_names': ['-h', '--help']}
 @click.pass_context
 def dump(ctx, repository, commit, output, output_formats, namespace, quiet):
     '''
-    Get Git commit informations and store them in a INI/XML/YAML/JSON file
+    Get Git commit informations and store them in a INI/XML/YAML/JSON/SH file
 
     \b
     REPOSITORY git repository path, Default is the current directory.

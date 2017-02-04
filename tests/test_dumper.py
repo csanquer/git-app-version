@@ -2,6 +2,7 @@
 
 import json
 import os
+import re
 import shutil
 
 import pytest
@@ -56,6 +57,22 @@ def get_file_content(path, section=None, fileFormat=None):
                     data[k] = v.decode('utf-8')
 
         return data
+    elif fileFormat == 'sh':
+        data = {}
+        pattern = re.compile(r'^([^=]+)="(.*)"$')
+        with open(path, 'r') as f:
+            for line in f:
+                match = pattern.match(line)
+                if match:
+                    k = match.group(1)
+                    v = match.group(2)
+
+                    if PY3:
+                        data[k] = v
+                    else:
+                        data[k] = v.decode('utf-8')
+
+        return data
     elif fileFormat == 'json':
         with open(path, 'r') as f:
             return json.load(f)
@@ -67,6 +84,34 @@ def get_file_content(path, section=None, fileFormat=None):
 @pytest.mark.parametrize(
     'data,data_format,target,section,expected_target,expected_data',
     [
+        (
+            {
+                'version': 'v1.1.0-3-g439e52',
+                'abbrev_commit': '40aaf83',
+                'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
+                'author_name': u'Se\u0301bastien Dupond',
+                'commit_date': '2016-03-01T09:33:33+0000',
+                'commit_timestamp': '1456824813',
+                'deploy_date': '2016-03-02T11:33:45+0000',
+                'deploy_timestamp': '1456918425',
+                'branches': ['master', 'feature/my_feature']
+            },
+            'sh',
+            'version',
+            '',
+            'version.sh',
+            {
+                'version': 'v1.1.0-3-g439e52',
+                'abbrev_commit': '40aaf83',
+                'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
+                'author_name':  u'Se\u0301bastien Dupond',
+                'commit_date': '2016-03-01T09:33:33+0000',
+                'commit_timestamp': '1456824813',
+                'deploy_date': '2016-03-02T11:33:45+0000',
+                'deploy_timestamp': '1456918425',
+                'branches': "['master', 'feature/my_feature']"
+            },
+        ),
         (
             {
                 'version': 'v1.1.0-3-g439e52',

@@ -11,7 +11,15 @@ Git App Version
 .. image:: https://scrutinizer-ci.com/g/csanquer/git-app-version/badges/coverage.png?b=master
     :target: https://scrutinizer-ci.com/g/csanquer/git-app-version/?branch=master
 
-A CLI tool written in Python to fetch Git commit informations and store them in an INI/XML/YAML/JSON file.
+A CLI tool written in Python to fetch Git commit informations and store them in a config file.
+
+supported formats :
+
+* JSON
+* YAML
+* XML
+* INI
+* Shell script variables
 
 Typical usecase : when deploying, run this command and import the git version config file.
 
@@ -48,7 +56,7 @@ Help result
 
     Usage: git-app-version [OPTIONS] [REPOSITORY] [COMMIT]
 
-      Get Git commit informations and store them in a INI/XML/YAML/JSON file
+      Get Git commit informations and store them in a INI/XML/YAML/JSON/SH file
 
       REPOSITORY git repository path, Default is the current directory.
       COMMIT     git commit to check, Default is HEAD.
@@ -58,14 +66,14 @@ Help result
       -q, --quiet                     silent mode
       -o, --output TEXT               output file path (without extension).
                                       Default is '<repository-path>/version'.
-      -f, --format [json|yml|xml|ini]
+      -f, --format [json|yml|xml|ini|sh]
                                       output file format and extension, Default is
                                       json.
       -n, --namespace TEXT            namespace like notation in version file, use
                                       dot separator to segment namespaces e.g.:
                                       'foo.bar.git'. Default is 'app_version' for
                                       XML and INI and no namespace for JSON and
-                                      YAML.
+                                      YAML. Never used for Shell file.
       -h, --help                      Show this message and exit.
 
 
@@ -114,7 +122,7 @@ You can generate several format at once :
 
 .. code:: shell
 
-    git-app-version -o version -f json -f yml -f xml -f ini
+    git-app-version -o version -f json -f yml -f xml -f ini -f sh
 
 
 Commit informations
@@ -450,6 +458,34 @@ File formats
       committer_email = paul.durand@example.com
       top_branches = ['master']
       branches = ['master','develop']
+
+* sh (shell script variables)
+
+  .. code:: shell
+
+      git-app-version -f sh
+
+  result
+
+  .. code:: shell
+
+      version="v1.1.0-3-g439e52"
+      full_commit="40aaf83894b98898895d478f8b7cc4a866b1d62c"
+      abbrev_commit="40aaf83"
+      commit_date="2016-03-01T09:33:33+0000"
+      commit_timestamp="1456824813"
+      author_date="2016-03-01T09:33:33+0000"
+      author_timestamp="1456824813"
+      deploy_date="2016-03-02T11:33:45+0000"
+      deploy_timestamp="1456918425"
+      message="new feature"
+      author_name="Paul Durand"
+      author_email="paul.durand@example.com"
+      committer_name="Paul Durand"
+      committer_email="paul.durand@example.com"
+      top_branches="['master']"
+      branches="['master','develop']"
+
 
 Licensing
 ---------

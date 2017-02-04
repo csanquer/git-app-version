@@ -113,6 +113,8 @@ def test_getters(git_repo_local, handler_local):
     assert handler_local.get_abbrev_commit() == commit.hexsha[0:7]
     assert handler_local.get_version() == 'v0.1.2-1-g' + commit.hexsha[0:7]
 
+    assert handler_local.get_message() == commit.message.strip()
+
     assert handler_local.get_author_name() == name
     assert handler_local.get_author_email() == email
 
@@ -188,6 +190,7 @@ def test_get_infos(mock_dt, git_repo_local, handler_local):
     mock_dt.side_effect = lambda *args, **kw: datetime(*args, **kw)
 
     expected = {
+        'message': 'commit 3',
         'abbrev_commit': commit.hexsha[0:7],
         'author_date': '2016-12-17T06:40:21+0100',
         'author_email': 'paul.dupond@example.com',

@@ -93,6 +93,9 @@ class GitHandler(object):
     def get_abbrev_commit(self, commit='HEAD'):
         return self.repo.commit(commit).hexsha[0:7]
 
+    def get_message(self, commit='HEAD'):
+        return self.repo.commit(commit).message.strip()
+
     def get_infos(self, commit='HEAD'):
         deploy_date = self.get_deploy_date()
         abbrev_commit = self.get_abbrev_commit(commit)
@@ -109,6 +112,7 @@ class GitHandler(object):
             'version': self.get_version(commit, default=abbrev_commit),
             'abbrev_commit': abbrev_commit,
             'full_commit': self.get_full_commit(commit),
+            'message': self.get_message(commit),
             'author_name': self.get_author_name(commit),
             'author_email': self.get_author_email(commit),
             'committer_name': self.get_committer_name(commit),

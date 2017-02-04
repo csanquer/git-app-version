@@ -101,6 +101,7 @@ output :
     deploy_date       2016-06-21T09:33:01+0000
     deploy_timestamp  1466501581
     full_commit       40aaf83894b98898895d478f8b7cc4a866b1d62c
+    message           new feature
     top_branches      master
     version           v1.1.0-3-g439e52
     ----------------  ----------------------------------------
@@ -131,6 +132,8 @@ Commit informations
   if no version is found, the abbrev commit will be used per default
 
   *e.g.: v1.1.0-3-g439e52*
+
+* **message** : Git commit message
 
 * **commit_date** : Git commit date in `iso8601 <https://en.wikipedia.org/wiki/ISO_8601>`_ format,
 
@@ -215,7 +218,9 @@ File formats
         "author_date": "2015-09-05T16:14:16+0000",
         "author_timestamp": "1441469656",
         "deploy_date": "2016-06-21T09:33:01+0000",
-        "deploy_timestamp": "1466501581"
+        "deploy_timestamp": "1466501581",
+        "message": "new feature"
+
       }
 
   with namespace
@@ -250,7 +255,8 @@ File formats
             "author_date": "2015-09-05T16:14:16+0000",
             "author_timestamp": "1441469656",
             "deploy_date": "2016-06-21T09:33:01+0000",
-            "deploy_timestamp": "1466501581"
+            "deploy_timestamp": "1466501581",
+            "message": "new feature"
           }
         }
       }
@@ -281,6 +287,7 @@ File formats
       'author_timestamp': '1441469656'
       'deploy_date': '2016-06-21T09:32:57+0000'
       'deploy_timestamp': '1466501577'
+      'message': 'new feature'
       'branches':
       - 'develop'
       - 'master'
@@ -313,6 +320,7 @@ File formats
           'author_timestamp': '1441469656'
           'deploy_date': '2016-06-21T09:32:57+0000'
           'deploy_timestamp': '1466501577'
+          'message': 'new feature'
           'branches':
           - 'develop'
           - 'master'
@@ -345,6 +353,7 @@ File formats
         <committer_email>paul.durand@example.com</committer_email>
         <author_name>Paul Durand</author_name>
         <author_email>paul.durand@example.com</author_email>
+        <message>new feature</message>
         <branches>develop</branches>
         <branches>master</branches>
         <top_branches>master</top_branches>
@@ -376,6 +385,7 @@ File formats
           <committer_email>paul.durand@example.com</committer_email>
           <author_name>Paul Durand</author_name>
           <author_email>paul.durand@example.com</author_email>
+          <message>new feature</message>
           <branches>develop</branches>
           <branches>master</branches>
           <top_branches>master</top_branches>
@@ -404,6 +414,7 @@ File formats
       author_timestamp = 1456824813
       deploy_date = 2016-03-02T11:33:45+0000
       deploy_timestamp = 1456918425
+      message = new feature
       author_name = Paul Durand
       author_email = paul.durand@example.com
       committer_name = Paul Durand
@@ -432,6 +443,7 @@ File formats
       author_timestamp = 1456824813
       deploy_date = 2016-03-02T11:33:45+0000
       deploy_timestamp = 1456918425
+      message = new feature
       author_name = Paul Durand
       author_email = paul.durand@example.com
       committer_name = Paul Durand

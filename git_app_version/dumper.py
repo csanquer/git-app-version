@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import csv
 import json
 import os
 
@@ -17,12 +18,16 @@ except ImportError:
 class FileDumper(object):
 
     def dump(
-            self,
-            data=None,
-            fileformat='json',
-            target=None,
-            cwd=None,
-            namespace=''):
+        self,
+        data=None,
+        fileformat='json',
+        target=None,
+        cwd=None,
+        namespace='',
+        csv_delimiter=',',
+        csv_quote='"',
+        csv_eol='lf'
+    ):
         target = self.__check_target(target, cwd)
         if fileformat == 'yaml' or fileformat == 'yml':
             return self.dump_yaml(data, target, namespace)
@@ -32,6 +37,9 @@ class FileDumper(object):
             return self.dump_ini(data, target, namespace)
         elif fileformat == 'sh':
             return self.dump_sh(data, target)
+        elif fileformat == 'csv':
+            return self.dump_csv(data, target, delimiter=csv_delimiter,
+                                 quotechar=csv_quote, eol=csv_eol)
         else:
             return self.dump_json(data, target, namespace)
 
@@ -82,6 +90,29 @@ class FileDumper(object):
                 if not PY3:
                     val = self.__encode(self.__flatten(val))
                 fpt.write("{}=\"{}\"\n".format(key, val))
+
+        return target
+
+    def dump_csv(self, data, target, delimiter=',', quotechar='"', eol='lf'):
+        target = target + '.csv'
+
+        eol = "\r\n" if eol == 'crlf' or eol == "\r\n" else "\n"
+
+        csv.register_dialect('custom', delimiter=str(delimiter),
+                             lineterminator=str(eol), quotechar=str(quotechar),
+                             quoting=csv.QUOTE_MINIMAL)
+
+        if PY3:
+            with open(target, 'w', encoding='utf-8') as fpt:
+                writer = csv.writer(fpt, dialect='custom')
+                for key, val in data.items():
+                    writer.writerow((key, val))
+        else:
+            with open(target, 'wb') as fpt:
+                writer = csv.writer(fpt, dialect='custom')
+                for key, val in data.items():
+                    val = self.__encode(self.__flatten(val))
+                    writer.writerow((key, val))
 
         return target
 

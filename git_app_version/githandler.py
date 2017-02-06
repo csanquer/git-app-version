@@ -28,6 +28,7 @@ RESERVED_KEYS = (
     'version'
 )
 
+
 class GitHandler(object):
 
     def __init__(self, path):

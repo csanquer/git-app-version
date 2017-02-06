@@ -10,6 +10,7 @@ import git_app_version.version
 from git_app_version.__main__ import dump as git_app_version_main
 from test_helpers import git_utils
 
+
 @pytest.fixture()
 def tmpdir(tmpdir_factory):
     cwd = os.getcwd()
@@ -84,6 +85,7 @@ def test_json(git_repo):
     assert os.path.exists(output_path)
     assert result.exit_code == 0
 
+
 def test_metadata(git_repo):
     runner = CliRunner()
 
@@ -101,27 +103,29 @@ def test_metadata(git_repo):
     assert os.path.exists(output_path)
     assert result.exit_code == 0
 
+
 def test_metadata_reserved_key(git_repo):
     runner = CliRunner()
 
     bad_key = 'deploy_date'
-    arg = ['-m', bad_key+'=foo', git_repo.working_tree_dir]
-    output_path = os.path.join(git_repo.working_tree_dir, 'version.json')
+    arg = ['-m', bad_key + '=foo', git_repo.working_tree_dir]
 
-    expected = ("Error: Invalid value for \"--meta\" / \"-m\": {} is a reserved key\n")
+    expected = (
+        "Error: Invalid value for \"--meta\" / \"-m\": {} is a reserved key\n")
 
     result = runner.invoke(git_app_version_main, arg)
     assert result.exit_code == 2
     assert result.output.find(expected.format(bad_key)) != -1
+
 
 def test_metadata_invalid_format(git_repo):
     runner = CliRunner()
 
     bad_key = 'foo'
     arg = ['-m', bad_key, git_repo.working_tree_dir]
-    output_path = os.path.join(git_repo.working_tree_dir, 'version.json')
 
-    expected = "Error: Invalid value for \"--meta\" / \"-m\": {} is not a valid meta data string e.g. : <key>=<value>\n"
+    expected = "Error: Invalid value for \"--meta\" / \"-m\":"
+    " {} is not a valid meta data string e.g. : <key>=<value>\n"
 
     result = runner.invoke(git_app_version_main, arg)
     assert result.exit_code == 2

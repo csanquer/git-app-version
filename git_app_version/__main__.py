@@ -5,14 +5,12 @@
 import os
 import re
 
-from pprint import pprint
-
 import click
 from tabulate import tabulate
 
 import git_app_version.version
 from git_app_version.dumper import FileDumper
-from git_app_version.githandler import GitHandler, RESERVED_KEYS
+from git_app_version.githandler import RESERVED_KEYS, GitHandler
 
 __version__ = git_app_version.version.__version__
 
@@ -26,6 +24,7 @@ def print_version(ctx, param, value):
 
 CONTEXT_SETTINGS = {'help_option_names': ['-h', '--help']}
 
+
 class MetadataParamType(click.ParamType):
     name = 'metadata'
 
@@ -33,7 +32,9 @@ class MetadataParamType(click.ParamType):
         try:
             match = re.match(r'^([^=]+)=(.*)$', value)
             if not match:
-                raise ValueError('%s is not a valid meta data string e.g. : <key>=<value>' % value)
+                raise ValueError(
+                    '%s is not a valid meta data string e.g. : <key>=<value>' %
+                    value)
 
             if match.group(1) in RESERVED_KEYS:
                 raise ValueError('%s is a reserved key' % match.group(1))
@@ -43,7 +44,9 @@ class MetadataParamType(click.ParamType):
         except ValueError as e:
             self.fail(str(e), param, ctx)
 
+
 METADATA = MetadataParamType()
+
 
 @click.command(context_settings=CONTEXT_SETTINGS)
 @click.option('--version', '-V', is_flag=True, callback=print_version,
@@ -54,7 +57,7 @@ METADATA = MetadataParamType()
               help='output file path (without extension).'
               ' Default is \'<repository-path>/version\'.')
 @click.option('--format', '-f', 'output_formats',
-              type=click.Choice(['json', 'yml', 'xml', 'ini', 'sh']),
+              type=click.Choice(['json', 'yml', 'xml', 'ini', 'csv', 'sh']),
               multiple=True, default=['json'],
               help='output file format and extension, Default is json.')
 @click.option('--namespace', '-n', default='',
@@ -62,17 +65,26 @@ METADATA = MetadataParamType()
               ' to segment namespaces e.g.: \'foo.bar.git\'.'
               ' Default is \'app_version\' for XML and INI'
               ' and no namespace for JSON and YAML.'
-              ' Never used for Shell file.')
+              ' Never used for CSV or Shell file.')
 @click.option('--meta', '-m', type=METADATA, multiple=True,
               help='meta data to add, format = "<key>=<value>"')
+@click.option('--csv-delimiter', '-d', 'csv_delimiter', default=',',
+              help='CSV delimiter, default=","')
+@click.option('--csv-eol', '-e', 'csv_eol', type=click.Choice(['lf', 'crlf']),
+              default="lf",
+              help='CSV end of line,'
+              ' lf = Unix new line, crlf = windows new line, default=lf')
+@click.option('--csv-quote', '-u', 'csv_quote', default='"',
+              help='CSV quoting character, default=\'"\'')
 @click.argument('repository', type=click.Path(
     exists=True, resolve_path=True, file_okay=False, readable=True),
     default=os.getcwd())
 @click.argument('commit', default='HEAD')
 @click.pass_context
-def dump(ctx, repository, commit, output, output_formats, namespace, meta, quiet):
+def dump(ctx, repository, commit, output, output_formats,
+         namespace, meta, quiet, csv_delimiter, csv_quote, csv_eol):
     '''
-    Get Git commit informations and store them in a INI/XML/YAML/JSON/SH file
+    Get Git commit informations and store them in a config file
 
     \b
     REPOSITORY git repository path, Default is the current directory.
@@ -86,7 +98,7 @@ def dump(ctx, repository, commit, output, output_formats, namespace, meta, quiet
 
         # add metadatas
         for item in meta:
-            for k,v in item.items():
+            for k, v in item.items():
                 data[k] = v
 
         if not quiet:
@@ -102,7 +114,10 @@ def dump(ctx, repository, commit, output, output_formats, namespace, meta, quiet
                 fileformat=output_format,
                 target=output,
                 cwd=repository,
-                namespace=namespace)
+                namespace=namespace,
+                csv_delimiter=csv_delimiter,
+                csv_quote=csv_quote,
+                csv_eol=csv_eol)
             if not quiet:
                 click.echo(dest)
 

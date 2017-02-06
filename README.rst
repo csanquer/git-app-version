@@ -19,6 +19,7 @@ supported formats :
 * YAML
 * XML
 * INI
+* CSV
 * Shell script variables
 
 Typical usecase : when deploying, run this command and import the git version config file.
@@ -56,7 +57,7 @@ Help result
 
     Usage: git-app-version [OPTIONS] [REPOSITORY] [COMMIT]
 
-      Get Git commit informations and store them in a INI/XML/YAML/JSON/SH file
+      Get Git commit informations and store them in a config file
 
       REPOSITORY git repository path, Default is the current directory.
       COMMIT     git commit to check, Default is HEAD.
@@ -66,7 +67,7 @@ Help result
       -q, --quiet                     silent mode
       -o, --output TEXT               output file path (without extension).
                                       Default is '<repository-path>/version'.
-      -f, --format [json|yml|xml|ini|sh]
+      -f, --format [json|yml|xml|ini|csv|sh]
                                       output file format and extension, Default is
                                       json.
       -n, --namespace TEXT            namespace like notation in version file, use
@@ -75,6 +76,10 @@ Help result
                                       XML and INI and no namespace for JSON and
                                       YAML. Never used for Shell file.
       -m, --meta METADATA             meta data to add, format = "<key>=<value>"
+      -d, --csv-delimiter TEXT        CSV delimiter, default=","
+      -e, --csv-eol [lf|crlf]         CSV end of line, lf = Unix new line, crlf =
+                                      windows new line, default=lf
+      -u, --csv-quote TEXT            CSV quoting character, default='"'
       -h, --help                      Show this message and exit.
 
 
@@ -497,6 +502,37 @@ File formats
       committer_email = paul.durand@example.com
       top_branches = ['master']
       branches = ['master','develop']
+
+* csv
+
+  you can configure CSV format with the option `--csv-delimiter` , `--csv-eol` and `--csv-quote`
+
+  .. code:: shell
+
+      git-app-version -f csv --csv-delimiter ',' --csv-eol lf --csv-quote '"'
+
+
+  result
+
+  .. code:: csv
+
+      version,v1.1.0-3-g439e52
+      full_commit,40aaf83894b98898895d478f8b7cc4a866b1d62c
+      abbrev_commit,40aaf83
+      commit_date,2016-03-01T09:33:33+0000
+      commit_timestamp,1456824813
+      author_date,2016-03-01T09:33:33+0000
+      author_timestamp,1456824813
+      deploy_date,2016-03-02T11:33:45+0000
+      deploy_timestamp,1456918425
+      message,new feature
+      author_name,Paul Durand
+      author_email,paul.durand@example.com
+      committer_name,Paul Durand
+      committer_email,paul.durand@example.com
+      top_branches,"['master']"
+      branches,"['master','develop']"
+
 
 * sh (shell script variables)
 

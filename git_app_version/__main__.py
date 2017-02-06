@@ -3,13 +3,16 @@
     Main module
 '''
 import os
+import re
+
+from pprint import pprint
 
 import click
 from tabulate import tabulate
 
 import git_app_version.version
 from git_app_version.dumper import FileDumper
-from git_app_version.githandler import GitHandler
+from git_app_version.githandler import GitHandler, RESERVED_KEYS
 
 __version__ = git_app_version.version.__version__
 
@@ -23,6 +26,24 @@ def print_version(ctx, param, value):
 
 CONTEXT_SETTINGS = {'help_option_names': ['-h', '--help']}
 
+class MetadataParamType(click.ParamType):
+    name = 'metadata'
+
+    def convert(self, value, param, ctx):
+        try:
+            match = re.match(r'^([^=]+)=(.*)$', value)
+            if not match:
+                raise ValueError('%s is not a valid meta data string e.g. : <key>=<value>' % value)
+
+            if match.group(1) in RESERVED_KEYS:
+                raise ValueError('%s is a reserved key' % match.group(1))
+
+            return {match.group(1): match.group(2).strip('"\'')}
+
+        except ValueError as e:
+            self.fail(e.message, param, ctx)
+
+METADATA = MetadataParamType()
 
 @click.command(context_settings=CONTEXT_SETTINGS)
 @click.option('--version', '-V', is_flag=True, callback=print_version,
@@ -42,12 +63,14 @@ CONTEXT_SETTINGS = {'help_option_names': ['-h', '--help']}
               ' Default is \'app_version\' for XML and INI'
               ' and no namespace for JSON and YAML.'
               ' Never used for Shell file.')
+@click.option('--meta', '-m', type=METADATA, multiple=True,
+              help='meta data to add, format = "<key>=<value>"')
 @click.argument('repository', type=click.Path(
     exists=True, resolve_path=True, file_okay=False, readable=True),
     default=os.getcwd())
 @click.argument('commit', default='HEAD')
 @click.pass_context
-def dump(ctx, repository, commit, output, output_formats, namespace, quiet):
+def dump(ctx, repository, commit, output, output_formats, namespace, meta, quiet):
     '''
     Get Git commit informations and store them in a INI/XML/YAML/JSON/SH file
 
@@ -60,6 +83,11 @@ def dump(ctx, repository, commit, output, output_formats, namespace, quiet):
         vcs = GitHandler(repository)
 
         data = vcs.get_infos(commit=commit)
+
+        # add metadatas
+        for item in meta:
+            for k,v in item.iteritems():
+                data[k] = v
 
         if not quiet:
             print_commit_table(data)

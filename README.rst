@@ -74,6 +74,7 @@ Help result
                                       'foo.bar.git'. Default is 'app_version' for
                                       XML and INI and no namespace for JSON and
                                       YAML. Never used for Shell file.
+      -m, --meta METADATA             meta data to add, format = "<key>=<value>"
       -h, --help                      Show this message and exit.
 
 
@@ -125,8 +126,46 @@ You can generate several format at once :
     git-app-version -o version -f json -f yml -f xml -f ini -f sh
 
 
-Commit informations
-^^^^^^^^^^^^^^^^^^^
+Metadata : adding custom fields
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+You can add custom metadata fields with the `--meta` / `-m` option (can be used several times) :
+
+.. code:: shell
+
+    git-app-version -m foo=bar -m custom_key=custom_value
+
+output :
+
+.. code:: shell
+
+    Git commit :
+    ----------------  ----------------------------------------
+    abbrev_commit     40aaf83
+    author_date       2015-09-05T16:14:16+0000
+    author_email      paul.durand@example.com
+    author_name       Paul Durand
+    author_timestamp  1441469656
+    branches          master develop
+    commit_date       2015-09-05T16:14:16+0000
+    commit_timestamp  1441469656
+    committer_email   paul.durand@example.com
+    committer_name    Paul Durand
+    custom_key        custom_value
+    deploy_date       2016-06-21T09:33:01+0000
+    deploy_timestamp  1466501581
+    foo               bar
+    full_commit       40aaf83894b98898895d478f8b7cc4a866b1d62c
+    message           new feature
+    top_branches      master
+    version           v1.1.0-3-g439e52
+    ----------------  ----------------------------------------
+    written to :
+    <my-git-repository>/version.json
+
+
+Commit informations fields
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * **full_commit** : Git SHA1 commit hash,
 

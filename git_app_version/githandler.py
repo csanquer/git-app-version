@@ -9,6 +9,24 @@ from git.exc import InvalidGitRepositoryError, NoSuchPathError
 
 import git_app_version.helper.date as dthelper
 
+RESERVED_KEYS = (
+    'abbrev_commit',
+    'author_date',
+    'author_email',
+    'author_name',
+    'author_timestamp',
+    'branches',
+    'commit_date',
+    'commit_timestamp',
+    'committer_email',
+    'committer_name',
+    'deploy_date',
+    'deploy_timestamp',
+    'full_commit',
+    'message',
+    'top_branches',
+    'version'
+)
 
 class GitHandler(object):
 

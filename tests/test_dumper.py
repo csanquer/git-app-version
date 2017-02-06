@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import csv
 import json
 import os
 import re
@@ -34,7 +35,8 @@ def output_dir():
     return path
 
 
-def get_file_content(path, section=None, fileFormat=None):
+def get_file_content(path, section=None, fileFormat=None,
+                     csv_delimiter=',', csv_quote='"', csv_eol='lf'):
     if fileFormat == 'yml' or fileFormat == 'yaml':
         with open(path, 'r') as f:
             return yaml.load(f)
@@ -55,6 +57,33 @@ def get_file_content(path, section=None, fileFormat=None):
                     data[k] = v
                 else:
                     data[k] = v.decode('utf-8')
+
+        return data
+    elif fileFormat == 'csv':
+        data = {}
+
+        eol = "\r\n" if csv_eol == 'crlf' or csv_eol == "\r\n" else "\n"
+
+        if PY3:
+            with open(path, 'r', encoding='utf-8') as f:
+                reader = csv.reader(
+                    f,
+                    delimiter=csv_delimiter,
+                    quotechar=csv_quote,
+                    lineterminator=eol,
+                    quoting=csv.QUOTE_MINIMAL)
+                for row in reader:
+                    data[row[0]] = row[1]
+        else:
+            with open(path, 'rb') as f:
+                reader = csv.reader(
+                    f,
+                    delimiter=csv_delimiter,
+                    quotechar=csv_quote,
+                    lineterminator=eol,
+                    quoting=csv.QUOTE_MINIMAL)
+                for row in reader:
+                    data[row[0]] = row[1].decode('utf-8')
 
         return data
     elif fileFormat == 'sh':
@@ -82,7 +111,8 @@ def get_file_content(path, section=None, fileFormat=None):
 
 
 @pytest.mark.parametrize(
-    'data,data_format,target,section,expected_target,expected_data',
+    'data,data_format,target,section,expected_target,expected_data,'
+    'csv_delimiter,csv_quote,csv_eol',
     [
         (
             {
@@ -104,13 +134,78 @@ def get_file_content(path, section=None, fileFormat=None):
                 'version': 'v1.1.0-3-g439e52',
                 'abbrev_commit': '40aaf83',
                 'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
-                'author_name':  u'Se\u0301bastien Dupond',
+                'author_name': u'Se\u0301bastien Dupond',
                 'commit_date': '2016-03-01T09:33:33+0000',
                 'commit_timestamp': '1456824813',
                 'deploy_date': '2016-03-02T11:33:45+0000',
                 'deploy_timestamp': '1456918425',
                 'branches': "['master', 'feature/my_feature']"
             },
+            None,
+            None,
+            None,
+        ),
+        (
+            {
+                'version': 'v1.1.0-3-g439e52',
+                'abbrev_commit': '40aaf83',
+                'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
+                'author_name': u'Se\u0301bastien Dupond',
+                'commit_date': '2016-03-01T09:33:33+0000',
+                'commit_timestamp': '1456824813',
+                'deploy_date': '2016-03-02T11:33:45+0000',
+                'deploy_timestamp': '1456918425',
+                'branches': ['master', 'feature/my_feature']
+            },
+            'csv',
+            'version',
+            '',
+            'version.csv',
+            {
+                'version': 'v1.1.0-3-g439e52',
+                'abbrev_commit': '40aaf83',
+                'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
+                'author_name': u'Se\u0301bastien Dupond',
+                'commit_date': '2016-03-01T09:33:33+0000',
+                'commit_timestamp': '1456824813',
+                'deploy_date': '2016-03-02T11:33:45+0000',
+                'deploy_timestamp': '1456918425',
+                'branches': "['master', 'feature/my_feature']"
+            },
+            ',',
+            '"',
+            'lf',
+        ),
+        (
+            {
+                'version': 'v1.1.0-3-g439e52',
+                'abbrev_commit': '40aaf83',
+                'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
+                'author_name': u'Se\u0301bastien Dupond',
+                'commit_date': '2016-03-01T09:33:33+0000',
+                'commit_timestamp': '1456824813',
+                'deploy_date': '2016-03-02T11:33:45+0000',
+                'deploy_timestamp': '1456918425',
+                'branches': ['master', 'feature/my_feature']
+            },
+            'csv',
+            'version',
+            '',
+            'version.csv',
+            {
+                'version': 'v1.1.0-3-g439e52',
+                'abbrev_commit': '40aaf83',
+                'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
+                'author_name': u'Se\u0301bastien Dupond',
+                'commit_date': '2016-03-01T09:33:33+0000',
+                'commit_timestamp': '1456824813',
+                'deploy_date': '2016-03-02T11:33:45+0000',
+                'deploy_timestamp': '1456918425',
+                'branches': "['master', 'feature/my_feature']"
+            },
+            ';',
+            '\'',
+            'crlf',
         ),
         (
             {
@@ -139,6 +234,9 @@ def get_file_content(path, section=None, fileFormat=None):
                 'deploy_timestamp': '1456918425',
                 'branches': "['master', 'feature/my_feature']"
             },
+            None,
+            None,
+            None,
         ),
         (
             {
@@ -165,6 +263,9 @@ def get_file_content(path, section=None, fileFormat=None):
                 'deploy_date': '2016-03-02T11:33:45+0000',
                 'deploy_timestamp': '1456918425',
             },
+            None,
+            None,
+            None,
         ),
         (
             {
@@ -189,6 +290,9 @@ def get_file_content(path, section=None, fileFormat=None):
                 'deploy_date': '2016-03-02T11:33:45+0000',
                 'deploy_timestamp': '1456918425',
             },
+            None,
+            None,
+            None,
         ),
         (
             {
@@ -219,7 +323,10 @@ def get_file_content(path, section=None, fileFormat=None):
                         'deploy_timestamp': '1456918425',
                     }
                 }
-            }
+            },
+            None,
+            None,
+            None,
         ),
         (
             {
@@ -244,6 +351,9 @@ def get_file_content(path, section=None, fileFormat=None):
                 'deploy_date': '2016-03-02T11:33:45+0000',
                 'deploy_timestamp': '1456918425',
             },
+            None,
+            None,
+            None,
         ),
         (
             {
@@ -275,6 +385,9 @@ def get_file_content(path, section=None, fileFormat=None):
                     }
                 }
             },
+            None,
+            None,
+            None,
         ),
         (
             {},
@@ -282,6 +395,9 @@ def get_file_content(path, section=None, fileFormat=None):
             'version',
             '',
             'version.yml',
+            None,
+            None,
+            None,
             None,
         ),
         (
@@ -309,6 +425,9 @@ def get_file_content(path, section=None, fileFormat=None):
                     'deploy_timestamp': '1456918425',
                 }
             },
+            None,
+            None,
+            None,
         ),
         (
             {
@@ -340,16 +459,28 @@ def get_file_content(path, section=None, fileFormat=None):
                     }
                 }
             },
+            None,
+            None,
+            None,
         )
     ]
 )
 def test_dump(output_dir, data, data_format, target,
-              section, expected_target, expected_data):
+              section, expected_target, expected_data,
+              csv_delimiter, csv_quote, csv_eol):
     appdumper = AppDumper()
 
     resultTarget = appdumper.dump(
-        data, data_format, target, output_dir, section)
+        data=data,
+        fileformat=data_format,
+        target=target,
+        cwd=output_dir,
+        namespace=section,
+        csv_delimiter=csv_delimiter,
+        csv_quote=csv_quote,
+        csv_eol=csv_eol)
 
     assert output_dir + '/' + expected_target == resultTarget
     assert expected_data == get_file_content(
-        output_dir + '/' + expected_target, section, data_format)
+        output_dir + '/' + expected_target, section, data_format,
+        csv_delimiter=csv_delimiter, csv_quote=csv_quote, csv_eol=csv_eol)

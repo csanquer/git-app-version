@@ -16,6 +16,9 @@ __version__ = git_app_version.version.__version__
 
 
 def print_version(ctx, param, value):
+    '''
+    display application version
+    '''
     if not value or ctx.resilient_parsing:
         return
     click.echo('git-app-version ' + __version__)
@@ -26,9 +29,15 @@ CONTEXT_SETTINGS = {'help_option_names': ['-h', '--help']}
 
 
 class MetadataParamType(click.ParamType):
+    '''
+    Click paramerer Type to parse <key>=<value> option
+    '''
     name = 'metadata'
 
     def convert(self, value, param, ctx):
+        '''
+        convert row option value to dict
+        '''
         try:
             match = re.match(r'^([^=]+)=(.*)$', value)
             if not match:
@@ -41,8 +50,8 @@ class MetadataParamType(click.ParamType):
 
             return {match.group(1): match.group(2).strip('"\'')}
 
-        except ValueError as e:
-            self.fail(str(e), param, ctx)
+        except ValueError as exc:
+            self.fail(str(exc), param, ctx)
 
 
 METADATA = MetadataParamType()
@@ -76,9 +85,10 @@ METADATA = MetadataParamType()
               ' lf = Unix new line, crlf = windows new line, default=lf')
 @click.option('--csv-quote', '-u', 'csv_quote', default='"',
               help='CSV quoting character, default=\'"\'')
-@click.argument('repository', type=click.Path(
-    exists=True, resolve_path=True, file_okay=False, readable=True),
-    default=os.getcwd())
+@click.argument('repository',
+                type=click.Path(exists=True, resolve_path=True,
+                                file_okay=False, readable=True),
+                default=os.getcwd())
 @click.argument('commit', default='HEAD')
 @click.pass_context
 def dump(ctx, repository, commit, output, output_formats,
@@ -98,8 +108,8 @@ def dump(ctx, repository, commit, output, output_formats,
 
         # add metadatas
         for item in meta:
-            for k, v in item.items():
-                data[k] = v
+            for key, val in item.items():
+                data[key] = val
 
         if not quiet:
             print_commit_table(data)
@@ -129,6 +139,9 @@ def dump(ctx, repository, commit, output, output_formats,
 
 
 def print_commit_table(data):
+    '''
+    display a dict as a Table in standard output
+    '''
     click.echo('Git commit :')
     keys = sorted(data.keys())
     table = []

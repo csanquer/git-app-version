@@ -1,6 +1,6 @@
 ---
 before_commands:
-    - sudo pip3 install -r requirements-dev.txt
+    - sudo pip3 install iso8601 pyyaml pytz xmltodict tzlocal gitpython tabulate click
 
 checks:
     python:

@@ -4,7 +4,6 @@
 """
 
 import os
-import subprocess
 
 from git import Repo
 
@@ -59,9 +58,11 @@ def init(email='user@example.com', username='User Test', repo_dir=None):
 
     return repo
 
-def default_init(version='0.1.2', email='user@example.com', username='User Test',
-        author='User Test <user@example.com>', date='2016-11-20T12:41:30+0000',
-        tag_date='2016-11-20T12:42:30+0000', repo_dir=None):
+def default_init(version='0.1.2',
+                 email='user@example.com', username='User Test',
+                 author='User Test <user@example.com>',
+                 date='2016-11-20T12:41:30+0000',
+                 tag_date='2016-11-20T12:42:30+0000', repo_dir=None):
     repo = init(email=email, username=username, repo_dir=repo_dir)
     commit(repo=repo, message='initial commit', author=author, date=date)
     tag(repo=repo, version=version, author=author, date=tag_date)

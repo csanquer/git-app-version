@@ -10,8 +10,6 @@ import git_app_version.version
 from git_app_version.__main__ import dump as git_app_version_main
 from test_helpers import git_utils
 
-from pprint import pprint
-
 @pytest.fixture()
 def tmpdir(tmpdir_factory):
     cwd = os.getcwd()

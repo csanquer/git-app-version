@@ -41,7 +41,7 @@ class MetadataParamType(click.ParamType):
             return {match.group(1): match.group(2).strip('"\'')}
 
         except ValueError as e:
-            self.fail(e.message, param, ctx)
+            self.fail(str(e), param, ctx)
 
 METADATA = MetadataParamType()
 
@@ -86,7 +86,7 @@ def dump(ctx, repository, commit, output, output_formats, namespace, meta, quiet
 
         # add metadatas
         for item in meta:
-            for k,v in item.iteritems():
+            for k,v in item.items():
                 data[k] = v
 
         if not quiet:

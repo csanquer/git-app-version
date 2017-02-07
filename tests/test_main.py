@@ -85,6 +85,32 @@ def test_json(git_repo):
     assert os.path.exists(output_path)
     assert result.exit_code == 0
 
+def test_all(git_repo):
+    runner = CliRunner()
+
+    arg = ['-f', 'all', git_repo.working_tree_dir]
+    output_path = os.path.join(git_repo.working_tree_dir, 'version')
+
+    result = runner.invoke(git_app_version_main, arg)
+
+    assert result.output.find('Git commit :') != -1
+    assert re.search(r"version\s+0.1.2", result.output)
+    assert result.output.find('written to :') != -1
+    assert result.output.find(output_path+'.json') != -1
+    assert result.output.find(output_path+'.yml') != -1
+    assert result.output.find(output_path+'.xml') != -1
+    assert result.output.find(output_path+'.sh') != -1
+    assert result.output.find(output_path+'.ini') != -1
+    assert result.output.find(output_path+'.csv') != -1
+
+    assert os.path.exists(output_path+'.json')
+    assert os.path.exists(output_path+'.yml')
+    assert os.path.exists(output_path+'.xml')
+    assert os.path.exists(output_path+'.sh')
+    assert os.path.exists(output_path+'.ini')
+    assert os.path.exists(output_path+'.csv')
+
+    assert result.exit_code == 0
 
 def test_metadata(git_repo):
     runner = CliRunner()

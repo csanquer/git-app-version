@@ -2,6 +2,8 @@
 '''
     Git manipulation
 '''
+from __future__ import unicode_literals
+
 import re
 
 from git import GitCommandError, Repo

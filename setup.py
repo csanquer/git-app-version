@@ -91,6 +91,7 @@ setup(
         'future',
         'six',
         'backports.csv',
+        'configparser >= 3.5.0',
         'iso8601',
         'pyyaml',
         'pytz',

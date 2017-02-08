@@ -4,6 +4,8 @@
 
     to convert easily date to ISO format and timestamp
 """
+from __future__ import unicode_literals
+
 from datetime import datetime
 
 import iso8601

@@ -1,22 +1,18 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 
-import csv
 import json
 import os
 import re
 import shutil
+from builtins import open
 
 import pytest
 import xmltodict
 import yaml
+from backports import configparser, csv
 
 from git_app_version.dumper import FileDumper as AppDumper
-from git_app_version.helper.pyversion import PY3
-
-try:
-    import ConfigParser as configparser
-except ImportError:
-    import configparser
 
 try:
     from yaml import CLoader as Loader, CDumper as Dumper
@@ -30,7 +26,7 @@ def output_dir():
     path = cwd + '/output'
     if os.path.exists(path):
         shutil.rmtree(path)
-    os.makedirs(path, 493)
+    # os.makedirs(path, 493)
 
     return path
 
@@ -38,10 +34,10 @@ def output_dir():
 def get_file_content(path, section=None, fileFormat=None,
                      csv_delimiter=',', csv_quote='"', csv_eol='lf'):
     if fileFormat == 'yml' or fileFormat == 'yaml':
-        with open(path, 'r') as f:
+        with open(path, 'r', encoding='utf-8') as f:
             return yaml.load(f)
     elif fileFormat == 'xml':
-        with open(path, 'r') as f:
+        with open(path, 'r', encoding='utf-8') as f:
             return xmltodict.parse(f.read(), dict_constructor=dict)
     elif fileFormat == 'ini':
         config = configparser.RawConfigParser()
@@ -53,60 +49,40 @@ def get_file_content(path, section=None, fileFormat=None,
 
         if config.has_section(section):
             for k, v in config.items(section):
-                if PY3:
-                    data[k] = v
-                else:
-                    data[k] = v.decode('utf-8')
+                data[k] = v
 
         return data
     elif fileFormat == 'csv':
         data = {}
 
-        eol = "\r\n" if csv_eol == 'crlf' or csv_eol == "\r\n" else "\n"
+        eol = '\r\n' if csv_eol == 'crlf' or csv_eol == '\r\n' else '\n'
 
-        if PY3:
-            with open(path, 'r', encoding='utf-8') as f:
-                reader = csv.reader(
-                    f,
-                    delimiter=csv_delimiter,
-                    quotechar=csv_quote,
-                    lineterminator=eol,
-                    quoting=csv.QUOTE_MINIMAL)
-                for row in reader:
-                    data[row[0]] = row[1]
-        else:
-            with open(path, 'rb') as f:
-                reader = csv.reader(
-                    f,
-                    delimiter=csv_delimiter,
-                    quotechar=csv_quote,
-                    lineterminator=eol,
-                    quoting=csv.QUOTE_MINIMAL)
-                for row in reader:
-                    data[row[0]] = row[1].decode('utf-8')
+        with open(path, 'r', encoding='utf-8') as f:
+            reader = csv.reader(
+                f,
+                delimiter=csv_delimiter,
+                quotechar=csv_quote,
+                lineterminator=eol,
+                quoting=csv.QUOTE_MINIMAL)
+            for row in reader:
+                data[row[0]] = row[1]
 
         return data
     elif fileFormat == 'sh':
         data = {}
         pattern = re.compile(r'^([^=]+)="(.*)"$')
-        with open(path, 'r') as f:
+        with open(path, 'r', encoding='utf8') as f:
             for line in f:
                 match = pattern.match(line)
                 if match:
-                    k = match.group(1)
-                    v = match.group(2)
-
-                    if PY3:
-                        data[k] = v
-                    else:
-                        data[k] = v.decode('utf-8')
+                    data[match.group(1)] = match.group(2)
 
         return data
     elif fileFormat == 'json':
-        with open(path, 'r') as f:
+        with open(path, 'r', encoding='utf-8') as f:
             return json.load(f)
     else:
-        with open(path, 'r') as f:
+        with open(path, 'r', encoding='utf-8') as f:
             return f.read()
 
 
@@ -119,7 +95,7 @@ def get_file_content(path, section=None, fileFormat=None,
                 'version': 'v1.1.0-3-g439e52',
                 'abbrev_commit': '40aaf83',
                 'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
-                'author_name': u'Se\u0301bastien Dupond',
+                'author_name': u'Sébastien Dupond',
                 'commit_date': '2016-03-01T09:33:33+0000',
                 'commit_timestamp': '1456824813',
                 'deploy_date': '2016-03-02T11:33:45+0000',
@@ -134,7 +110,7 @@ def get_file_content(path, section=None, fileFormat=None,
                 'version': 'v1.1.0-3-g439e52',
                 'abbrev_commit': '40aaf83',
                 'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
-                'author_name': u'Se\u0301bastien Dupond',
+                'author_name': u'Sébastien Dupond',
                 'commit_date': '2016-03-01T09:33:33+0000',
                 'commit_timestamp': '1456824813',
                 'deploy_date': '2016-03-02T11:33:45+0000',
@@ -212,7 +188,7 @@ def get_file_content(path, section=None, fileFormat=None,
                 'version': 'v1.1.0-3-g439e52',
                 'abbrev_commit': '40aaf83',
                 'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
-                'author_name': u'Se\u0301bastien Dupond',
+                'author_name': u'Sébastien Dupond',
                 'commit_date': '2016-03-01T09:33:33+0000',
                 'commit_timestamp': '1456824813',
                 'deploy_date': '2016-03-02T11:33:45+0000',
@@ -227,7 +203,7 @@ def get_file_content(path, section=None, fileFormat=None,
                 'version': 'v1.1.0-3-g439e52',
                 'abbrev_commit': '40aaf83',
                 'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
-                'author_name': u'Se\u0301bastien Dupond',
+                'author_name': u'Sébastien Dupond',
                 'commit_date': '2016-03-01T09:33:33+0000',
                 'commit_timestamp': '1456824813',
                 'deploy_date': '2016-03-02T11:33:45+0000',
@@ -243,7 +219,7 @@ def get_file_content(path, section=None, fileFormat=None,
                 'version': 'v1.1.0-3-g439e52',
                 'abbrev_commit': '40aaf83',
                 'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
-                'author_name': u'Se\u0301bastien Dupond',
+                'author_name': u'Sébastien Dupond',
                 'commit_date': '2016-03-01T09:33:33+0000',
                 'commit_timestamp': '1456824813',
                 'deploy_date': '2016-03-02T11:33:45+0000',
@@ -257,7 +233,7 @@ def get_file_content(path, section=None, fileFormat=None,
                 'version': 'v1.1.0-3-g439e52',
                 'abbrev_commit': '40aaf83',
                 'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
-                'author_name': u'Se\u0301bastien Dupond',
+                'author_name': u'Sébastien Dupond',
                 'commit_date': '2016-03-01T09:33:33+0000',
                 'commit_timestamp': '1456824813',
                 'deploy_date': '2016-03-02T11:33:45+0000',
@@ -272,6 +248,7 @@ def get_file_content(path, section=None, fileFormat=None,
                 'version': 'v1.1.0-3-g439e52',
                 'abbrev_commit': '40aaf83',
                 'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
+                'author_name': u'Sébastien Dupond',
                 'commit_date': '2016-03-01T09:33:33+0000',
                 'commit_timestamp': '1456824813',
                 'deploy_date': '2016-03-02T11:33:45+0000',
@@ -285,6 +262,7 @@ def get_file_content(path, section=None, fileFormat=None,
                 'version': 'v1.1.0-3-g439e52',
                 'abbrev_commit': '40aaf83',
                 'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
+                'author_name': u'Sébastien Dupond',
                 'commit_date': '2016-03-01T09:33:33+0000',
                 'commit_timestamp': '1456824813',
                 'deploy_date': '2016-03-02T11:33:45+0000',
@@ -299,7 +277,7 @@ def get_file_content(path, section=None, fileFormat=None,
                 'version': 'v1.1.0-3-g439e52',
                 'abbrev_commit': '40aaf83',
                 'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
-                'author_name': u'Se\u0301bastien Dupond',
+                'author_name': u'Sébastien Dupond',
                 'commit_date': '2016-03-01T09:33:33+0000',
                 'commit_timestamp': '1456824813',
                 'deploy_date': '2016-03-02T11:33:45+0000',
@@ -316,7 +294,7 @@ def get_file_content(path, section=None, fileFormat=None,
                         'abbrev_commit': '40aaf83',
                         'full_commit':
                             '40aaf83894b98898895d478f8b7cc4a866b1d62c',
-                        'author_name': u'Se\u0301bastien Dupond',
+                        'author_name': u'Sébastien Dupond',
                         'commit_date': '2016-03-01T09:33:33+0000',
                         'commit_timestamp': '1456824813',
                         'deploy_date': '2016-03-02T11:33:45+0000',

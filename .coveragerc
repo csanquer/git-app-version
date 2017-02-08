@@ -2,11 +2,17 @@
 [run]
 branch = True
 source = git_app_version
+omit =
+    git_app_version/version.py
 
 
 [report]
 precision = 2
 ignore_errors = False
+exclude_lines =
+    pragma: no cover
+
+    if __name__ == '__main__':
 
 [html]
 directory = coverage_html_report

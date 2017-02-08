@@ -88,6 +88,9 @@ setup(
     # requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
     install_requires=[
+        'future',
+        'backports.csv',
+        'configparser >= 3.5.0',
         'iso8601',
         'pyyaml',
         'pytz',

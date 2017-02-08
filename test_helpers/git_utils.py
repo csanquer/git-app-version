@@ -2,7 +2,7 @@
 """
     Git fixtures helpers
 """
-
+from __future__ import unicode_literals
 import os
 
 from git import Repo

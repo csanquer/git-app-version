@@ -2,19 +2,16 @@
 '''
 Data dumper to files with several format
 '''
-import csv
+from __future__ import unicode_literals
+
 import json
+from builtins import open
 
 import xmltodict
 import yaml
+from backports import configparser, csv
 
 import git_app_version.helper.tools as tools
-from git_app_version.helper.pyversion import PY3
-
-try:
-    import ConfigParser as configparser
-except ImportError:
-    import configparser
 
 
 class FileDumper(object):
@@ -71,11 +68,9 @@ class FileDumper(object):
 
         target = target + '.sh'
 
-        with open(target, 'w') as fpt:
+        with open(target, 'w', encoding='utf-8') as fpt:
             for key, val in data.items():
-                if not PY3:
-                    val = tools.encode(tools.flatten(val))
-                fpt.write("{}=\"{}\"\n".format(key, val))
+                fpt.write("{}=\"{}\"\n".format(key, tools.flatten(val)))
 
         return target
 
@@ -86,23 +81,16 @@ class FileDumper(object):
 
         target = target + '.csv'
 
-        eol = "\r\n" if eol == 'crlf' or eol == "\r\n" else "\n"
+        eol = '\r\n' if eol == 'crlf' or eol == '\r\n' else '\n'
 
-        csv.register_dialect('custom', delimiter=str(delimiter),
-                             lineterminator=str(eol), quotechar=str(quotechar),
-                             quoting=csv.QUOTE_MINIMAL)
-
-        if PY3:
-            with open(target, 'w', encoding='utf-8') as fpt:
-                writer = csv.writer(fpt, dialect='custom')
-                for key, val in data.items():
-                    writer.writerow((key, val))
-        else:
-            with open(target, 'wb') as fpt:
-                writer = csv.writer(fpt, dialect='custom')
-                for key, val in data.items():
-                    val = tools.encode(tools.flatten(val))
-                    writer.writerow((key, val))
+        with open(target, 'w', encoding='utf-8') as fpt:
+            writer = csv.writer(fpt,
+                                delimiter=delimiter,
+                                lineterminator=eol,
+                                quotechar=quotechar,
+                                quoting=csv.QUOTE_MINIMAL)
+            for key, val in data.items():
+                writer.writerow((key, tools.flatten(val)))
 
         return target
 
@@ -120,12 +108,9 @@ class FileDumper(object):
         ini.add_section(namespace)
 
         for key, val in data.items():
-            if not PY3:
-                val = tools.encode(tools.flatten(val))
+            ini.set(namespace, key, tools.flatten(val))
 
-            ini.set(namespace, key, val)
-
-        with open(target, 'w') as fpt:
+        with open(target, 'w', encoding='utf-8') as fpt:
             ini.write(fpt)
 
         return target
@@ -139,16 +124,12 @@ class FileDumper(object):
         if namespace is None or namespace == '':
             namespace = 'app_version'
 
-        with open(target, 'w') as fpt:
+        with open(target, 'w', encoding='utf-8') as fpt:
             xml = xmltodict.unparse(
-                self.__create_infos_to_dump(
-                    data,
-                    namespace),
+                self.__create_infos_to_dump(data, namespace),
                 encoding='utf-8',
                 pretty=True,
                 indent='  ')
-            if not PY3:
-                xml = xml.encode('utf-8')
 
             fpt.write(xml)
 
@@ -163,8 +144,8 @@ class FileDumper(object):
 
         data1 = self.__create_infos_to_dump(data, namespace)
 
-        with open(target, 'w') as fpt:
-            json.dump(data1, fpt, indent=2)
+        with open(target, 'w', encoding='utf-8') as fpt:
+            fpt.write(json.dumps(data1, indent=2, ensure_ascii=False))
 
         return target
 
@@ -175,7 +156,7 @@ class FileDumper(object):
 
         target = target + '.yml'
 
-        with open(target, 'w') as fpt:
+        with open(target, 'w', encoding='utf-8') as fpt:
             if not data:
                 fpt.write("---\n")
             else:

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 
 import os
 import shutil
@@ -33,16 +34,6 @@ def test_create_parent_dirs(output_dir, path, mode, abs_path):
                                                             output_dir,
                                                             mode)
     assert os.path.exists(os.path.dirname(expected_path))
-
-
-@pytest.mark.skipif(sys.version_info > (3,),
-                    reason="python version >= 3.0")
-@pytest.mark.parametrize("text,encoding,expected", [
-    (u'Se\u0301bastien', 'utf-8', 'Se\xcc\x81bastien'),
-    ('Sébastien', 'utf-8', 'S\xc3\xa9bastien'),
-])
-def test_encode(text, encoding, expected):
-    assert expected == tools_helper.encode(text, encoding=encoding)
 
 
 @pytest.mark.parametrize("items,expected", [

@@ -2,6 +2,8 @@
 '''
     Main module
 '''
+# from __future__ import unicode_literals
+
 import os
 import re
 
@@ -86,13 +88,13 @@ METADATA = MetadataParamType()
               ' Never used for CSV or Shell file.')
 @click.option('--meta', '-m', type=METADATA, multiple=True,
               help='meta data to add, format = "<key>=<value>"')
-@click.option('--csv-delimiter', '-d', 'csv_delimiter', default=',',
+@click.option('--csv-delimiter', '-d', 'csv_delimiter', default=u',',
               help='CSV delimiter, default=","')
 @click.option('--csv-eol', '-e', 'csv_eol', type=click.Choice(['lf', 'crlf']),
               default="lf",
               help='CSV end of line,'
               ' lf = Unix new line, crlf = windows new line, default=lf')
-@click.option('--csv-quote', '-u', 'csv_quote', default='"',
+@click.option('--csv-quote', '-u', 'csv_quote', default=u'"',
               help='CSV quoting character, default=\'"\'')
 @click.argument('repository',
                 type=click.Path(exists=True, resolve_path=True,
@@ -166,6 +168,3 @@ def print_commit_table(data):
         table.append([key, item])
 
     click.echo(tabulate(table, tablefmt='simple'))
-
-if __name__ == '__main__':
-    dump()

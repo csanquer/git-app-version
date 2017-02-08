@@ -2,6 +2,8 @@
 """
     various tool helpers
 """
+from __future__ import unicode_literals
+
 import os
 
 
@@ -21,17 +23,6 @@ def create_parent_dirs(path, cwd=None, mode=493):
         os.makedirs(parent_dir, mode)
 
     return path
-
-
-def encode(text, encoding='utf-8'):
-    '''
-    encode a string if necessary
-    '''
-
-    if isinstance(text, unicode):
-        return text.encode(encoding)
-    else:
-        return text
 
 
 def flatten(items):

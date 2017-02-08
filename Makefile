@@ -69,4 +69,7 @@ test:
 	$(VIRTUAL_ENV)/bin/coverage xml
 
 test-all:
-	tox --skip-missing-interpreters
+	$(VIRTUAL_ENV)/bin/tox --skip-missing-interpreters
+
+test-23:
+	$(VIRTUAL_ENV)/bin/tox -e py27,py35

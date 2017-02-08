@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-"""
+'''
     Git manipulation
-"""
+'''
 import re
 
 from git import GitCommandError, Repo
@@ -30,6 +30,9 @@ RESERVED_KEYS = (
 
 
 class GitHandler(object):
+    '''
+    Git
+    '''
 
     def __init__(self, path):
         try:
@@ -39,9 +42,18 @@ class GitHandler(object):
                 'The directory \'{}\' is not a git repository.'.format(path))
 
     def get_deploy_date(self):
+        '''
+        get current date
+        '''
+
         return dthelper.utcnow()
 
     def get_version(self, commit='HEAD', default=''):
+        '''
+        get human readable version
+        result of `git describe --tag --always`
+        '''
+
         try:
             version = self.repo.git.describe(
                 '--tag', '--always', commit).strip()
@@ -54,6 +66,11 @@ class GitHandler(object):
         return version
 
     def get_branches(self, commit='HEAD'):
+        '''
+        get remote branches which commit belong
+        result of `git branch --remote --no-color --contains=<commit>`
+        '''
+
         raw = self.repo.git.branch("--no-color",
                                    "--remote",
                                    "--contains=" + commit)
@@ -71,6 +88,10 @@ class GitHandler(object):
         return branches
 
     def get_top_branches(self, branches, abbrev_commit=None):
+        '''
+        get remote branches which commit belong and is the branch HEAD
+        '''
+
         top_branch = []
 
         for branch in branches:
@@ -80,6 +101,10 @@ class GitHandler(object):
         return top_branch
 
     def remove_remote_prefix(self, branches):
+        '''
+        remove git remote prefix from branch name
+        e.g.: origin/master = master
+        '''
         regex_remote = re.compile(r'^[^/]+/')  # remove git remote prefix
 
         clean_branches = []
@@ -89,33 +114,73 @@ class GitHandler(object):
         return clean_branches
 
     def get_committer_name(self, commit='HEAD'):
+        '''
+        get git committer name
+        '''
+
         return self.repo.commit(commit).committer.name
 
     def get_committer_email(self, commit='HEAD'):
+        '''
+        get git committer email
+        '''
+
         return self.repo.commit(commit).committer.email
 
     def get_author_name(self, commit='HEAD'):
+        '''
+        get git author name
+        '''
+
         return self.repo.commit(commit).author.name
 
     def get_author_email(self, commit='HEAD'):
+        '''
+        get git author email
+        '''
+
         return self.repo.commit(commit).author.email
 
     def get_commit_date(self, commit='HEAD'):
+        '''
+        get git commit date
+        '''
+
         return self.repo.commit(commit).committed_datetime
 
     def get_author_date(self, commit='HEAD'):
+        '''
+        get git authoring date
+        '''
+
         return self.repo.commit(commit).authored_datetime
 
     def get_full_commit(self, commit='HEAD'):
+        '''
+        get git commit full SHA1 hash
+        '''
+
         return self.repo.commit(commit).hexsha
 
     def get_abbrev_commit(self, commit='HEAD'):
+        '''
+        get git commit shorten SHA1 hash
+        '''
+
         return self.repo.commit(commit).hexsha[0:7]
 
     def get_message(self, commit='HEAD'):
+        '''
+        get git commit message
+        '''
+
         return self.repo.commit(commit).message.strip()
 
     def get_infos(self, commit='HEAD'):
+        '''
+        get all git commit data
+        '''
+
         deploy_date = self.get_deploy_date()
         abbrev_commit = self.get_abbrev_commit(commit)
         commit_date = self.get_commit_date(commit)

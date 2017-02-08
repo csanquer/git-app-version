@@ -27,6 +27,7 @@ def print_version(ctx, param, value):
 
 CONTEXT_SETTINGS = {'help_option_names': ['-h', '--help']}
 
+
 class MetadataParamType(click.ParamType):
     '''
     Click paramerer Type to parse <key>=<value> option
@@ -65,9 +66,18 @@ METADATA = MetadataParamType()
               help='output file path (without extension).'
               ' Default is \'<repository-path>/version\'.')
 @click.option('--format', '-f', 'output_formats',
-              type=click.Choice(['all', 'json', 'yml', 'xml', 'ini', 'csv', 'sh']),
+              type=click.Choice([
+                  'all',
+                  'json',
+                  'yml',
+                  'xml',
+                  'ini',
+                  'csv',
+                  'sh'
+              ]),
               multiple=True, default=['json'],
-              help='output file format and extension, use \'all\' to output all format , Default is json.')
+              help='output file format and extension,'
+              ' use \'all\' to output all format , Default is json.')
 @click.option('--namespace', '-n', default='',
               help='namespace like notation in version file, use dot separator'
               ' to segment namespaces e.g.: \'foo.bar.git\'.'

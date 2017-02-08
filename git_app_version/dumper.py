@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
-
+'''
+Data dumper to files with several format
+'''
 import csv
 import json
-import os
 
 import xmltodict
 import yaml
 
+import git_app_version.helper.tools as tools
 from git_app_version.helper.pyversion import PY3
 
 try:
@@ -16,48 +18,43 @@ except ImportError:
 
 
 class FileDumper(object):
+    '''
+    Main dumper
+    '''
 
-    def dump(
-        self,
-        data=None,
-        fileformat='json',
-        target=None,
-        cwd=None,
-        namespace='',
-        csv_delimiter=',',
-        csv_quote='"',
-        csv_eol='lf'
-    ):
-        target = self.__check_target(target, cwd)
+    def dump(self,
+             data=None,
+             fileformat='json',
+             target=None,
+             cwd=None,
+             namespace='',
+             csv_delimiter=',',
+             csv_quote='"',
+             csv_eol='lf'):
+        '''
+        Agnostic main dump function
+        '''
+
+        target = tools.create_parent_dirs(target, cwd)
         if fileformat == 'yaml' or fileformat == 'yml':
-            return self.dump_yaml(data, target, namespace)
+            return self.__dump_yaml(data, target, namespace)
         elif fileformat == 'xml':
-            return self.dump_xml(data, target, namespace)
+            return self.__dump_xml(data, target, namespace)
         elif fileformat == 'ini':
-            return self.dump_ini(data, target, namespace)
+            return self.__dump_ini(data, target, namespace)
         elif fileformat == 'sh':
-            return self.dump_sh(data, target)
+            return self.__dump_sh(data, target)
         elif fileformat == 'csv':
-            return self.dump_csv(data, target, delimiter=csv_delimiter,
-                                 quotechar=csv_quote, eol=csv_eol)
+            return self.__dump_csv(data, target, delimiter=csv_delimiter,
+                                   quotechar=csv_quote, eol=csv_eol)
         else:
-            return self.dump_json(data, target, namespace)
-
-    def __check_target(self, target, cwd=None):
-        if not os.path.isabs(target):
-            cwd = cwd if cwd else os.getcwd()
-            target = cwd + '/' + target
-
-        self.__make_parent_dir(target)
-
-        return target
-
-    def __make_parent_dir(self, target):
-        parent_dir = os.path.dirname(target)
-        if not os.path.exists(parent_dir):
-            os.makedirs(parent_dir, 493)  # 493 in decimal as 755 in octal
+            return self.__dump_json(data, target, namespace)
 
     def __create_infos_to_dump(self, infos, namespace=None):
+        '''
+        reorganize data with a namespace if necessary
+        '''
+
         to_dump = infos
         if namespace is not None and namespace != '':
             namespaces = namespace.split('.')
@@ -67,33 +64,26 @@ class FileDumper(object):
 
         return to_dump
 
-    def __encode(self, item, encoding='utf-8'):
-        if isinstance(item, unicode):
-            return item.encode(encoding)
-        else:
-            return item
+    def __dump_sh(self, data, target):
+        '''
+        dump to Shell variables file
+        '''
 
-    def __flatten(self, item):
-        if isinstance(item, list):
-            flattened_list = ''
-            if len(item):
-                flattened_list = "'{}'".format("', '".join(item))
-            return "[{}]".format(flattened_list)
-        else:
-            return item
-
-    def dump_sh(self, data, target):
         target = target + '.sh'
 
         with open(target, 'w') as fpt:
             for key, val in data.items():
                 if not PY3:
-                    val = self.__encode(self.__flatten(val))
+                    val = tools.encode(tools.flatten(val))
                 fpt.write("{}=\"{}\"\n".format(key, val))
 
         return target
 
-    def dump_csv(self, data, target, delimiter=',', quotechar='"', eol='lf'):
+    def __dump_csv(self, data, target, delimiter=',', quotechar='"', eol='lf'):
+        '''
+        dump to CSV file (comma separated values)
+        '''
+
         target = target + '.csv'
 
         eol = "\r\n" if eol == 'crlf' or eol == "\r\n" else "\n"
@@ -111,12 +101,16 @@ class FileDumper(object):
             with open(target, 'wb') as fpt:
                 writer = csv.writer(fpt, dialect='custom')
                 for key, val in data.items():
-                    val = self.__encode(self.__flatten(val))
+                    val = tools.encode(tools.flatten(val))
                     writer.writerow((key, val))
 
         return target
 
-    def dump_ini(self, data, target, namespace=None):
+    def __dump_ini(self, data, target, namespace=None):
+        '''
+        dump to INI file
+        '''
+
         target = target + '.ini'
 
         if namespace is None or namespace == '':
@@ -127,7 +121,7 @@ class FileDumper(object):
 
         for key, val in data.items():
             if not PY3:
-                val = self.__encode(self.__flatten(val))
+                val = tools.encode(tools.flatten(val))
 
             ini.set(namespace, key, val)
 
@@ -136,7 +130,11 @@ class FileDumper(object):
 
         return target
 
-    def dump_xml(self, data, target, namespace=None):
+    def __dump_xml(self, data, target, namespace=None):
+        '''
+        dump to XML file
+        '''
+
         target = target + '.xml'
         if namespace is None or namespace == '':
             namespace = 'app_version'
@@ -156,7 +154,11 @@ class FileDumper(object):
 
             return target
 
-    def dump_json(self, data, target, namespace=None):
+    def __dump_json(self, data, target, namespace=None):
+        '''
+        dump to JSON file
+        '''
+
         target = target + '.json'
 
         data1 = self.__create_infos_to_dump(data, namespace)
@@ -166,7 +168,11 @@ class FileDumper(object):
 
         return target
 
-    def dump_yaml(self, data, target, namespace=None):
+    def __dump_yaml(self, data, target, namespace=None):
+        '''
+        dump to YAML file
+        '''
+
         target = target + '.yml'
 
         with open(target, 'w') as fpt:

@@ -30,7 +30,7 @@ def output_dir():
     path = cwd + '/output'
     if os.path.exists(path):
         shutil.rmtree(path)
-    # os.makedirs(path, 493)
+    os.makedirs(path, 493)
 
     return path
 

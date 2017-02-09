@@ -67,14 +67,14 @@ Help result
       -q, --quiet                     silent mode
       -o, --output TEXT               output file path (without extension).
                                       Default is '<repository-path>/version'.
-      -f, --format [json|yml|xml|ini|csv|sh]
-                                      output file format and extension, Default is
-                                      json.
+      -f, --format [all|json|yml|xml|ini|csv|sh]
+                                      output file format and extension, use 'all'
+                                      to output all format , Default is json.
       -n, --namespace TEXT            namespace like notation in version file, use
                                       dot separator to segment namespaces e.g.:
                                       'foo.bar.git'. Default is 'app_version' for
                                       XML and INI and no namespace for JSON and
-                                      YAML. Never used for Shell file.
+                                      YAML. Never used for CSV or Shell file.
       -m, --meta METADATA             meta data to add, format = "<key>=<value>"
       -d, --csv-delimiter TEXT        CSV delimiter, default=","
       -e, --csv-eol [lf|crlf]         CSV end of line, lf = Unix new line, crlf =

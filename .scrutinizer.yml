@@ -1,6 +1,6 @@
 ---
 before_commands:
-    - sudo pip2 install iso8601 pyyaml pytz xmltodict tzlocal gitpython tabulate click
+    - sudo pip install iso8601 pyyaml pytz xmltodict tzlocal gitpython tabulate click future backports.csv
 
 checks:
     python:

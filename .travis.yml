@@ -1,3 +1,4 @@
+---
 language: python
 python:
   - '2.7'
@@ -20,31 +21,45 @@ matrix:
 addons:
   apt:
     packages:
-    - pandoc
+      - pandoc
 
 cache: pip
 
 install:
   - pip install -U pip>=8.1.2 wheel>=0.29
   - pip install -r requirements-dev.txt
-  - pip install scrutinizer-ocular
+  - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then pip install scrutinizer-ocular ; fi
 
 script:
   - coverage run -m py.test
 
 after_success:
   - coverage report -m
-  - coverage html
-  - coverage xml
-  - ocular --data-file ".coverage" --config-file ".coveragerc"
+  # - coverage html
+  - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then coverage xml ; fi
+  - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then ocular --data-file ".coverage" --config-file ".coveragerc" ; fi
+
+before_deploy:
+  # build single executable release
+  - if [[ -n "$TRAVIS_TAG" ]]; then pip install "pyinstaller>=3.1.0"; pyinstaller git-app-version.spec ; fi
+  - if [[ -n "$TRAVIS_TAG" -a -f dist/git-app-version ]]; then tar -czf git-app-version_${TRAVIS_OS_NAME}_amd64.tar.gz dist/git-app-version ; fi
 
 deploy:
-  provider: pypi
-  user: csanquer
-  password:
-    secure: nXqSxUZNgsHRpYcXDM7B7SCN49G8AJUHJuvFwfnGPQATI8zVxLLxDEUh0Iait4/l3VmFhbGrTfJk7pCv7a5cWBMN7m8WHwuFRPFvIk4Lt66cUmXlTf7+heSEepqtI5jKfv9hbFmoVUwdugGIyMOoBP86QRu4QCBNI6lmB4e153xzoF26EVAeTtu6y2juQyHQknt64mxEq5od2wIDrUVtuh/9gZGE+H0KZm0dFRVwShVBSX0f0ozAbIyMhvJr+7qGRTLFtOWmU+5ff5IqGUfQtIKsaxO0nVZ34mo10DEfFzev1Nbq1TPCH7t+Gc20hXbcxqGpjiH/71k3OTZ7fpk/QWll12An5Wh12GNvv7wDjOir3VC9Vw5RS3x0p083zpxmxKxZXlUbOW7L1CmS7Dv3x6rOZM4IAExvC3dCjaoPoTmEppDYvs4lpJEwnnEMEVNOnXWbGlIEY69ASNPczu76+3HR52c8F1VdsDdxUKU8qPMmbf+lrHPJgwT6uGAFG80dAh3AczrfpFH4MDaOzLsjVDGAUDIcyM2gr8RFcWGMib1uqH9IteAKHs9Y4c/y4eQdCRlySMWgMDBu4isX09ks/5CZEjnl3FwEePbs92rVh8MGvAIFeVdO9465vJ/V3ogGiqSl4OWt1mC91AesAUFk8nmeLLAR3+YL8dD0DihatFo=
-  distributions: sdist bdist_wheel
-  repo: csanquer/git-app-version
-  on:
-    tags: true
-    python: '2.7'
+  - provider: pypi
+    user: csanquer
+    password:
+      secure: nXqSxUZNgsHRpYcXDM7B7SCN49G8AJUHJuvFwfnGPQATI8zVxLLxDEUh0Iait4/l3VmFhbGrTfJk7pCv7a5cWBMN7m8WHwuFRPFvIk4Lt66cUmXlTf7+heSEepqtI5jKfv9hbFmoVUwdugGIyMOoBP86QRu4QCBNI6lmB4e153xzoF26EVAeTtu6y2juQyHQknt64mxEq5od2wIDrUVtuh/9gZGE+H0KZm0dFRVwShVBSX0f0ozAbIyMhvJr+7qGRTLFtOWmU+5ff5IqGUfQtIKsaxO0nVZ34mo10DEfFzev1Nbq1TPCH7t+Gc20hXbcxqGpjiH/71k3OTZ7fpk/QWll12An5Wh12GNvv7wDjOir3VC9Vw5RS3x0p083zpxmxKxZXlUbOW7L1CmS7Dv3x6rOZM4IAExvC3dCjaoPoTmEppDYvs4lpJEwnnEMEVNOnXWbGlIEY69ASNPczu76+3HR52c8F1VdsDdxUKU8qPMmbf+lrHPJgwT6uGAFG80dAh3AczrfpFH4MDaOzLsjVDGAUDIcyM2gr8RFcWGMib1uqH9IteAKHs9Y4c/y4eQdCRlySMWgMDBu4isX09ks/5CZEjnl3FwEePbs92rVh8MGvAIFeVdO9465vJ/V3ogGiqSl4OWt1mC91AesAUFk8nmeLLAR3+YL8dD0DihatFo=
+    distributions: sdist bdist_wheel
+    repo: csanquer/git-app-version
+    on:
+      tags: true
+      python: '2.7'
+
+  - provider: releases
+    api_key:
+      secure: X2cACTomipRH1PyEOqFKMSfZTARPABWGw/qh4/bCNV5M0VbH33tF/UUIaCyO+MLCVTnmP0RKEZYxDJhJ6J322mcvGNEhIFn9LxpmN7inrYTdqz5JhLEGuzhGrqHbwbyPhTr/RX7Biuj6hJsGFjvrSDOyLK//1jwzo9ZhZOa+POVsIT01ocXKjiMYmrx/u7XyEGy+LaXGQyChgwAkL9YPAPoWQT8eQcf4bAe4L+ncEzsdNWgzBY8C3wQ7nm8WfphLctwXf7+SWjETfaH0k9bfnrSpLrN/kcytoduj6EIsEIIbwooLXrfDxKgQmr56rTt8rgvsbVL9UsxIOmAUZofEKfVtQDyYv7BlQHY/GyeGSNzDIdlxN/RkHNCqe7CoYI7/O0AGeAw90Q5OXjDo236Q0iN27IzXhHZ42N4fS1MswR7j/gSjiMxaI7jjRijZ/zP9pEFcJWgdqRw3dUrMqbt0n16k+FLtYcrq/VezwIF4Rfc+zt1CyjPBh48QaITcpsKrAsyklQLPGK1XrCScy2s+qtwNrgjZMkOPhymnVUQe3GhEdZBYJOSGMeJUAiRfFrwRh1EdpOjEvRjCEGFuuHUFfeRcSzO4yDC2RE6eEtzmbxB7i5dzQeMIrjXaCvUzYm8P7gzBTLn5pnNl9GQGIW7dPZa914K5f/zWEFrI2/vWCyI=
+    file: git-app-version_${TRAVIS_OS_NAME}_amd64.tar.gz
+    on:
+      tags: true
+      python: '2.7'
+      repo: csanquer/git-app-version

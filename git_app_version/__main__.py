@@ -168,3 +168,6 @@ def print_commit_table(data):
         table.append([key, item])
 
     click.echo(tabulate(table, tablefmt='simple'))
+
+if __name__ == '__main__':
+    dump()

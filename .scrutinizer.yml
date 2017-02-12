@@ -1,6 +1,6 @@
 ---
 before_commands:
-    - sudo pip3 install iso8601 pyyaml pytz xmltodict tzlocal gitpython tabulate click
+    - sudo pip2 install iso8601 pyyaml pytz xmltodict tzlocal gitpython tabulate click
 
 checks:
     python:
@@ -16,5 +16,5 @@ tools:
     external_code_coverage:
         timeout: 600
     pylint:
-        python_version: 3
+        python_version: 2
         config_file: '.pylintrc'

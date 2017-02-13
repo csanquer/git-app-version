@@ -514,7 +514,7 @@ File formats
 
   result
 
-  .. code:: csv
+  .. code:: resource
 
       version,v1.1.0-3-g439e52
       full_commit,40aaf83894b98898895d478f8b7cc4a866b1d62c

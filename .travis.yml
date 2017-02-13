@@ -41,7 +41,7 @@ after_success:
 
 before_deploy:
   # build single executable release
-  - if [[ -n "$TRAVIS_TAG" ]]; then pip install "pyinstaller>=3.1.0"; pyinstaller git-app-version.spec ; tar -czf git-app-version_${TRAVIS_OS_NAME}_amd64.tar.gz dist/git-app-version ; fi
+  - if [[ -n "$TRAVIS_TAG" ]]; then pip install "pyinstaller>=3.1.0"; pyinstaller git-app-version.spec ; tar -czf git-app-version_${TRAVIS_OS_NAME}_amd64.tar.gz -C dist git-app-version ; fi
 
 deploy:
   - provider: pypi

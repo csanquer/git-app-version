@@ -60,6 +60,9 @@ lint3: install-dev
 lint3-html: install-dev
 	$(VIRTUAL_ENV)/bin/pylint --py3k git_app_version -f html > pylint.html || exit 0
 
+compile:
+	pyinstaller git-app-version.spec
+
 # Tests
 test:
 	$(VIRTUAL_ENV)/bin/coverage erase

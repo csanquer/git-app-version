@@ -3,6 +3,7 @@
 import os
 import re
 
+import click
 import pytest
 from click.testing import CliRunner
 
@@ -11,10 +12,10 @@ from git_app_version.__main__ import dump as git_app_version_main
 from test_helpers import git_utils
 
 
-@pytest.fixture()
-def tmpdir(tmpdir_factory):
+@pytest.fixture(params=['git_empty', 'téléchargement'])
+def tmpdir(tmpdir_factory, request):
     cwd = os.getcwd()
-    new_cwd = tmpdir_factory.mktemp('empty')
+    new_cwd = tmpdir_factory.mktemp(request.param)
     new_cwd_path = str(new_cwd)
     os.chdir(new_cwd_path)
     yield new_cwd_path
@@ -49,12 +50,12 @@ def test_not_git_repository(tmpdir):
     runner = CliRunner()
 
     arg = [tmpdir]
-    expected = ("Error Writing version config file :"
-                " The directory '{}' is not a git repository.\n")
+    expected = (u"The directory '{}' is not a git repository.\n")
 
     result = runner.invoke(git_app_version_main, arg)
+
     assert result.exit_code == 1
-    assert result.output == expected.format(tmpdir)
+    assert result.output == expected.format(click.format_filename(tmpdir))
 
 
 def test_quiet(git_repo):
@@ -152,7 +153,7 @@ def test_metadata_invalid_format(git_repo):
     bad_key = 'foo'
     arg = ['-m', bad_key, git_repo.working_tree_dir]
 
-    expected = "Error: Invalid value for \"--meta\" / \"-m\":"
+    expected = u"Error: Invalid value for \"--meta\" / \"-m\":"
     " {} is not a valid meta data string e.g. : <key>=<value>\n"
 
     result = runner.invoke(git_app_version_main, arg)

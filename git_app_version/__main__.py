@@ -8,6 +8,7 @@ import os
 import re
 
 import click
+from git.exc import InvalidGitRepositoryError, NoSuchPathError
 from tabulate import tabulate
 
 import git_app_version.version
@@ -44,11 +45,11 @@ class MetadataParamType(click.ParamType):
             match = re.match(r'^([^=]+)=(.*)$', value)
             if not match:
                 raise ValueError(
-                    '%s is not a valid meta data string e.g. : <key>=<value>' %
+                    u'%s is not a valid meta data string e.g. : <key>=<value>' %
                     value)
 
             if match.group(1) in RESERVED_KEYS:
-                raise ValueError('%s is a reserved key' % match.group(1))
+                raise ValueError(u'%s is a reserved key' % match.group(1))
 
             return {match.group(1): match.group(2).strip('"\'')}
 
@@ -113,6 +114,8 @@ def dump(ctx, repository, commit, output, output_formats,
     '''
 
     try:
+        # pprint(repository)
+        # pprint(type(repository))
         vcs = GitHandler(repository)
 
         data = vcs.get_infos(commit=commit)
@@ -147,8 +150,9 @@ def dump(ctx, repository, commit, output, output_formats,
 
         ctx.exit(0)
 
-    except (RuntimeError, ValueError, TypeError) as exc:
-        click.echo("Error Writing version config file : " + str(exc))
+    except (InvalidGitRepositoryError, NoSuchPathError):
+        msg = u'The directory \'{}\' is not a git repository.'
+        click.echo(msg.format(click.format_filename(repository)))
         ctx.exit(1)
 
 

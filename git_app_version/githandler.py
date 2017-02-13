@@ -7,7 +7,6 @@ from __future__ import unicode_literals
 import re
 
 from git import GitCommandError, Repo
-from git.exc import InvalidGitRepositoryError, NoSuchPathError
 
 import git_app_version.helper.date as dthelper
 
@@ -37,11 +36,7 @@ class GitHandler(object):
     '''
 
     def __init__(self, path):
-        try:
-            self.repo = Repo(path)
-        except (InvalidGitRepositoryError, NoSuchPathError):
-            raise ValueError(
-                'The directory \'{}\' is not a git repository.'.format(path))
+        self.repo = Repo(path)
 
     def get_deploy_date(self):
         '''

@@ -6,6 +6,7 @@ from datetime import datetime
 
 import pytest
 import pytz
+from git.exc import InvalidGitRepositoryError, NoSuchPathError
 from mock import patch
 
 from git_app_version.githandler import GitHandler
@@ -82,7 +83,7 @@ def handler_local(git_repo_local):
 def test_not_git_repository(tmpdir):
     not_git_dir = tmpdir.mkdir('not_git')
 
-    with pytest.raises(ValueError):
+    with pytest.raises(InvalidGitRepositoryError):
         GitHandler(str(not_git_dir))
 
 

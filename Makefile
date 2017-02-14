@@ -41,33 +41,33 @@ install-dev: $(VIRTUAL_ENV)
 
 # Python coding standards
 autopep8: install-dev
-	$(VIRTUAL_ENV)/bin/autopep8 --in-place -r -a $SRC_DIR $TEST_DIR
+	$(VIRTUAL_ENV)/bin/autopep8 --in-place -r -a $(SRC_DIR) $(TEST_DIR)
 
 pep8: install-dev
-	$(VIRTUAL_ENV)/bin/pep8 $SRC_DIR $TEST_DIR
+	$(VIRTUAL_ENV)/bin/pep8 $(SRC_DIR) $(TEST_DIR)
 
 flake8: install-dev
-	$(VIRTUAL_ENV)/bin/flake8 $SRC_DIR $TEST_DIR
+	$(VIRTUAL_ENV)/bin/flake8 $(SRC_DIR) $(TEST_DIR)
 
 isort: install-dev
-	$(VIRTUAL_ENV)/bin/isort -rc $SRC_DIR $TEST_DIR
+	$(VIRTUAL_ENV)/bin/isort -rc $(SRC_DIR) $(TEST_DIR)
 
 lint: install-dev
-	$(VIRTUAL_ENV)/bin/pylint $SRC_DIR -f colorized || exit 0
+	$(VIRTUAL_ENV)/bin/pylint $(SRC_DIR) -f colorized || exit 0
 
 lint-html: install-dev
-	$(VIRTUAL_ENV)/bin/pylint $SRC_DIR -f html > pylint.html || exit 0
+	$(VIRTUAL_ENV)/bin/pylint $(SRC_DIR) -f html > pylint.html || exit 0
 
 lint3: install-dev
-	$(VIRTUAL_ENV)/bin/pylint --py3k $SRC_DIR -f colorized || exit 0
+	$(VIRTUAL_ENV)/bin/pylint --py3k $(SRC_DIR) -f colorized || exit 0
 
 lint3-html: install-dev
-	$(VIRTUAL_ENV)/bin/pylint --py3k $SRC_DIR -f html > pylint.html || exit 0
+	$(VIRTUAL_ENV)/bin/pylint --py3k $(SRC_DIR) -f html > pylint.html || exit 0
 
 compile:
-	$(VIRTUAL_ENV)/bin/pyinstaller ${APP_NAME}.spec
+	$(VIRTUAL_ENV)/bin/pyinstaller $(APP_NAME).spec
 
-# $TEST_DIR
+# $(TEST_DIR)
 test:
 	$(VIRTUAL_ENV)/bin/coverage erase
 	$(VIRTUAL_ENV)/bin/coverage run -m py.test

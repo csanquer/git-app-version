@@ -106,17 +106,20 @@ setup(
     # for example:
     # $ pip install -e .[dev,test]
     extras_require={
-        'dev': ['check-manifest'],
-        'test': [
-            'coverage',
-            'pytest >=3.0',
-            'mock',
-            'tox',
+        'dev': [
+            'check-manifest',
+            'pyinstaller >=3.2'
             'pylint',
             'pep8',
             'autopep8',
             'flake8',
             'isort'
+        ],
+        'test': [
+            'coverage',
+            'pytest >=3.0',
+            'mock',
+            'tox'
         ],
     },
 

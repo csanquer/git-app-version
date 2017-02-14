@@ -4,7 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['git_app_version/__main__.py'],
-             pathex=['/home/charles/git/git-app-version'],
+             pathex=[],
              binaries=[],
              datas=[],
              hiddenimports=[],

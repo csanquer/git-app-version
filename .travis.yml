@@ -18,10 +18,6 @@ matrix:
     - python: 'pypy'
     - python: 'pypy3'
 
-addons:
-  apt:
-    packages:
-      - pandoc
 
 cache: pip
 

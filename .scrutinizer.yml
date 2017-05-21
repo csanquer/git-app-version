@@ -10,6 +10,7 @@ filter:
     excluded_paths:
         - '*/test/*'
         - 'git_app_version/_version.py'
+        - 'versioneer.py'
         - 'tests/'
         - 'tests_helpers/'
 

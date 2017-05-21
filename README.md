@@ -34,6 +34,15 @@ Just run :
 pip install git-app-version
 ```
 
+Or download [latest binary release](https://github.com/csanquer/git-app-version/releases/latest) for Linux amd64 :
+
+```sh
+wget https://github.com/csanquer/git-app-version/releases/download/v1.0.0/git-app-version_linux_amd64.tar.gz
+tar -xvzf git-app-version_linux_amd64.tar.gz
+sudo mv git-app-version /usr/local/bin/
+sudo chmod a+x /usr/local/bin/git-app-version
+```
+
 Usage
 -----
 

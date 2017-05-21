@@ -19,15 +19,17 @@ class FileDumper(object):
     Main dumper
     '''
 
-    def dump(self,
-             data=None,
-             fileformat='json',
-             target=None,
-             cwd=None,
-             namespace='',
-             csv_delimiter=',',
-             csv_quote='"',
-             csv_eol='lf'):
+    def dump(
+        self,
+        data=None,
+        fileformat='json',
+        target=None,
+        cwd=None,
+        namespace='',
+        csv_delimiter=',',
+        csv_quote='"',
+        csv_eol='lf'
+    ):
         '''
         Agnostic main dump function
         '''
@@ -42,8 +44,13 @@ class FileDumper(object):
         elif fileformat == 'sh':
             return self.__dump_sh(data, target)
         elif fileformat == 'csv':
-            return self.__dump_csv(data, target, delimiter=csv_delimiter,
-                                   quotechar=csv_quote, eol=csv_eol)
+            return self.__dump_csv(
+                data,
+                target,
+                delimiter=csv_delimiter,
+                quotechar=csv_quote,
+                eol=csv_eol
+            )
         else:
             return self.__dump_json(data, target, namespace)
 
@@ -84,11 +91,13 @@ class FileDumper(object):
         eol = '\r\n' if eol == 'crlf' or eol == '\r\n' else '\n'
 
         with open(target, 'w', encoding='utf-8') as fpt:
-            writer = csv.writer(fpt,
-                                delimiter=delimiter,
-                                lineterminator=eol,
-                                quotechar=quotechar,
-                                quoting=csv.QUOTE_MINIMAL)
+            writer = csv.writer(
+                fpt,
+                delimiter=delimiter,
+                lineterminator=eol,
+                quotechar=quotechar,
+                quoting=csv.QUOTE_MINIMAL
+            )
             for key, val in data.items():
                 writer.writerow((key, tools.flatten(val)))
 
@@ -129,7 +138,8 @@ class FileDumper(object):
                 self.__create_infos_to_dump(data, namespace),
                 encoding='utf-8',
                 pretty=True,
-                indent='  ')
+                indent='  '
+            )
 
             fpt.write(xml)
 

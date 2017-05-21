@@ -5,3 +5,6 @@
 # it's already declared in setup.py
 # include sample/*.dat
 include *.rst
+include versioneer.py
+include git_app_version/_version.py
+include git_app_version/*.txt

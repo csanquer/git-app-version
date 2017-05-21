@@ -11,22 +11,10 @@ from git import GitCommandError, Repo
 import git_app_version.helper.date as dthelper
 
 RESERVED_KEYS = (
-    'abbrev_commit',
-    'author_date',
-    'author_email',
-    'author_name',
-    'author_timestamp',
-    'branches',
-    'commit_date',
-    'commit_timestamp',
-    'committer_email',
-    'committer_name',
-    'deploy_date',
-    'deploy_timestamp',
-    'full_commit',
-    'message',
-    'top_branches',
-    'version'
+    'abbrev_commit', 'author_date', 'author_email', 'author_name',
+    'author_timestamp', 'branches', 'commit_date', 'commit_timestamp',
+    'committer_email', 'committer_name', 'deploy_date', 'deploy_timestamp',
+    'full_commit', 'message', 'top_branches', 'version'
 )
 
 
@@ -52,8 +40,8 @@ class GitHandler(object):
         '''
 
         try:
-            version = self.repo.git.describe(
-                '--tag', '--always', commit).strip()
+            version = self.repo.git.describe('--tag', '--always',
+                                             commit).strip()
         except GitCommandError:
             version = ''
 
@@ -68,9 +56,9 @@ class GitHandler(object):
         result of `git branch --remote --no-color --contains=<commit>`
         '''
 
-        raw = self.repo.git.branch("--no-color",
-                                   "--remote",
-                                   "--contains=" + commit)
+        raw = self.repo.git.branch(
+            "--no-color", "--remote", "--contains=" + commit
+        )
         raw_branches = raw.splitlines()
 
         regex_point = re.compile(r'->')  # remove git reference pointing
@@ -185,7 +173,8 @@ class GitHandler(object):
 
         branches = self.get_branches(commit)
         top_branch = self.get_top_branches(
-            branches=branches, abbrev_commit=abbrev_commit)
+            branches=branches, abbrev_commit=abbrev_commit
+        )
 
         return {
             'branches': self.remove_remote_prefix(branches),

@@ -12,9 +12,10 @@ PYTHON_BASENAME ?= $(shell basename $(PYTHON))
 PYTHON_REQUIREMENTS_FILE ?= requirements.txt
 PYTHON_REQUIREMENTS_DEV_FILE ?= requirements-dev.txt
 # QUICK ?=
-VIRTUAL_ENV ?= .virtualenv-$(PYTHON_BASENAME)
-PIP ?= $(VIRTUAL_ENV)/bin/pip
-PYTEST ?= $(VIRTUAL_ENV)/bin/pytest
+VENV ?= .virtualenv-$(PYTHON_BASENAME)
+BIN_DIR ?= $(VENV)/bin
+PIP ?= $(BIN_DIR)/pip
+PYTEST ?= $(BIN_DIR)/pytest
 PYTEST_OPTIONS ?= --capture=no --cov=git_semver --cov-report html
 
 .SILENT: ;               # no need for @
@@ -28,55 +29,61 @@ default: all;   # default target
 all: install install-dev lint lint-html test
 
 # Setup the local virtualenv, or use the one provided by the current environment.
-$(VIRTUAL_ENV):
-	virtualenv -p $(PYTHON) $(VIRTUAL_ENV)
+$(VENV):
+	virtualenv -p $(PYTHON) $(VENV)
 	$(PIP) install -U pip wheel
-	ln -fs $(VIRTUAL_ENV)/bin/activate activate-$(PYTHON_BASENAME)
+	ln -fs $(BIN_DIR)/activate activate-$(PYTHON_BASENAME)
 
-install: $(VIRTUAL_ENV)
+install: $(VENV)
+	$(PIP) install versioneer
+	$(PIP) install pypandoc
 	$(PIP) install -r $(PYTHON_REQUIREMENTS_FILE)
 
-install-dev: $(VIRTUAL_ENV)
+install-dev: $(VENV)
+	$(PIP) install versioneer
+	$(PIP) install pypandoc
 	$(PIP) install -r $(PYTHON_REQUIREMENTS_DEV_FILE)
 
 # Python coding standards
-autopep8: install-dev
-	$(VIRTUAL_ENV)/bin/autopep8 --in-place -r -a $(SRC_DIR) $(TEST_DIR)
+yapf:
+	$(BIN_DIR)/yapf --in-place -r $(SRC_DIR) $(TEST_DIR)
 
-pep8: install-dev
-	$(VIRTUAL_ENV)/bin/pep8 $(SRC_DIR) $(TEST_DIR)
+pep8:
+	$(BIN_DIR)/pep8 $(SRC_DIR) $(TEST_DIR)
 
-flake8: install-dev
-	$(VIRTUAL_ENV)/bin/flake8 $(SRC_DIR) $(TEST_DIR)
+flake8:
+	$(BIN_DIR)/flake8 $(SRC_DIR) $(TEST_DIR)
 
-isort: install-dev
-	$(VIRTUAL_ENV)/bin/isort -rc $(SRC_DIR) $(TEST_DIR)
+isort:
+	$(BIN_DIR)/isort -rc $(SRC_DIR) $(TEST_DIR)
 
-lint: install-dev
-	$(VIRTUAL_ENV)/bin/pylint $(SRC_DIR) -f colorized || exit 0
+lint:
+	$(BIN_DIR)/pylint $(SRC_DIR) -f colorized || exit 0
 
-lint-html: install-dev
-	$(VIRTUAL_ENV)/bin/pylint $(SRC_DIR) -f html > pylint.html || exit 0
+lint-html:
+	$(BIN_DIR)/pylint $(SRC_DIR) -f html > pylint.html || exit 0
 
-lint3: install-dev
-	$(VIRTUAL_ENV)/bin/pylint --py3k $(SRC_DIR) -f colorized || exit 0
+lint3:
+	$(BIN_DIR)/pylint --py3k $(SRC_DIR) -f colorized || exit 0
 
-lint3-html: install-dev
-	$(VIRTUAL_ENV)/bin/pylint --py3k $(SRC_DIR) -f html > pylint.html || exit 0
+lint3-html:
+	$(BIN_DIR)/pylint --py3k $(SRC_DIR) -f html > pylint.html || exit 0
 
 compile:
-	$(VIRTUAL_ENV)/bin/pyinstaller $(APP_NAME).spec
+	git describe --tags --always > $(SRC_DIR)/version.txt
+	$(BIN_DIR)/pyinstaller -D $(APP_NAME).spec
+	rm -f $(SRC_DIR)/version.txt
 
 # $(TEST_DIR)
 test:
-	$(VIRTUAL_ENV)/bin/coverage erase
-	$(VIRTUAL_ENV)/bin/coverage run -m py.test
-	$(VIRTUAL_ENV)/bin/coverage report -m
-	$(VIRTUAL_ENV)/bin/coverage html
-	$(VIRTUAL_ENV)/bin/coverage xml
+	$(PYTEST) --cov=git_app_version \
+	--no-cov-on-fail \
+	--cov-report term-missing \
+	--cov-report html \
+	--cov-report xml
 
 test-all:
-	$(VIRTUAL_ENV)/bin/tox --skip-missing-interpreters
+	$(BIN_DIR)/tox --skip-missing-interpreters
 
 test-23:
-	$(VIRTUAL_ENV)/bin/tox -e py27,py35
+	$(BIN_DIR)/tox -e py27,py35

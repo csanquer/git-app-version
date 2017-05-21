@@ -7,7 +7,7 @@ import click
 import pytest
 from click.testing import CliRunner
 
-import git_app_version.version
+import git_app_version
 from git_app_version.__main__ import dump as git_app_version_main
 from test_helpers import git_utils
 
@@ -29,8 +29,14 @@ def git_repo(tmpdir_factory):
     new_cwd_path = str(new_cwd)
     os.chdir(new_cwd_path)
     repo = git_utils.init(repo_dir=new_cwd_path)
-    git_utils.commit(repo, message='commit 1',)
-    git_utils.tag(repo, version='0.1.2',)
+    git_utils.commit(
+        repo,
+        message='commit 1',
+    )
+    git_utils.tag(
+        repo,
+        version='0.1.2',
+    )
     yield repo
     os.chdir(cwd)
 
@@ -38,8 +44,11 @@ def git_repo(tmpdir_factory):
 def test_version():
     runner = CliRunner()
 
+    version = 'v1.0.0'
+    git_app_version.__version__ = version
+
     arg = ['--version']
-    expected = 'git-app-version ' + git_app_version.version.__version__ + "\n"
+    expected = 'git-app-version ' + version + "\n"
 
     result = runner.invoke(git_app_version_main, arg)
     assert result.exit_code == 0
@@ -140,7 +149,8 @@ def test_metadata_reserved_key(git_repo):
     arg = ['-m', bad_key + '=foo', git_repo.working_tree_dir]
 
     expected = (
-        "Error: Invalid value for \"--meta\" / \"-m\": {} is a reserved key\n")
+        "Error: Invalid value for \"--meta\" / \"-m\": {} is a reserved key\n"
+    )
 
     result = runner.invoke(git_app_version_main, arg)
     assert result.exit_code == 2

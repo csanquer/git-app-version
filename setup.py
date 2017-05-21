@@ -12,28 +12,26 @@ from codecs import open
 import os
 import re
 
-from setuptools import setup
+import versioneer
+import pypandoc
 
-here = os.path.abspath(os.path.dirname(__file__))
-
-def read(*parts):
-    with open(os.path.join(here, *parts), 'r', encoding='utf-8') as f:
-        return f.read()
-
-def find_version(*file_paths):
-    version_file = read(*file_paths)
-    version_match = re.search(r"^__version__ = ['\"]([^'\"]*)['\"]",
-                              version_file, re.M)
-    if version_match:
-        return version_match.group(1)
-    raise RuntimeError("Unable to find version string.")
+try:
+    long_description = pypandoc.convert(source='README.md', to='rst', format='markdown_github')
+    long_description = long_description.replace("\r","")
+except OSError as e:
+    print("\n\n!!! pandoc not found !!!\n\n")
+    import io
+    # pandoc is not installed, fallback to using raw contents
+    with io.open('README.md', encoding="utf-8") as f:
+        long_description = f.read()
 
 setup(
     name='git-app-version',
-    version=find_version("git_app_version", "version.py"),
+    version=versioneer.get_version(),
+    cmdclass=versioneer.get_cmdclass(),
 
     description='CLI tool to get Git commit informations and store them in a config file',
-    long_description=read('README.rst'),
+    long_description=long_description,
 
     # The project's main homepage.
     url='https://github.com/csanquer/git-app-version',
@@ -107,16 +105,18 @@ setup(
     # $ pip install -e .[dev,test]
     extras_require={
         'dev': [
+            'versioneer',
+            'pypandoc',
             'check-manifest',
             'pyinstaller >=3.2'
             'pylint',
             'pep8',
-            'autopep8',
+            'yapf',
             'flake8',
             'isort'
         ],
         'test': [
-            'coverage',
+            'pytest-cov',
             'pytest >=3.0',
             'mock',
             'tox'
@@ -126,9 +126,9 @@ setup(
     # If there are data files included in your packages that need to be
     # installed, specify them here.  If using Python 2.6 or less, then these
     # have to be included in MANIFEST.in as well.
-    # package_data={
-    #     'sample': ['package_data.dat'],
-    # },
+    package_data={
+        'git_app_version': ['*.txt'],
+    },
 
     # Although 'package_data' is the preferred approach, in some case you may
     # need to place data files outside of your packages. See:

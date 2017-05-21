@@ -27,20 +27,20 @@ cache: pip
 
 install:
   - pip install -U pip>=8.1.2 wheel>=0.29
+  - pip install versioneer
+  - pip install pypandoc
   - pip install -r requirements-dev.txt
   - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then pip install scrutinizer-ocular ; fi
 
 script:
-  - coverage run -m py.test
+  - pytest --cov=git_app_version --no-cov-on-fail --cov-report term-missing --cov-report xml
 
 after_success:
-  - coverage report -m
-  # - coverage html
-  - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then coverage xml ; fi
   - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then ocular --data-file ".coverage" --config-file ".coveragerc" ; fi
 
 before_deploy:
   # build single executable release
+  - git describe --tags --always > git_app_version/version.txt
   - if [[ -n "$TRAVIS_TAG" ]]; then pyinstaller git-app-version.spec ; tar -czf git-app-version_${TRAVIS_OS_NAME}_amd64.tar.gz -C dist git-app-version ; fi
 
 deploy:

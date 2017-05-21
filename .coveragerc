@@ -3,7 +3,7 @@
 branch = True
 source = git_app_version
 omit =
-    git_app_version/version.py
+    git_app_version/_version.py
 
 
 [report]

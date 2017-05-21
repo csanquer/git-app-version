@@ -6,7 +6,7 @@ from datetime import datetime
 
 import pytest
 import pytz
-from git.exc import InvalidGitRepositoryError, NoSuchPathError
+from git.exc import InvalidGitRepositoryError
 from mock import patch
 
 from git_app_version.githandler import GitHandler
@@ -42,17 +42,26 @@ def git_repo_remote(tmpdir_factory):
     author_dt3 = datetime(2016, 12, 17, 6, 40, 21)
 
     repo = git_utils.init(repo_dir=new_cwd_path)
-    git_utils.commit(repo, message='commit 1',
-                                   author='{} <{}>'.format(name, email),
-                                   date=tz.localize(author_dt1).isoformat())
-    git_utils.commit(repo, message='commit 2',
-                                   author='{} <{}>'.format(name, email),
-                                   date=tz.localize(author_dt2).isoformat())
+    git_utils.commit(
+        repo,
+        message='commit 1',
+        author='{} <{}>'.format(name, email),
+        date=tz.localize(author_dt1).isoformat()
+    )
+    git_utils.commit(
+        repo,
+        message='commit 2',
+        author='{} <{}>'.format(name, email),
+        date=tz.localize(author_dt2).isoformat()
+    )
     git_utils.tag(repo, 'v0.1.2')
     git_utils.branch(repo, 'release', 'master')
-    git_utils.commit(repo, message='commit 3',
-                                   author='{} <{}>'.format(name, email),
-                                   date=tz.localize(author_dt3).isoformat())
+    git_utils.commit(
+        repo,
+        message='commit 3',
+        author='{} <{}>'.format(name, email),
+        date=tz.localize(author_dt3).isoformat()
+    )
     git_utils.branch(repo, 'feature/my_feature', 'master')
 
     yield repo
@@ -88,9 +97,14 @@ def test_not_git_repository(tmpdir):
 
 
 @patch('git_app_version.helper.date.datetime')
-@pytest.mark.parametrize("mock_dt_now,expected", [
-    (datetime(2015, 12, 21, 11, 33, 45), datetime(2015, 12, 21, 11, 33, 45)),
-])
+@pytest.mark.parametrize(
+    "mock_dt_now,expected", [
+        (
+            datetime(2015, 12, 21, 11, 33, 45),
+            datetime(2015, 12, 21, 11, 33, 45)
+        ),
+    ]
+)
 def test_get_deploy_date(mock_dt, mock_dt_now, expected, handler):
     tz = pytz.utc
 
@@ -154,8 +168,8 @@ def test_get_version_after_tag(git_repo, handler):
     git_utils.tag(repo=git_repo, version='v0.1.3')
     commit = git_utils.commit(repo=git_repo, message='test 2')
 
-    assert handler.get_version(
-        default=default) == 'v0.1.3-1-g' + commit.hexsha[0:7]
+    assert handler.get_version(default=default
+                               ) == 'v0.1.3-1-g' + commit.hexsha[0:7]
 
 
 def test_get_branches(git_repo_local, handler_local):
@@ -169,14 +183,18 @@ def test_get_top_branches(git_repo_local, handler_local):
     abbrev_commit = git_repo_local.commit('HEAD').hexsha[0:7]
 
     assert handler_local.get_top_branches(
-        branches=branches,
-        abbrev_commit=abbrev_commit) == expected
+        branches=branches, abbrev_commit=abbrev_commit
+    ) == expected
 
 
-@pytest.mark.parametrize("branches,expected", [
-    (['origin/master', 'origin/feature/my_feature'],
-     ['master', 'feature/my_feature']),
-])
+@pytest.mark.parametrize(
+    "branches,expected", [
+        (
+            ['origin/master', 'origin/feature/my_feature'],
+            ['master', 'feature/my_feature']
+        ),
+    ]
+)
 def test_remove_remote_prefix(branches, expected, handler):
     assert handler.remove_remote_prefix(branches=branches) == expected
 

@@ -11,11 +11,9 @@ import click
 from git.exc import InvalidGitRepositoryError, NoSuchPathError
 from tabulate import tabulate
 
-import git_app_version.version
+import git_app_version
 from git_app_version.dumper import FileDumper
 from git_app_version.githandler import RESERVED_KEYS, GitHandler
-
-__version__ = git_app_version.version.__version__
 
 
 def print_version(ctx, param, value):
@@ -24,7 +22,7 @@ def print_version(ctx, param, value):
     '''
     if not value or ctx.resilient_parsing:
         return
-    click.echo('git-app-version ' + __version__)
+    click.echo('git-app-version ' + git_app_version.__version__)
     ctx.exit()
 
 
@@ -45,8 +43,9 @@ class MetadataParamType(click.ParamType):
             match = re.match(r'^([^=]+)=(.*)$', value)
             if not match:
                 raise ValueError(
-                    u'%s is not a valid meta data string e.g. : <key>=<value>' %
-                    value)
+                    u'%s is not a valid meta data string e.g. : <key>=<value>'
+                    % value
+                )
 
             if match.group(1) in RESERVED_KEYS:
                 raise ValueError(u'%s is a reserved key' % match.group(1))
@@ -61,50 +60,89 @@ METADATA = MetadataParamType()
 
 
 @click.command(context_settings=CONTEXT_SETTINGS)
-@click.option('--version', '-V', is_flag=True, callback=print_version,
-              expose_value=False, is_eager=True)
+@click.option(
+    '--version',
+    '-V',
+    is_flag=True,
+    callback=print_version,
+    expose_value=False,
+    is_eager=True
+)
 # @click.option('--verbose', '-v', count=True)
-@click.option('--quiet', '-q', is_flag=True, help='silent mode')
-@click.option('--output', '-o', default='version',
-              help='output file path (without extension).'
-              ' Default is \'<repository-path>/version\'.')
-@click.option('--format', '-f', 'output_formats',
-              type=click.Choice([
-                  'all',
-                  'json',
-                  'yml',
-                  'xml',
-                  'ini',
-                  'csv',
-                  'sh'
-              ]),
-              multiple=True, default=['json'],
-              help='output file format and extension,'
-              ' use \'all\' to output all format , Default is json.')
-@click.option('--namespace', '-n', default='',
-              help='namespace like notation in version file, use dot separator'
-              ' to segment namespaces e.g.: \'foo.bar.git\'.'
-              ' Default is \'app_version\' for XML and INI'
-              ' and no namespace for JSON and YAML.'
-              ' Never used for CSV or Shell file.')
-@click.option('--meta', '-m', type=METADATA, multiple=True,
-              help='meta data to add, format = "<key>=<value>"')
-@click.option('--csv-delimiter', '-d', 'csv_delimiter', default=u',',
-              help='CSV delimiter, default=","')
-@click.option('--csv-eol', '-e', 'csv_eol', type=click.Choice(['lf', 'crlf']),
-              default="lf",
-              help='CSV end of line,'
-              ' lf = Unix new line, crlf = windows new line, default=lf')
-@click.option('--csv-quote', '-u', 'csv_quote', default=u'"',
-              help='CSV quoting character, default=\'"\'')
-@click.argument('repository',
-                type=click.Path(exists=True, resolve_path=True,
-                                file_okay=False, readable=True),
-                default=os.getcwd())
+@click.option(
+    '--quiet', '-q', is_flag=True, help='silent mode'
+)
+@click.option(
+    '--output',
+    '-o',
+    default='version',
+    help='output file path (without extension).'
+    ' Default is \'<repository-path>/version\'.'
+)
+@click.option(
+    '--format',
+    '-f',
+    'output_formats',
+    type=click.Choice(['all', 'json', 'yml', 'xml', 'ini', 'csv', 'sh']),
+    multiple=True,
+    default=['json'],
+    help='output file format and extension,'
+    ' use \'all\' to output all format, can be set several times ,'
+    ' Default is json.'
+)
+@click.option(
+    '--namespace',
+    '-n',
+    default='',
+    help='namespace like notation in version file, use dot separator'
+    ' to segment namespaces e.g.: \'foo.bar.git\'.'
+    ' Default is \'app_version\' for XML and INI'
+    ' and no namespace for JSON and YAML.'
+    ' Never used for CSV or Shell file.'
+)
+@click.option(
+    '--meta',
+    '-m',
+    type=METADATA,
+    multiple=True,
+    help='meta data to add, format = "<key>=<value>", can be set several times'
+)
+@click.option(
+    '--csv-delimiter',
+    '-d',
+    'csv_delimiter',
+    default=u',',
+    help='CSV delimiter, default=","'
+)
+@click.option(
+    '--csv-eol',
+    '-e',
+    'csv_eol',
+    type=click.Choice(['lf', 'crlf']),
+    default="lf",
+    help='CSV end of line,'
+    ' lf = Unix new line, crlf = windows new line, default=lf'
+)
+@click.option(
+    '--csv-quote',
+    '-u',
+    'csv_quote',
+    default=u'"',
+    help='CSV quoting character, default=\'"\''
+)
+@click.argument(
+    'repository',
+    type=click.Path(
+        exists=True, resolve_path=True, file_okay=False, readable=True
+    ),
+    default=os.getcwd()
+)
 @click.argument('commit', default='HEAD')
 @click.pass_context
-def dump(ctx, repository, commit, output, output_formats,
-         namespace, meta, quiet, csv_delimiter, csv_quote, csv_eol):
+def dump(
+    ctx, repository, commit, output, output_formats, namespace, meta, quiet,
+    csv_delimiter, csv_quote, csv_eol
+):
     '''
     Get Git commit informations and store them in a config file
 
@@ -144,7 +182,8 @@ def dump(ctx, repository, commit, output, output_formats,
                 namespace=namespace,
                 csv_delimiter=csv_delimiter,
                 csv_quote=csv_quote,
-                csv_eol=csv_eol)
+                csv_eol=csv_eol
+            )
             if not quiet:
                 click.echo(dest)
 
@@ -172,6 +211,7 @@ def print_commit_table(data):
         table.append([key, item])
 
     click.echo(tabulate(table, tablefmt='simple'))
+
 
 if __name__ == '__main__':
     dump()

@@ -1,13 +1,10 @@
 Git App Version
 ===============
 
-[![image](https://badge.fury.io/py/git-app-version.svg)](https://badge.fury.io/py/git-app-version)
-
-[![image](https://travis-ci.org/csanquer/git-app-version.svg?branch=master)](https://travis-ci.org/csanquer/git-app-version)
-
-[![image](https://scrutinizer-ci.com/g/csanquer/git-app-version/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/csanquer/git-app-version/?branch=master)
-
-[![image](https://scrutinizer-ci.com/g/csanquer/git-app-version/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/csanquer/git-app-version/?branch=master)
+[![PyPI version](https://badge.fury.io/py/git-app-version.svg)](https://badge.fury.io/py/git-app-version)
+[![travis-build](https://travis-ci.org/csanquer/git-app-version.svg?branch=master)](https://travis-ci.org/csanquer/git-app-version)
+[![scrutinizer-quality](https://scrutinizer-ci.com/g/csanquer/git-app-version/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/csanquer/git-app-version/?branch=master)
+[![scrutinizer-coverage](https://scrutinizer-ci.com/g/csanquer/git-app-version/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/csanquer/git-app-version/?branch=master)
 
 A CLI tool written in Python to fetch Git commit informations and store them in a config file.
 
@@ -25,7 +22,7 @@ Typical usecase : when deploying, run this command and import the git version co
 Requirements
 ------------
 
--   Python 2.7 or &gt;= 3.3
+-   Python 2.7 or >= 3.3
 -   python pip package tool
 
 Installation
@@ -65,13 +62,15 @@ Options:
                                   Default is '<repository-path>/version'.
   -f, --format [all|json|yml|xml|ini|csv|sh]
                                   output file format and extension, use 'all'
-                                  to output all format , Default is json.
+                                  to output all format, can be set several
+                                  times , Default is json.
   -n, --namespace TEXT            namespace like notation in version file, use
                                   dot separator to segment namespaces e.g.:
                                   'foo.bar.git'. Default is 'app_version' for
                                   XML and INI and no namespace for JSON and
                                   YAML. Never used for CSV or Shell file.
-  -m, --meta METADATA             meta data to add, format = "<key>=<value>"
+  -m, --meta METADATA             meta data to add, format = "<key>=<value>",
+                                  can be set several times
   -d, --csv-delimiter TEXT        CSV delimiter, default=","
   -e, --csv-eol [lf|crlf]         CSV end of line, lf = Unix new line, crlf =
                                   windows new line, default=lf

@@ -98,6 +98,7 @@ def get_file_content(
     'csv_delimiter,csv_quote,csv_eol', [
         (
             {
+                'message': "Merge branch 'feature/myfeature' into 'develop'",
                 'version': 'v1.1.0-3-g439e52',
                 'abbrev_commit': '40aaf83',
                 'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
@@ -108,6 +109,7 @@ def get_file_content(
                 'deploy_timestamp': '1456918425',
                 'branches': ['master', 'feature/my_feature']
             }, 'sh', 'version', '', 'version.sh', {
+                'message': "Merge branch 'feature/myfeature' into 'develop'",
                 'version': 'v1.1.0-3-g439e52',
                 'abbrev_commit': '40aaf83',
                 'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
@@ -120,6 +122,7 @@ def get_file_content(
             }, None, None, None,
         ), (
             {
+                'message': "Merge branch 'feature/myfeature' into 'develop'",
                 'version': 'v1.1.0-3-g439e52',
                 'abbrev_commit': '40aaf83',
                 'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
@@ -130,6 +133,7 @@ def get_file_content(
                 'deploy_timestamp': '1456918425',
                 'branches': ['master', 'feature/my_feature']
             }, 'csv', 'version', '', 'version.csv', {
+                'message': "Merge branch 'feature/myfeature' into 'develop'",
                 'version': 'v1.1.0-3-g439e52',
                 'abbrev_commit': '40aaf83',
                 'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
@@ -142,6 +146,7 @@ def get_file_content(
             }, ',', '"', 'lf',
         ), (
             {
+                'message': "Merge branch 'feature/myfeature' into 'develop'",
                 'version': 'v1.1.0-3-g439e52',
                 'abbrev_commit': '40aaf83',
                 'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
@@ -152,6 +157,7 @@ def get_file_content(
                 'deploy_timestamp': '1456918425',
                 'branches': ['master', 'feature/my_feature']
             }, 'csv', 'version', '', 'version.csv', {
+                'message': "Merge branch 'feature/myfeature' into 'develop'",
                 'version': 'v1.1.0-3-g439e52',
                 'abbrev_commit': '40aaf83',
                 'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
@@ -164,6 +170,7 @@ def get_file_content(
             }, ';', '\'', 'crlf',
         ), (
             {
+                'message': "Merge branch 'feature/myfeature' into 'develop'",
                 'version': 'v1.1.0-3-g439e52',
                 'abbrev_commit': '40aaf83',
                 'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
@@ -174,6 +181,7 @@ def get_file_content(
                 'deploy_timestamp': '1456918425',
                 'branches': ['master', 'feature/my_feature']
             }, 'ini', 'version', '', 'version.ini', {
+                'message': "Merge branch 'feature/myfeature' into 'develop'",
                 'version': 'v1.1.0-3-g439e52',
                 'abbrev_commit': '40aaf83',
                 'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
@@ -186,6 +194,7 @@ def get_file_content(
             }, None, None, None,
         ), (
             {
+                'message': "Merge branch 'feature/myfeature' into 'develop'",
                 'version': 'v1.1.0-3-g439e52',
                 'abbrev_commit': '40aaf83',
                 'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
@@ -195,6 +204,7 @@ def get_file_content(
                 'deploy_date': '2016-03-02T11:33:45+0000',
                 'deploy_timestamp': '1456918425',
             }, 'ini', 'version', 'parameters.git', 'version.ini', {
+                'message': "Merge branch 'feature/myfeature' into 'develop'",
                 'version': 'v1.1.0-3-g439e52',
                 'abbrev_commit': '40aaf83',
                 'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
@@ -206,6 +216,7 @@ def get_file_content(
             }, None, None, None,
         ), (
             {
+                'message': "Merge branch 'feature/myfeature' into 'develop'",
                 'version': 'v1.1.0-3-g439e52',
                 'abbrev_commit': '40aaf83',
                 'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
@@ -215,6 +226,7 @@ def get_file_content(
                 'deploy_date': '2016-03-02T11:33:45+0000',
                 'deploy_timestamp': '1456918425',
             }, 'json', 'version', '', 'version.json', {
+                'message': "Merge branch 'feature/myfeature' into 'develop'",
                 'version': 'v1.1.0-3-g439e52',
                 'abbrev_commit': '40aaf83',
                 'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
@@ -226,6 +238,7 @@ def get_file_content(
             }, None, None, None,
         ), (
             {
+                'message': "Merge branch 'feature/myfeature' into 'develop'",
                 'version': 'v1.1.0-3-g439e52',
                 'abbrev_commit': '40aaf83',
                 'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
@@ -237,6 +250,7 @@ def get_file_content(
             }, 'json', 'version', 'parameters.git', 'version.json', {
                 'parameters': {
                     'git': {
+                        'message': "Merge branch 'feature/myfeature' into 'develop'",
                         'version': 'v1.1.0-3-g439e52',
                         'abbrev_commit': '40aaf83',
                         'full_commit':
@@ -251,6 +265,7 @@ def get_file_content(
             }, None, None, None,
         ), (
             {
+                'message': "Merge branch 'feature/myfeature' into 'develop'",
                 'version': 'v1.1.0-3-g439e52',
                 'abbrev_commit': '40aaf83',
                 'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
@@ -259,6 +274,7 @@ def get_file_content(
                 'deploy_date': '2016-03-02T11:33:45+0000',
                 'deploy_timestamp': '1456918425',
             }, 'yml', 'version', '', 'version.yml', {
+                'message': "Merge branch 'feature/myfeature' into 'develop'",
                 'version': 'v1.1.0-3-g439e52',
                 'abbrev_commit': '40aaf83',
                 'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
@@ -269,6 +285,7 @@ def get_file_content(
             }, None, None, None,
         ), (
             {
+                'message': "Merge branch 'feature/myfeature' into 'develop'",
                 'version': 'v1.1.0-3-g439e52',
                 'abbrev_commit': '40aaf83',
                 'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
@@ -280,6 +297,7 @@ def get_file_content(
             }, 'yml', 'version', 'parameters.git', 'version.yml', {
                 'parameters': {
                     'git': {
+                        'message': "Merge branch 'feature/myfeature' into 'develop'",
                         'version': 'v1.1.0-3-g439e52',
                         'abbrev_commit': '40aaf83',
                         'full_commit':
@@ -295,6 +313,7 @@ def get_file_content(
         ), ({}, 'yml', 'version', '', 'version.yml', None, None, None, None, ),
         (
             {
+                'message': "Merge branch 'feature/myfeature' into 'develop'",
                 'version': 'v1.1.0-3-g439e52',
                 'abbrev_commit': '40aaf83',
                 'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
@@ -304,6 +323,7 @@ def get_file_content(
                 'deploy_timestamp': '1456918425',
             }, 'xml', 'version', '', 'version.xml', {
                 'app_version': {
+                    'message': "Merge branch 'feature/myfeature' into 'develop'",
                     'version': 'v1.1.0-3-g439e52',
                     'abbrev_commit': '40aaf83',
                     'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
@@ -315,6 +335,7 @@ def get_file_content(
             }, None, None, None,
         ), (
             {
+                'message': "Merge branch 'feature/myfeature' into 'develop'",
                 'version': 'v1.1.0-3-g439e52',
                 'abbrev_commit': '40aaf83',
                 'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
@@ -326,6 +347,7 @@ def get_file_content(
             }, 'xml', 'version', 'parameters.git', 'version.xml', {
                 'parameters': {
                     'git': {
+                        'message': "Merge branch 'feature/myfeature' into 'develop'",
                         'version': 'v1.1.0-3-g439e52',
                         'abbrev_commit': '40aaf83',
                         'full_commit':

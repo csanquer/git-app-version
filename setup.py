@@ -14,10 +14,10 @@ import re
 
 import versioneer
 import pypandoc
-from pypandoc.pandoc_download import download_pandoc
+# from pypandoc.pandoc_download import download_pandoc
 
 try:
-    download_pandoc()
+    # download_pandoc()
 
     long_description = pypandoc.convert(source='README.md', to='rst', format='markdown_github')
     long_description = long_description.replace("\r","")

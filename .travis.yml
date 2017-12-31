@@ -21,6 +21,10 @@ matrix:
 
 cache: pip
 
+before_install:
+  - sudo apt-get -qq update
+  - sudo apt-get install -y pandoc
+
 install:
   - pip install -U pip>=8.1.2 wheel>=0.29
   - pip install versioneer

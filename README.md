@@ -5,6 +5,8 @@ Git App Version
 [![travis-build](https://travis-ci.org/csanquer/git-app-version.svg?branch=master)](https://travis-ci.org/csanquer/git-app-version)
 [![scrutinizer-quality](https://scrutinizer-ci.com/g/csanquer/git-app-version/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/csanquer/git-app-version/?branch=master)
 [![scrutinizer-coverage](https://scrutinizer-ci.com/g/csanquer/git-app-version/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/csanquer/git-app-version/?branch=master)
+[![GitHub license](https://img.shields.io/github/license/csanquer/git-app-version.svg)](https://github.com/csanquer/git-app-version/blob/master/LICENSE)
+[![Maintenance](https://img.shields.io/maintenance/yes/2020.svg)]()
 
 A CLI tool written in Python to fetch Git commit informations and store them in a config file.
 

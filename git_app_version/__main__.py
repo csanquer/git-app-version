@@ -69,9 +69,7 @@ METADATA = MetadataParamType()
     is_eager=True
 )
 # @click.option('--verbose', '-v', count=True)
-@click.option(
-    '--quiet', '-q', is_flag=True, help='silent mode'
-)
+@click.option('--quiet', '-q', is_flag=True, help='silent mode')
 @click.option(
     '--output',
     '-o',

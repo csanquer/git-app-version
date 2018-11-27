@@ -48,8 +48,8 @@ install-dev: $(VENV)
 yapf:
 	$(BIN_DIR)/yapf --in-place -r $(SRC_DIR) $(TEST_DIR)
 
-pep8:
-	$(BIN_DIR)/pep8 $(SRC_DIR) $(TEST_DIR)
+pycodestyle:
+	$(BIN_DIR)/pycodestyle $(SRC_DIR) $(TEST_DIR)
 
 flake8:
 	$(BIN_DIR)/flake8 $(SRC_DIR) $(TEST_DIR)

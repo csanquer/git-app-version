@@ -11,22 +11,12 @@ from setuptools import setup, find_packages
 from codecs import open
 import os
 import re
+import io
 
 import versioneer
-import pypandoc
-# from pypandoc.pandoc_download import download_pandoc
 
-try:
-    # download_pandoc()
-
-    long_description = pypandoc.convert(source='README.md', to='rst', format='markdown_github')
-    long_description = long_description.replace("\r","")
-except OSError as e:
-    print("\n\n!!! pandoc not found !!!\n\n")
-    import io
-    # pandoc is not installed, fallback to using raw contents
-    with io.open('README.md', encoding="utf-8") as f:
-        long_description = f.read()
+with io.open('README.md', encoding="utf-8") as f:
+    long_description = f.read()
 
 setup(
     name='git-app-version',
@@ -67,7 +57,7 @@ setup(
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
-        # 'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.7',
     ],
 
     # What does your project relate to?
@@ -106,11 +96,10 @@ setup(
     extras_require={
         'dev': [
             'versioneer',
-            'pypandoc',
             'check-manifest',
             'pyinstaller >=3.2'
             'pylint',
-            'pep8',
+            'pycodestyle',
             'yapf',
             'flake8',
             'isort'

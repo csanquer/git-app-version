@@ -17,7 +17,7 @@ from git_app_version.dumper import FileDumper as AppDumper
 try:
     from yaml import CLoader as Loader, CDumper as Dumper
 except ImportError:
-    from yaml import Loader, Dumper  # flake8: noqa
+    from yaml import Loader, Dumper  # noqa: F401
 
 
 @pytest.fixture
@@ -108,7 +108,12 @@ def get_file_content(
                 'deploy_date': '2016-03-02T11:33:45+0000',
                 'deploy_timestamp': '1456918425',
                 'branches': ['master', 'feature/my_feature']
-            }, 'sh', 'version', '', 'version.sh', {
+            },
+            'sh',
+            'version',
+            '',
+            'version.sh',
+            {
                 'message': "Merge branch 'feature/myfeature' into 'develop'",
                 'version': 'v1.1.0-3-g439e52',
                 'abbrev_commit': '40aaf83',
@@ -119,8 +124,12 @@ def get_file_content(
                 'deploy_date': '2016-03-02T11:33:45+0000',
                 'deploy_timestamp': '1456918425',
                 'branches': "['master', 'feature/my_feature']"
-            }, None, None, None,
-        ), (
+            },
+            None,
+            None,
+            None,
+        ),
+        (
             {
                 'message': "Merge branch 'feature/myfeature' into 'develop'",
                 'version': 'v1.1.0-3-g439e52',
@@ -132,7 +141,12 @@ def get_file_content(
                 'deploy_date': '2016-03-02T11:33:45+0000',
                 'deploy_timestamp': '1456918425',
                 'branches': ['master', 'feature/my_feature']
-            }, 'csv', 'version', '', 'version.csv', {
+            },
+            'csv',
+            'version',
+            '',
+            'version.csv',
+            {
                 'message': "Merge branch 'feature/myfeature' into 'develop'",
                 'version': 'v1.1.0-3-g439e52',
                 'abbrev_commit': '40aaf83',
@@ -143,8 +157,12 @@ def get_file_content(
                 'deploy_date': '2016-03-02T11:33:45+0000',
                 'deploy_timestamp': '1456918425',
                 'branches': "['master', 'feature/my_feature']"
-            }, ',', '"', 'lf',
-        ), (
+            },
+            ',',
+            '"',
+            'lf',
+        ),
+        (
             {
                 'message': "Merge branch 'feature/myfeature' into 'develop'",
                 'version': 'v1.1.0-3-g439e52',
@@ -156,7 +174,12 @@ def get_file_content(
                 'deploy_date': '2016-03-02T11:33:45+0000',
                 'deploy_timestamp': '1456918425',
                 'branches': ['master', 'feature/my_feature']
-            }, 'csv', 'version', '', 'version.csv', {
+            },
+            'csv',
+            'version',
+            '',
+            'version.csv',
+            {
                 'message': "Merge branch 'feature/myfeature' into 'develop'",
                 'version': 'v1.1.0-3-g439e52',
                 'abbrev_commit': '40aaf83',
@@ -167,8 +190,12 @@ def get_file_content(
                 'deploy_date': '2016-03-02T11:33:45+0000',
                 'deploy_timestamp': '1456918425',
                 'branches': "['master', 'feature/my_feature']"
-            }, ';', '\'', 'crlf',
-        ), (
+            },
+            ';',
+            '\'',
+            'crlf',
+        ),
+        (
             {
                 'message': "Merge branch 'feature/myfeature' into 'develop'",
                 'version': 'v1.1.0-3-g439e52',
@@ -180,7 +207,12 @@ def get_file_content(
                 'deploy_date': '2016-03-02T11:33:45+0000',
                 'deploy_timestamp': '1456918425',
                 'branches': ['master', 'feature/my_feature']
-            }, 'ini', 'version', '', 'version.ini', {
+            },
+            'ini',
+            'version',
+            '',
+            'version.ini',
+            {
                 'message': "Merge branch 'feature/myfeature' into 'develop'",
                 'version': 'v1.1.0-3-g439e52',
                 'abbrev_commit': '40aaf83',
@@ -191,8 +223,12 @@ def get_file_content(
                 'deploy_date': '2016-03-02T11:33:45+0000',
                 'deploy_timestamp': '1456918425',
                 'branches': "['master', 'feature/my_feature']"
-            }, None, None, None,
-        ), (
+            },
+            None,
+            None,
+            None,
+        ),
+        (
             {
                 'message': "Merge branch 'feature/myfeature' into 'develop'",
                 'version': 'v1.1.0-3-g439e52',
@@ -203,18 +239,11 @@ def get_file_content(
                 'commit_timestamp': '1456824813',
                 'deploy_date': '2016-03-02T11:33:45+0000',
                 'deploy_timestamp': '1456918425',
-            }, 'ini', 'version', 'parameters.git', 'version.ini', {
-                'message': "Merge branch 'feature/myfeature' into 'develop'",
-                'version': 'v1.1.0-3-g439e52',
-                'abbrev_commit': '40aaf83',
-                'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
-                'author_name': u'Sébastien Dupond',
-                'commit_date': '2016-03-01T09:33:33+0000',
-                'commit_timestamp': '1456824813',
-                'deploy_date': '2016-03-02T11:33:45+0000',
-                'deploy_timestamp': '1456918425',
-            }, None, None, None,
-        ), (
+            },
+            'ini',
+            'version',
+            'parameters.git',
+            'version.ini',
             {
                 'message': "Merge branch 'feature/myfeature' into 'develop'",
                 'version': 'v1.1.0-3-g439e52',
@@ -225,18 +254,12 @@ def get_file_content(
                 'commit_timestamp': '1456824813',
                 'deploy_date': '2016-03-02T11:33:45+0000',
                 'deploy_timestamp': '1456918425',
-            }, 'json', 'version', '', 'version.json', {
-                'message': "Merge branch 'feature/myfeature' into 'develop'",
-                'version': 'v1.1.0-3-g439e52',
-                'abbrev_commit': '40aaf83',
-                'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
-                'author_name': u'Sébastien Dupond',
-                'commit_date': '2016-03-01T09:33:33+0000',
-                'commit_timestamp': '1456824813',
-                'deploy_date': '2016-03-02T11:33:45+0000',
-                'deploy_timestamp': '1456918425',
-            }, None, None, None,
-        ), (
+            },
+            None,
+            None,
+            None,
+        ),
+        (
             {
                 'message': "Merge branch 'feature/myfeature' into 'develop'",
                 'version': 'v1.1.0-3-g439e52',
@@ -247,70 +270,70 @@ def get_file_content(
                 'commit_timestamp': '1456824813',
                 'deploy_date': '2016-03-02T11:33:45+0000',
                 'deploy_timestamp': '1456918425',
-            }, 'json', 'version', 'parameters.git', 'version.json', {
+            },
+            'json',
+            'version',
+            '',
+            'version.json',
+            {
+                'message': "Merge branch 'feature/myfeature' into 'develop'",
+                'version': 'v1.1.0-3-g439e52',
+                'abbrev_commit': '40aaf83',
+                'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
+                'author_name': u'Sébastien Dupond',
+                'commit_date': '2016-03-01T09:33:33+0000',
+                'commit_timestamp': '1456824813',
+                'deploy_date': '2016-03-02T11:33:45+0000',
+                'deploy_timestamp': '1456918425',
+            },
+            None,
+            None,
+            None,
+        ),
+        (
+            {
+                'message': "Merge branch 'feature/myfeature' into 'develop'",
+                'version': 'v1.1.0-3-g439e52',
+                'abbrev_commit': '40aaf83',
+                'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
+                'author_name': u'Sébastien Dupond',
+                'commit_date': '2016-03-01T09:33:33+0000',
+                'commit_timestamp': '1456824813',
+                'deploy_date': '2016-03-02T11:33:45+0000',
+                'deploy_timestamp': '1456918425',
+            },
+            'json',
+            'version',
+            'parameters.git',
+            'version.json',
+            {
                 'parameters': {
                     'git': {
-                        'message': "Merge branch 'feature/myfeature' into 'develop'",
-                        'version': 'v1.1.0-3-g439e52',
-                        'abbrev_commit': '40aaf83',
+                        'message':
+                        "Merge branch 'feature/myfeature' into 'develop'",
+                        'version':
+                        'v1.1.0-3-g439e52',
+                        'abbrev_commit':
+                        '40aaf83',
                         'full_commit':
                         '40aaf83894b98898895d478f8b7cc4a866b1d62c',
-                        'author_name': u'Sébastien Dupond',
-                        'commit_date': '2016-03-01T09:33:33+0000',
-                        'commit_timestamp': '1456824813',
-                        'deploy_date': '2016-03-02T11:33:45+0000',
-                        'deploy_timestamp': '1456918425',
+                        'author_name':
+                        u'Sébastien Dupond',
+                        'commit_date':
+                        '2016-03-01T09:33:33+0000',
+                        'commit_timestamp':
+                        '1456824813',
+                        'deploy_date':
+                        '2016-03-02T11:33:45+0000',
+                        'deploy_timestamp':
+                        '1456918425',
                     }
                 }
-            }, None, None, None,
-        ), (
-            {
-                'message': "Merge branch 'feature/myfeature' into 'develop'",
-                'version': 'v1.1.0-3-g439e52',
-                'abbrev_commit': '40aaf83',
-                'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
-                'commit_date': '2016-03-01T09:33:33+0000',
-                'commit_timestamp': '1456824813',
-                'deploy_date': '2016-03-02T11:33:45+0000',
-                'deploy_timestamp': '1456918425',
-            }, 'yml', 'version', '', 'version.yml', {
-                'message': "Merge branch 'feature/myfeature' into 'develop'",
-                'version': 'v1.1.0-3-g439e52',
-                'abbrev_commit': '40aaf83',
-                'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
-                'commit_date': '2016-03-01T09:33:33+0000',
-                'commit_timestamp': '1456824813',
-                'deploy_date': '2016-03-02T11:33:45+0000',
-                'deploy_timestamp': '1456918425',
-            }, None, None, None,
-        ), (
-            {
-                'message': "Merge branch 'feature/myfeature' into 'develop'",
-                'version': 'v1.1.0-3-g439e52',
-                'abbrev_commit': '40aaf83',
-                'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
-                'author_name': u'Se\u0301bastien Dupond',
-                'commit_date': '2016-03-01T09:33:33+0000',
-                'commit_timestamp': '1456824813',
-                'deploy_date': '2016-03-02T11:33:45+0000',
-                'deploy_timestamp': '1456918425',
-            }, 'yml', 'version', 'parameters.git', 'version.yml', {
-                'parameters': {
-                    'git': {
-                        'message': "Merge branch 'feature/myfeature' into 'develop'",
-                        'version': 'v1.1.0-3-g439e52',
-                        'abbrev_commit': '40aaf83',
-                        'full_commit':
-                        '40aaf83894b98898895d478f8b7cc4a866b1d62c',
-                        'author_name': u'Se\u0301bastien Dupond',
-                        'commit_date': '2016-03-01T09:33:33+0000',
-                        'commit_timestamp': '1456824813',
-                        'deploy_date': '2016-03-02T11:33:45+0000',
-                        'deploy_timestamp': '1456918425',
-                    }
-                }
-            }, None, None, None,
-        ), ({}, 'yml', 'version', '', 'version.yml', None, None, None, None, ),
+            },
+            None,
+            None,
+            None,
+        ),
         (
             {
                 'message': "Merge branch 'feature/myfeature' into 'develop'",
@@ -321,19 +344,26 @@ def get_file_content(
                 'commit_timestamp': '1456824813',
                 'deploy_date': '2016-03-02T11:33:45+0000',
                 'deploy_timestamp': '1456918425',
-            }, 'xml', 'version', '', 'version.xml', {
-                'app_version': {
-                    'message': "Merge branch 'feature/myfeature' into 'develop'",
-                    'version': 'v1.1.0-3-g439e52',
-                    'abbrev_commit': '40aaf83',
-                    'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
-                    'commit_date': '2016-03-01T09:33:33+0000',
-                    'commit_timestamp': '1456824813',
-                    'deploy_date': '2016-03-02T11:33:45+0000',
-                    'deploy_timestamp': '1456918425',
-                }
-            }, None, None, None,
-        ), (
+            },
+            'yml',
+            'version',
+            '',
+            'version.yml',
+            {
+                'message': "Merge branch 'feature/myfeature' into 'develop'",
+                'version': 'v1.1.0-3-g439e52',
+                'abbrev_commit': '40aaf83',
+                'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
+                'commit_date': '2016-03-01T09:33:33+0000',
+                'commit_timestamp': '1456824813',
+                'deploy_date': '2016-03-02T11:33:45+0000',
+                'deploy_timestamp': '1456918425',
+            },
+            None,
+            None,
+            None,
+        ),
+        (
             {
                 'message': "Merge branch 'feature/myfeature' into 'develop'",
                 'version': 'v1.1.0-3-g439e52',
@@ -344,22 +374,124 @@ def get_file_content(
                 'commit_timestamp': '1456824813',
                 'deploy_date': '2016-03-02T11:33:45+0000',
                 'deploy_timestamp': '1456918425',
-            }, 'xml', 'version', 'parameters.git', 'version.xml', {
+            },
+            'yml',
+            'version',
+            'parameters.git',
+            'version.yml',
+            {
                 'parameters': {
                     'git': {
-                        'message': "Merge branch 'feature/myfeature' into 'develop'",
-                        'version': 'v1.1.0-3-g439e52',
-                        'abbrev_commit': '40aaf83',
+                        'message':
+                        "Merge branch 'feature/myfeature' into 'develop'",
+                        'version':
+                        'v1.1.0-3-g439e52',
+                        'abbrev_commit':
+                        '40aaf83',
                         'full_commit':
                         '40aaf83894b98898895d478f8b7cc4a866b1d62c',
-                        'author_name': u'Se\u0301bastien Dupond',
-                        'commit_date': '2016-03-01T09:33:33+0000',
-                        'commit_timestamp': '1456824813',
-                        'deploy_date': '2016-03-02T11:33:45+0000',
-                        'deploy_timestamp': '1456918425',
+                        'author_name':
+                        u'Se\u0301bastien Dupond',
+                        'commit_date':
+                        '2016-03-01T09:33:33+0000',
+                        'commit_timestamp':
+                        '1456824813',
+                        'deploy_date':
+                        '2016-03-02T11:33:45+0000',
+                        'deploy_timestamp':
+                        '1456918425',
                     }
                 }
-            }, None, None, None,
+            },
+            None,
+            None,
+            None,
+        ), (
+            {},
+            'yml',
+            'version',
+            '',
+            'version.yml',
+            None,
+            None,
+            None,
+            None,
+        ),
+        (
+            {
+                'message': "Merge branch 'feature/myfeature' into 'develop'",
+                'version': 'v1.1.0-3-g439e52',
+                'abbrev_commit': '40aaf83',
+                'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
+                'commit_date': '2016-03-01T09:33:33+0000',
+                'commit_timestamp': '1456824813',
+                'deploy_date': '2016-03-02T11:33:45+0000',
+                'deploy_timestamp': '1456918425',
+            },
+            'xml',
+            'version',
+            '',
+            'version.xml',
+            {
+                'app_version': {
+                    'message':
+                    "Merge branch 'feature/myfeature' into 'develop'",
+                    'version': 'v1.1.0-3-g439e52',
+                    'abbrev_commit': '40aaf83',
+                    'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
+                    'commit_date': '2016-03-01T09:33:33+0000',
+                    'commit_timestamp': '1456824813',
+                    'deploy_date': '2016-03-02T11:33:45+0000',
+                    'deploy_timestamp': '1456918425',
+                }
+            },
+            None,
+            None,
+            None,
+        ),
+        (
+            {
+                'message': "Merge branch 'feature/myfeature' into 'develop'",
+                'version': 'v1.1.0-3-g439e52',
+                'abbrev_commit': '40aaf83',
+                'full_commit': '40aaf83894b98898895d478f8b7cc4a866b1d62c',
+                'author_name': u'Se\u0301bastien Dupond',
+                'commit_date': '2016-03-01T09:33:33+0000',
+                'commit_timestamp': '1456824813',
+                'deploy_date': '2016-03-02T11:33:45+0000',
+                'deploy_timestamp': '1456918425',
+            },
+            'xml',
+            'version',
+            'parameters.git',
+            'version.xml',
+            {
+                'parameters': {
+                    'git': {
+                        'message':
+                        "Merge branch 'feature/myfeature' into 'develop'",
+                        'version':
+                        'v1.1.0-3-g439e52',
+                        'abbrev_commit':
+                        '40aaf83',
+                        'full_commit':
+                        '40aaf83894b98898895d478f8b7cc4a866b1d62c',
+                        'author_name':
+                        u'Se\u0301bastien Dupond',
+                        'commit_date':
+                        '2016-03-01T09:33:33+0000',
+                        'commit_timestamp':
+                        '1456824813',
+                        'deploy_date':
+                        '2016-03-02T11:33:45+0000',
+                        'deploy_timestamp':
+                        '1456918425',
+                    }
+                }
+            },
+            None,
+            None,
+            None,
         )
     ]
 )

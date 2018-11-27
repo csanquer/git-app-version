@@ -25,6 +25,7 @@ setup(
 
     description='CLI tool to get Git commit informations and store them in a config file',
     long_description=long_description,
+    long_description_content_type='text/markdown',
 
     # The project's main homepage.
     url='https://github.com/csanquer/git-app-version',

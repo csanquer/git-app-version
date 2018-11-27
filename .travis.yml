@@ -25,7 +25,7 @@ before_install:
   - sudo apt-get install -y pandoc
 
 install:
-  - pip install -U pip>=8.1.2 wheel>=0.29
+  - pip install -U pip>=9.0.0 wheel>=0.32
   - pip install versioneer
   - pip install -r requirements-dev.txt
   - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then pip install scrutinizer-ocular ; fi
@@ -42,6 +42,15 @@ before_deploy:
   - if [[ -n "$TRAVIS_TAG" ]]; then pyinstaller git-app-version.spec ; tar -czf git-app-version_${TRAVIS_OS_NAME}_amd64.tar.gz -C dist git-app-version ; fi
 
 deploy:
+  - provider: releases
+    api_key:
+      secure: QBQdzCE05L9RO9UGL5PurWjp8YiBGmzape0ybbYTaSDIA/d6Abdk9907bbCHqIgW7fiPzpmHgHeOXZLEiX7tgtCD5d8fqg/WGQfEpVhYrhSBG4dBdDKUnSYebsjjZGHxXlVz0fOrEV37G0NKhvuxrjclrk8tzE5jIemtimqwWotdce19A0vIDVwM8bcl6dh00pLEzRVN71EYvr7Nbzz2BxVus2RIU0l+oVk/92AONnWby9yLBL+qSpPO15f6Oq7e2Z2KYorZcUN8os8P19Eg3D9A0GHG4D9nRtvylXghAjs6sS+a5IdHgsDCZtJUVPgsqq63jBzijJqlVUmxmrPEUpFYITJmKBBqs66/L1iCBScZ27LsnjmtUgZAfUNWON7Kr8IT3WNfdUEZhhK/2HxhLrYBQJaPDL0VBYIVc8UxLWeT8BBY4RTAunqrQvEay/W3UXAWfR33lB3gu16Tdk6MYe7XJpd3mWnpXQmTSWoks5+eyYrpL0tGvdL9JVRBlfPnlf9/txf3EjbPEafkIW7pMJfbdq192cFlWto4znALMUgdAYC5bJfgvHIYDUhOljsFtyn9ogX81WKxeYJMwE475Zx2oUgYsbH7WRLEp6x7fW8qAKrVqtMjgCpGwizUY8qa6sJ3AlbxAxvJMmvyn54YcuO4F0Ya/raX8qE7196QXl0=
+    file: git-app-version_${TRAVIS_OS_NAME}_amd64.tar.gz
+    on:
+      tags: true
+      python: '2.7'
+      repo: csanquer/git-app-version
+
   - provider: pypi
     user: csanquer
     password:
@@ -52,12 +61,3 @@ deploy:
     on:
       tags: true
       python: '2.7'
-
-  - provider: releases
-    api_key:
-      secure: QBQdzCE05L9RO9UGL5PurWjp8YiBGmzape0ybbYTaSDIA/d6Abdk9907bbCHqIgW7fiPzpmHgHeOXZLEiX7tgtCD5d8fqg/WGQfEpVhYrhSBG4dBdDKUnSYebsjjZGHxXlVz0fOrEV37G0NKhvuxrjclrk8tzE5jIemtimqwWotdce19A0vIDVwM8bcl6dh00pLEzRVN71EYvr7Nbzz2BxVus2RIU0l+oVk/92AONnWby9yLBL+qSpPO15f6Oq7e2Z2KYorZcUN8os8P19Eg3D9A0GHG4D9nRtvylXghAjs6sS+a5IdHgsDCZtJUVPgsqq63jBzijJqlVUmxmrPEUpFYITJmKBBqs66/L1iCBScZ27LsnjmtUgZAfUNWON7Kr8IT3WNfdUEZhhK/2HxhLrYBQJaPDL0VBYIVc8UxLWeT8BBY4RTAunqrQvEay/W3UXAWfR33lB3gu16Tdk6MYe7XJpd3mWnpXQmTSWoks5+eyYrpL0tGvdL9JVRBlfPnlf9/txf3EjbPEafkIW7pMJfbdq192cFlWto4znALMUgdAYC5bJfgvHIYDUhOljsFtyn9ogX81WKxeYJMwE475Zx2oUgYsbH7WRLEp6x7fW8qAKrVqtMjgCpGwizUY8qa6sJ3AlbxAxvJMmvyn54YcuO4F0Ya/raX8qE7196QXl0=
-    file: git-app-version_${TRAVIS_OS_NAME}_amd64.tar.gz
-    on:
-      tags: true
-      python: '2.7'
-      repo: csanquer/git-app-version

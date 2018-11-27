@@ -5,13 +5,14 @@ python:
   - '3.4'
   - '3.5'
   - '3.6'
-  - '3.7'
+  - '3.7-dev'
   - nightly
   - pypy
   - pypy3
 
 matrix:
   allow_failures:
+    - python: '3.7-dev'
     - python: 'nightly'
     - python: 'pypy'
     - python: 'pypy3'
@@ -26,7 +27,6 @@ before_install:
 install:
   - pip install -U pip>=8.1.2 wheel>=0.29
   - pip install versioneer
-  - pip install pypandoc
   - pip install -r requirements-dev.txt
   - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then pip install scrutinizer-ocular ; fi
 

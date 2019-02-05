@@ -38,41 +38,52 @@ install: $(VENV)
 	$(PIP) install versioneer
 	$(PIP) install pypandoc
 	$(PIP) install -r $(PYTHON_REQUIREMENTS_FILE)
+.PHONY: install
 
 install-dev: $(VENV)
 	$(PIP) install versioneer
 	$(PIP) install pypandoc
 	$(PIP) install -r $(PYTHON_REQUIREMENTS_DEV_FILE)
+.PHONY: install-dev
 
 # Python coding standards
 yapf:
 	$(BIN_DIR)/yapf --in-place -r $(SRC_DIR) $(TEST_DIR)
+.PHONY: yapf
 
 pycodestyle:
 	$(BIN_DIR)/pycodestyle $(SRC_DIR) $(TEST_DIR)
+.PHONY: pycodestyle
 
 flake8:
 	$(BIN_DIR)/flake8 $(SRC_DIR) $(TEST_DIR)
+.PHONY: flake8
 
 isort:
 	$(BIN_DIR)/isort -rc $(SRC_DIR) $(TEST_DIR)
+.PHONY: isort
 
 lint:
 	$(BIN_DIR)/pylint $(SRC_DIR) -f colorized || exit 0
+.PHONY: lint
 
 lint-html:
 	$(BIN_DIR)/pylint $(SRC_DIR) -f html > pylint.html || exit 0
+.PHONY: lint-html
 
 lint3:
 	$(BIN_DIR)/pylint --py3k $(SRC_DIR) -f colorized || exit 0
+.PHONY: lint3
 
 lint3-html:
 	$(BIN_DIR)/pylint --py3k $(SRC_DIR) -f html > pylint.html || exit 0
+.PHONY: lint3-html
 
 compile:
 	git describe --tags --always > $(SRC_DIR)/version.txt
 	$(BIN_DIR)/pyinstaller -D $(APP_NAME).spec
 	rm -f $(SRC_DIR)/version.txt
+.PHONY: compile
 
 # $(TEST_DIR)
 test:
@@ -81,9 +92,16 @@ test:
 	--cov-report term-missing \
 	--cov-report html \
 	--cov-report xml
+.PHONY: test
 
 test-all:
 	$(BIN_DIR)/tox --skip-missing-interpreters
+.PHONY: test-all
 
 test-23:
-	$(BIN_DIR)/tox -e py27,py35
+	$(BIN_DIR)/tox -e py27,py36
+.PHONY: test-23
+
+clean:
+	rm -rf $(VENV) .tox __pycache__ coverage_html_report *.egg-info
+.PHONY: clean

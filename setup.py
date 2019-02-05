@@ -98,7 +98,7 @@ setup(
         'dev': [
             'versioneer',
             'check-manifest',
-            'pyinstaller >=3.2'
+            'pyinstaller==3.2',
             'pylint',
             'pycodestyle',
             'yapf',
@@ -106,8 +106,8 @@ setup(
             'isort'
         ],
         'test': [
-            'pytest-cov',
-            'pytest >=3.0',
+            'pytest-cov>=2.6',
+            'pytest>=4.2',
             'mock',
             'tox'
         ],
